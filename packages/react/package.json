@@ -1,0 +1,23 @@
+{
+  "name": "@mycelium/react",
+  "version": "0.1.0-beta",
+  "private": false,
+  "type": "module",
+  "description": "",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "lint": "eslint .",
+    "test": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [],
+  "author": "mycelium-dev",
+  "license": "MIT",
+  "packageManager": "pnpm@10.12.1",
+  "dependencies": {
+    "@mycelium/core-sdk": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": ">=19"
+  }
+}

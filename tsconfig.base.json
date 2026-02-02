@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": false,
+    "skipLibCheck": true
+  }
+}

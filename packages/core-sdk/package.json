@@ -1,0 +1,27 @@
+{
+  "name": "@mycelium/core-sdk",
+  "version": "0.1.0-beta",
+  "private": false,
+  "type": "module",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "lint": "eslint .",
+    "test": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [],
+  "author": "mycelium-dev",
+  "license": "MIT",
+  "packageManager": "pnpm@10.12.1",
+  "peerDependencies": {},
+  "dependencies": {}
+}

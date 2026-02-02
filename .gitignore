@@ -1,0 +1,49 @@
+# --------------------
+# OS
+# --------------------
+.DS_Store
+Thumbs.db
+
+# --------------------
+# Node / pnpm
+# --------------------
+node_modules/
+.pnpm-store/
+.pnp.*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# --------------------
+# Build outputs
+# --------------------
+dist/
+build/
+lib/
+.esbuild/
+.turbo/
+
+# --------------------
+# TypeScript
+# --------------------
+*.tsbuildinfo
+
+# --------------------
+# Coverage
+# --------------------
+coverage/
+
+# --------------------
+# Env files
+# --------------------
+.env
+.env.*
+!.env.example
+
+# --------------------
+# IDEs
+# --------------------
+.vscode/
+.idea/
+*.iml
