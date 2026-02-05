@@ -1,5 +1,5 @@
 {
-  "address": "GrEC9xKdjWQw7cdTUKoFEbMAsSkEQJTqt3oM6po6KFFL",
+  "address": "Bwa3soySFuwawNvuApEUdrkmdP5ji2ynX3gJn5u6kSJp",
   "metadata": {
     "name": "metadata",
     "version": "0.1.0",
@@ -9,16 +9,7 @@
   "instructions": [
     {
       "name": "create_entity_metadata",
-      "discriminator": [
-        206,
-        211,
-        171,
-        106,
-        161,
-        192,
-        50,
-        7
-      ],
+      "discriminator": [206, 211, 171, 106, 161, 192, 50, 7],
       "accounts": [
         {
           "name": "entity_metadata",
@@ -28,21 +19,8 @@
               {
                 "kind": "const",
                 "value": [
-                  101,
-                  110,
-                  116,
-                  105,
-                  116,
-                  121,
-                  95,
-                  109,
-                  101,
-                  116,
-                  97,
-                  100,
-                  97,
-                  116,
-                  97
+                  101, 110, 116, 105, 116, 121, 95, 109, 101, 116, 97, 100, 97,
+                  116, 97
                 ]
               },
               {
@@ -58,15 +36,11 @@
         },
         {
           "name": "entity",
-          "docs": [
-            "Owning entity"
-          ]
+          "docs": ["Owning entity"]
         },
         {
           "name": "schema",
-          "docs": [
-            "Schema must exist"
-          ]
+          "docs": ["Schema must exist"]
         },
         {
           "name": "payer",
@@ -81,7 +55,7 @@
       "args": [
         {
           "name": "version",
-          "type": "string"
+          "type": "u64"
         },
         {
           "name": "uri",
@@ -95,16 +69,7 @@
     },
     {
       "name": "create_ip_metadata",
-      "discriminator": [
-        170,
-        218,
-        79,
-        21,
-        199,
-        157,
-        101,
-        42
-      ],
+      "discriminator": [170, 218, 79, 21, 199, 157, 101, 42],
       "accounts": [
         {
           "name": "ip_metadata",
@@ -113,19 +78,7 @@
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  105,
-                  112,
-                  95,
-                  109,
-                  101,
-                  116,
-                  97,
-                  100,
-                  97,
-                  116,
-                  97
-                ]
+                "value": [105, 112, 95, 109, 101, 116, 97, 100, 97, 116, 97]
               },
               {
                 "kind": "account",
@@ -140,15 +93,11 @@
         },
         {
           "name": "ip_asset",
-          "docs": [
-            "IP being annotated"
-          ]
+          "docs": ["IP being annotated"]
         },
         {
           "name": "schema",
-          "docs": [
-            "Schema must exist (enforced reference)"
-          ]
+          "docs": ["Schema must exist (enforced reference)"]
         },
         {
           "name": "payer",
@@ -163,7 +112,7 @@
       "args": [
         {
           "name": "version",
-          "type": "string"
+          "type": "u64"
         },
         {
           "name": "uri",
@@ -177,16 +126,7 @@
     },
     {
       "name": "lock_entity_metadata",
-      "discriminator": [
-        245,
-        29,
-        202,
-        77,
-        190,
-        35,
-        208,
-        234
-      ],
+      "discriminator": [245, 29, 202, 77, 190, 35, 208, 234],
       "accounts": [
         {
           "name": "metadata",
@@ -204,16 +144,7 @@
     },
     {
       "name": "lock_ip_metadata",
-      "discriminator": [
-        4,
-        208,
-        66,
-        135,
-        24,
-        41,
-        38,
-        204
-      ],
+      "discriminator": [4, 208, 66, 135, 24, 41, 38, 204],
       "accounts": [
         {
           "name": "metadata",
@@ -231,16 +162,7 @@
     },
     {
       "name": "register_schema",
-      "discriminator": [
-        177,
-        252,
-        118,
-        252,
-        113,
-        195,
-        220,
-        14
-      ],
+      "discriminator": [177, 252, 118, 252, 113, 195, 220, 14],
       "accounts": [
         {
           "name": "schema",
@@ -249,14 +171,7 @@
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  115,
-                  99,
-                  104,
-                  101,
-                  109,
-                  97
-                ]
+                "value": [115, 99, 104, 101, 109, 97]
               },
               {
                 "kind": "arg",
@@ -296,26 +211,14 @@
     },
     {
       "name": "update_entity_metadata",
-      "discriminator": [
-        152,
-        231,
-        134,
-        248,
-        170,
-        240,
-        38,
-        115
-      ],
+      "discriminator": [152, 231, 134, 248, 170, 240, 38, 115],
       "accounts": [
         {
           "name": "entity"
         },
         {
           "name": "previous_metadata",
-          "docs": [
-            "Previous metadata version (optional for v1)"
-          ],
-          "optional": true
+          "docs": ["Previous metadata version (optional for v1)"]
         },
         {
           "name": "new_metadata",
@@ -325,21 +228,8 @@
               {
                 "kind": "const",
                 "value": [
-                  101,
-                  110,
-                  116,
-                  105,
-                  116,
-                  121,
-                  95,
-                  109,
-                  101,
-                  116,
-                  97,
-                  100,
-                  97,
-                  116,
-                  97
+                  101, 110, 116, 105, 116, 121, 95, 109, 101, 116, 97, 100, 97,
+                  116, 97
                 ]
               },
               {
@@ -358,9 +248,7 @@
         },
         {
           "name": "authority",
-          "docs": [
-            "Must be entity controller"
-          ],
+          "docs": ["Must be entity controller"],
           "signer": true
         },
         {
@@ -376,7 +264,7 @@
       "args": [
         {
           "name": "version",
-          "type": "string"
+          "type": "u64"
         },
         {
           "name": "uri",
@@ -390,16 +278,7 @@
     },
     {
       "name": "update_ip_metadata",
-      "discriminator": [
-        37,
-        176,
-        216,
-        119,
-        26,
-        193,
-        236,
-        92
-      ],
+      "discriminator": [37, 176, 216, 119, 26, 193, 236, 92],
       "accounts": [
         {
           "name": "ip_asset",
@@ -407,13 +286,10 @@
         },
         {
           "name": "entity",
-          "docs": [
-            "Entity owning the IP"
-          ]
+          "docs": ["Entity owning the IP"]
         },
         {
-          "name": "previous_metadata",
-          "optional": true
+          "name": "previous_metadata"
         },
         {
           "name": "new_metadata",
@@ -422,19 +298,7 @@
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  105,
-                  112,
-                  95,
-                  109,
-                  101,
-                  116,
-                  97,
-                  100,
-                  97,
-                  116,
-                  97
-                ]
+                "value": [105, 112, 95, 109, 101, 116, 97, 100, 97, 116, 97]
               },
               {
                 "kind": "account",
@@ -452,9 +316,7 @@
         },
         {
           "name": "authority",
-          "docs": [
-            "Must be controller of the entity"
-          ],
+          "docs": ["Must be controller of the entity"],
           "signer": true
         },
         {
@@ -470,7 +332,7 @@
       "args": [
         {
           "name": "version",
-          "type": "string"
+          "type": "u64"
         },
         {
           "name": "uri",
@@ -486,68 +348,23 @@
   "accounts": [
     {
       "name": "EntityAccount",
-      "discriminator": [
-        46,
-        132,
-        149,
-        104,
-        229,
-        39,
-        46,
-        87
-      ]
+      "discriminator": [46, 132, 149, 104, 229, 39, 46, 87]
     },
     {
       "name": "EntityMetadata",
-      "discriminator": [
-        169,
-        25,
-        203,
-        216,
-        51,
-        80,
-        76,
-        79
-      ]
+      "discriminator": [169, 25, 203, 216, 51, 80, 76, 79]
     },
     {
       "name": "IPAsset",
-      "discriminator": [
-        157,
-        216,
-        58,
-        229,
-        111,
-        101,
-        192,
-        187
-      ]
+      "discriminator": [157, 216, 58, 229, 111, 101, 192, 187]
     },
     {
       "name": "IPMetadata",
-      "discriminator": [
-        80,
-        200,
-        252,
-        27,
-        169,
-        52,
-        116,
-        110
-      ]
+      "discriminator": [80, 200, 252, 27, 169, 52, 116, 110]
     },
     {
       "name": "SchemaRegistry",
-      "discriminator": [
-        67,
-        184,
-        244,
-        100,
-        7,
-        70,
-        92,
-        51
-      ]
+      "discriminator": [67, 184, 244, 100, 7, 70, 92, 51]
     }
   ],
   "errors": [
@@ -570,6 +387,16 @@
       "code": 6003,
       "name": "AlreadyLocked",
       "msg": "Metadata already locked"
+    },
+    {
+      "code": 6004,
+      "name": "VersionOverflow",
+      "msg": "Version overflow"
+    },
+    {
+      "code": 6005,
+      "name": "InvalidVersion",
+      "msg": "Invalid version"
     }
   ],
   "types": [
@@ -581,10 +408,7 @@
           {
             "name": "entity_id",
             "type": {
-              "array": [
-                "u8",
-                32
-              ]
+              "array": ["u8", 32]
             }
           },
           {
@@ -610,14 +434,6 @@
             "type": "pubkey"
           },
           {
-            "name": "name",
-            "type": "string"
-          },
-          {
-            "name": "description",
-            "type": "string"
-          },
-          {
             "name": "updated_at",
             "type": "i64"
           },
@@ -637,44 +453,31 @@
         "fields": [
           {
             "name": "entity",
-            "docs": [
-              "Entity this metadata belongs to"
-            ],
+            "docs": ["Entity this metadata belongs to"],
             "type": "pubkey"
           },
           {
             "name": "schema",
-            "docs": [
-              "SchemaRegistry reference"
-            ],
+            "docs": ["SchemaRegistry reference"],
             "type": "pubkey"
           },
           {
             "name": "version",
-            "docs": [
-              "Version identifier (e.g. \"v1\", \"legal-2024\")"
-            ],
-            "type": "string"
+            "type": "u64"
           },
           {
             "name": "uri",
-            "docs": [
-              "URI pointing to off-chain entity metadata"
-            ],
+            "docs": ["URI pointing to off-chain entity metadata"],
             "type": "string"
           },
           {
             "name": "content_hash",
-            "docs": [
-              "Hash of the metadata content (integrity only)"
-            ],
+            "docs": ["Hash of the metadata content (integrity only)"],
             "type": "bytes"
           },
           {
             "name": "created_at",
-            "docs": [
-              "Creation timestamp"
-            ],
+            "docs": ["Creation timestamp"],
             "type": "i64"
           },
           {
@@ -720,17 +523,13 @@
             }
           },
           {
-            "name": "state",
-            "docs": [
-              "Root / Anchored / Unanchored"
-            ],
+            "name": "status",
+            "docs": ["Active / Frozen"],
             "type": "u8"
           },
           {
             "name": "parent_claims",
-            "docs": [
-              "Parent claims (unanchored allowed)"
-            ],
+            "docs": ["Parent claims (unanchored allowed)"],
             "type": {
               "vec": {
                 "defined": {
@@ -791,44 +590,31 @@
         "fields": [
           {
             "name": "ip_asset",
-            "docs": [
-              "IPAsset this metadata belongs to"
-            ],
+            "docs": ["IPAsset this metadata belongs to"],
             "type": "pubkey"
           },
           {
             "name": "schema",
-            "docs": [
-              "SchemaRegistry reference (enforced)"
-            ],
+            "docs": ["SchemaRegistry reference (enforced)"],
             "type": "pubkey"
           },
           {
             "name": "version",
-            "docs": [
-              "Version identifier (e.g. \"v1\", \"v2\", \"2024-01\")"
-            ],
-            "type": "string"
+            "type": "u64"
           },
           {
             "name": "uri",
-            "docs": [
-              "URI pointing to metadata content (IPFS, Arweave, HTTPS)"
-            ],
+            "docs": ["URI pointing to metadata content (IPFS, Arweave, HTTPS)"],
             "type": "string"
           },
           {
             "name": "content_hash",
-            "docs": [
-              "Hash of the metadata content (integrity only)"
-            ],
+            "docs": ["Hash of the metadata content (integrity only)"],
             "type": "bytes"
           },
           {
             "name": "created_at",
-            "docs": [
-              "Creation timestamp"
-            ],
+            "docs": ["Creation timestamp"],
             "type": "i64"
           },
           {
@@ -850,10 +636,7 @@
           {
             "name": "claim_hash",
             "type": {
-              "array": [
-                "u8",
-                32
-              ]
+              "array": ["u8", 32]
             }
           }
         ]
@@ -873,9 +656,7 @@
           },
           {
             "name": "category",
-            "docs": [
-              "Length 32 allows for descriptive slugs"
-            ],
+            "docs": ["Length 32 allows for descriptive slugs"],
             "type": "string"
           },
           {
@@ -887,9 +668,7 @@
           },
           {
             "name": "creator",
-            "docs": [
-              "The address that registered this schema"
-            ],
+            "docs": ["The address that registered this schema"],
             "type": "pubkey"
           },
           {

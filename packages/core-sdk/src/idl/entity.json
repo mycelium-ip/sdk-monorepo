@@ -1,5 +1,5 @@
 {
-  "address": "Bhz5ReL66AZ1PdFSaexBpXnjx3EsEKYGTchTnpKh1UsR",
+  "address": "9wuS9WD7h8J1scE1eUieU9u5mUzMyHAduA9MZcgmxTco",
   "metadata": {
     "name": "entity",
     "version": "0.1.0",
@@ -8,17 +8,18 @@
   },
   "instructions": [
     {
-      "name": "assert_entity_authority_cpi",
-      "discriminator": [
-        215,
-        126,
-        10,
-        131,
-        134,
-        59,
-        70,
-        175
+      "name": "assert_controller_threshold",
+      "discriminator": [195, 68, 103, 16, 222, 131, 246, 134],
+      "accounts": [
+        {
+          "name": "entity"
+        }
       ],
+      "args": []
+    },
+    {
+      "name": "assert_entity_authority_cpi",
+      "discriminator": [215, 126, 10, 131, 134, 59, 70, 175],
       "accounts": [
         {
           "name": "entity"
@@ -39,16 +40,7 @@
     },
     {
       "name": "freeze_entity",
-      "discriminator": [
-        159,
-        136,
-        30,
-        2,
-        67,
-        167,
-        214,
-        147
-      ],
+      "discriminator": [159, 136, 30, 2, 67, 167, 214, 147],
       "accounts": [
         {
           "name": "entity",
@@ -63,16 +55,7 @@
     },
     {
       "name": "init_entity_treasury",
-      "discriminator": [
-        66,
-        233,
-        24,
-        140,
-        15,
-        239,
-        108,
-        43
-      ],
+      "discriminator": [66, 233, 24, 140, 15, 239, 108, 43],
       "accounts": [
         {
           "name": "entity",
@@ -81,14 +64,7 @@
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  101,
-                  110,
-                  116,
-                  105,
-                  116,
-                  121
-                ]
+                "value": [101, 110, 116, 105, 116, 121]
               },
               {
                 "kind": "arg",
@@ -105,21 +81,8 @@
               {
                 "kind": "const",
                 "value": [
-                  101,
-                  110,
-                  116,
-                  105,
-                  116,
-                  121,
-                  95,
-                  116,
-                  114,
-                  101,
-                  97,
-                  115,
-                  117,
-                  114,
-                  121
+                  101, 110, 116, 105, 116, 121, 95, 116, 114, 101, 97, 115, 117,
+                  114, 121
                 ]
               },
               {
@@ -143,26 +106,14 @@
         {
           "name": "entity_id",
           "type": {
-            "array": [
-              "u8",
-              32
-            ]
+            "array": ["u8", 32]
           }
         }
       ]
     },
     {
       "name": "register_entity",
-      "discriminator": [
-        166,
-        52,
-        122,
-        244,
-        214,
-        116,
-        215,
-        255
-      ],
+      "discriminator": [166, 52, 122, 244, 214, 116, 215, 255],
       "accounts": [
         {
           "name": "entity",
@@ -171,14 +122,7 @@
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  101,
-                  110,
-                  116,
-                  105,
-                  116,
-                  121
-                ]
+                "value": [101, 110, 116, 105, 116, 121]
               },
               {
                 "kind": "arg",
@@ -201,10 +145,7 @@
         {
           "name": "entity_id",
           "type": {
-            "array": [
-              "u8",
-              32
-            ]
+            "array": ["u8", 32]
           }
         },
         {
@@ -216,37 +157,16 @@
         {
           "name": "threshold",
           "type": "u8"
-        },
-        {
-          "name": "name",
-          "type": "string"
-        },
-        {
-          "name": "description",
-          "type": "string"
         }
       ]
     },
     {
       "name": "update_controllers",
-      "discriminator": [
-        71,
-        2,
-        167,
-        69,
-        145,
-        109,
-        42,
-        139
-      ],
+      "discriminator": [71, 2, 167, 69, 145, 109, 42, 139],
       "accounts": [
         {
           "name": "entity",
           "writable": true
-        },
-        {
-          "name": "controller",
-          "signer": true
         }
       ],
       "args": [
@@ -266,29 +186,11 @@
   "accounts": [
     {
       "name": "EntityAccount",
-      "discriminator": [
-        46,
-        132,
-        149,
-        104,
-        229,
-        39,
-        46,
-        87
-      ]
+      "discriminator": [46, 132, 149, 104, 229, 39, 46, 87]
     },
     {
       "name": "EntityTreasury",
-      "discriminator": [
-        158,
-        97,
-        79,
-        97,
-        49,
-        235,
-        122,
-        123
-      ]
+      "discriminator": [158, 97, 79, 97, 49, 235, 122, 123]
     }
   ],
   "errors": [
@@ -316,6 +218,11 @@
       "code": 6004,
       "name": "EntityFrozen",
       "msg": "Entity is frozen"
+    },
+    {
+      "code": 6005,
+      "name": "NotEnoughControllerSigners",
+      "msg": "Not enough controller signers"
     }
   ],
   "types": [
@@ -327,10 +234,7 @@
           {
             "name": "entity_id",
             "type": {
-              "array": [
-                "u8",
-                32
-              ]
+              "array": ["u8", 32]
             }
           },
           {
@@ -356,14 +260,6 @@
             "type": "pubkey"
           },
           {
-            "name": "name",
-            "type": "string"
-          },
-          {
-            "name": "description",
-            "type": "string"
-          },
-          {
             "name": "updated_at",
             "type": "i64"
           },
@@ -383,23 +279,17 @@
         "fields": [
           {
             "name": "entity",
-            "docs": [
-              "Entity this treasury belongs to"
-            ],
+            "docs": ["Entity this treasury belongs to"],
             "type": "pubkey"
           },
           {
             "name": "version",
-            "docs": [
-              "Versioning for future upgrades"
-            ],
+            "docs": ["Versioning for future upgrades"],
             "type": "u8"
           },
           {
             "name": "created_at",
-            "docs": [
-              "Created timestamp"
-            ],
+            "docs": ["Created timestamp"],
             "type": "i64"
           }
         ]
