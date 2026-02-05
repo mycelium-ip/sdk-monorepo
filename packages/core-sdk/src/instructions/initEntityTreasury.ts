@@ -1,5 +1,9 @@
 // src/instructions/initEntityTreasury.ts
-import { PublicKey, SystemProgram, TransactionInstruction } from "@solana/web3.js";
+import {
+  PublicKey,
+  SystemProgram,
+  TransactionInstruction,
+} from "@solana/web3.js";
 import { anchorDiscriminator } from "../core/encoding";
 
 export type BuildInitEntityTreasuryInstructionParams = {
@@ -23,7 +27,7 @@ export function buildInitEntityTreasuryInstruction({
   // ─────────────────────────────────────────────
   const [entityPda] = PublicKey.findProgramAddressSync(
     [Buffer.from("entity"), Buffer.from(entityId)],
-    programId
+    programId,
   );
 
   // ─────────────────────────────────────────────
@@ -31,7 +35,7 @@ export function buildInitEntityTreasuryInstruction({
   // ─────────────────────────────────────────────
   const [treasuryPda] = PublicKey.findProgramAddressSync(
     [Buffer.from("entity_treasury"), entityPda.toBuffer()],
-    programId
+    programId,
   );
 
   // ─────────────────────────────────────────────
@@ -58,4 +62,5 @@ export function buildInitEntityTreasuryInstruction({
     data,
   });
 
-  return { instruction, entityPda, treasuryPda }
+  return { instruction, entityPda, treasuryPda };
+}
