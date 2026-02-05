@@ -1,58 +1,67 @@
-import * as anchor from "@coral-xyz/anchor";
-import { Program } from "@coral-xyz/anchor";
-import { Entity } from "../types/entity";
+import {
+  PublicKey,
+  SystemProgram,
+  TransactionInstruction,
+} from "@solana/web3.js";
+import { anchorDiscriminator } from "../core/encoding";
 
 export type BuildAssertControllerThresholdInstructionParams = {
-  program: Program<Entity>;
+  programId: PublicKey;
 
-  // Intent
   entityId: Uint8Array;
 
-  // Controllers asserting the threshold
-  approvingControllers: anchor.web3.PublicKey[];
+  // controllers asserting quorum
+  approvingControllers: PublicKey[];
 
-  // Fee payer (even though no state change, still required by your instruction)
-  payer: anchor.web3.PublicKey;
+  payer: PublicKey;
 };
 
 export function buildAssertControllerThresholdInstruction({
-  program,
+  programId,
   entityId,
   approvingControllers,
   payer,
 }: BuildAssertControllerThresholdInstructionParams): {
-  instruction: anchor.web3.TransactionInstruction;
-  entityPda: anchor.web3.PublicKey;
+  instruction: TransactionInstruction;
+  entityPda: PublicKey;
 } {
   // ─────────────────────────────────────────────
   // 1. Derive Entity PDA
   // ─────────────────────────────────────────────
-  const [entityPda] = anchor.web3.PublicKey.findProgramAddressSync(
+  const [entityPda] = PublicKey.findProgramAddressSync(
     [Buffer.from("entity"), Buffer.from(entityId)],
-    program.programId,
+    programId,
   );
 
   // ─────────────────────────────────────────────
-  // 2. Remaining accounts (controller signers)
+  // 2. Instruction data (discriminator only)
   // ─────────────────────────────────────────────
-  const remainingAccounts = approvingControllers.map((pk) => ({
-    pubkey: pk,
-    isSigner: true,
-    isWritable: false,
-  }));
+  const data = anchorDiscriminator("assert_controller_threshold");
 
   // ─────────────────────────────────────────────
-  // 3. Build instruction (pure)
+  // 3. Account metas
   // ─────────────────────────────────────────────
-  const instruction = program.methods
-    .assertControllerThreshold()
-    .accounts({
-      entity: entityPda,
-      payer,
-      systemProgram: anchor.web3.SystemProgram.programId,
-    })
-    .remainingAccounts(remainingAccounts)
-    .instruction();
+  const keys = [
+    { pubkey: entityPda, isSigner: false, isWritable: false },
+    { pubkey: payer, isSigner: false, isWritable: false },
+    { pubkey: SystemProgram.programId, isSigner: false, isWritable: false },
+
+    // remaining accounts = controller signers
+    ...approvingControllers.map((pk) => ({
+      pubkey: pk,
+      isSigner: true,
+      isWritable: false,
+    })),
+  ];
+
+  // ─────────────────────────────────────────────
+  // 4. Build instruction
+  // ─────────────────────────────────────────────
+  const instruction = new TransactionInstruction({
+    programId,
+    keys,
+    data,
+  });
 
   return {
     instruction,

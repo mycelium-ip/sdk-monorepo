@@ -1,48 +1,68 @@
-import * as anchor from "@coral-xyz/anchor";
-import { Program } from "@coral-xyz/anchor";
-import { Entity } from "../types/entity";
+import {
+  PublicKey,
+  SystemProgram,
+  TransactionInstruction,
+} from "@solana/web3.js";
+import { anchorDiscriminator } from "../core/encoding";
+import { encodePubkeyVec, encodeU8 } from "../core/borsh";
 
 export type BuildRegisterEntityInstructionParams = {
-  program: Program<Entity>;
+  programId: PublicKey;
 
-  // Intent
-  entityId: Uint8Array;
-  controllers: anchor.web3.PublicKey[];
+  // intent
+  entityId: Uint8Array; // 32 bytes
+  controllers: PublicKey[];
   threshold: number;
 
-  // Who pays for account creation
-  payer: anchor.web3.PublicKey;
+  // fee payer
+  payer: PublicKey;
 };
 
 export function buildRegisterEntityInstruction({
-  program,
+  programId,
   entityId,
   controllers,
   threshold,
   payer,
 }: BuildRegisterEntityInstructionParams): {
-  instruction: anchor.web3.TransactionInstruction;
-  entityPda: anchor.web3.PublicKey;
+  instruction: TransactionInstruction;
+  entityPda: PublicKey;
 } {
   // ─────────────────────────────────────────────
   // 1. Derive Entity PDA
   // ─────────────────────────────────────────────
-  const [entityPda] = anchor.web3.PublicKey.findProgramAddressSync(
+  const [entityPda] = PublicKey.findProgramAddressSync(
     [Buffer.from("entity"), Buffer.from(entityId)],
-    program.programId,
+    programId,
   );
 
   // ─────────────────────────────────────────────
-  // 2. Build instruction (NO send, NO sign)
+  // 2. Encode instruction data
   // ─────────────────────────────────────────────
-  const instruction = program.methods
-    .registerEntity([...entityId], controllers, threshold)
-    .accounts({
-      entity: entityPda,
-      payer,
-      systemProgram: anchor.web3.SystemProgram.programId,
-    })
-    .instruction();
+  const data = Buffer.concat([
+    anchorDiscriminator("register_entity"),
+    Buffer.from(entityId),
+    encodePubkeyVec(controllers),
+    encodeU8(threshold),
+  ]);
+
+  // ─────────────────────────────────────────────
+  // 3. Account metas
+  // ─────────────────────────────────────────────
+  const keys = [
+    { pubkey: entityPda, isSigner: false, isWritable: true },
+    { pubkey: payer, isSigner: true, isWritable: true },
+    { pubkey: SystemProgram.programId, isSigner: false, isWritable: false },
+  ];
+
+  // ─────────────────────────────────────────────
+  // 4. Build instruction
+  // ─────────────────────────────────────────────
+  const instruction = new TransactionInstruction({
+    programId,
+    keys,
+    data,
+  });
 
   return {
     instruction,

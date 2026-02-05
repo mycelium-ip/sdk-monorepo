@@ -1,59 +1,67 @@
-import * as anchor from "@coral-xyz/anchor";
-import { Program } from "@coral-xyz/anchor";
-import { Entity } from "../types/entity";
+// src/instructions/updateControllers.ts
+import { PublicKey, TransactionInstruction } from "@solana/web3.js";
+import { anchorDiscriminator } from "../core/encoding";
+import { encodePubkeyVec, encodeU8 } from "../core/borsh";
 
 export type BuildUpdateControllersInstructionParams = {
-  program: Program<Entity>;
+  programId: PublicKey;
 
-  // Intent
   entityId: Uint8Array;
-  newControllers: anchor.web3.PublicKey[];
+
+  newControllers: PublicKey[];
   newThreshold: number;
 
-  // Existing controllers approving this change
-  approvingControllers: anchor.web3.PublicKey[];
+  // existing controllers approving the rotation
+  approvingControllers: PublicKey[];
 };
 
 export function buildUpdateControllersInstruction({
-  program,
+  programId,
   entityId,
   newControllers,
   newThreshold,
   approvingControllers,
 }: BuildUpdateControllersInstructionParams): {
-  instruction: anchor.web3.TransactionInstruction;
-  entityPda: anchor.web3.PublicKey;
+  instruction: TransactionInstruction;
+  entityPda: PublicKey;
 } {
   // ─────────────────────────────────────────────
-  // 1. Derive Entity PDA
+  // 1. Derive entity PDA
   // ─────────────────────────────────────────────
-  const [entityPda] = anchor.web3.PublicKey.findProgramAddressSync(
+  const [entityPda] = PublicKey.findProgramAddressSync(
     [Buffer.from("entity"), Buffer.from(entityId)],
-    program.programId,
+    programId,
   );
 
   // ─────────────────────────────────────────────
-  // 2. Remaining accounts (multisig signers)
+  // 2. Encode instruction data
   // ─────────────────────────────────────────────
-  const remainingAccounts = approvingControllers.map((pk) => ({
-    pubkey: pk,
-    isSigner: true,
-    isWritable: false,
-  }));
+  const data = Buffer.concat([
+    anchorDiscriminator("update_controllers"), // 8 bytes
+    encodePubkeyVec(newControllers), // Vec<Pubkey>
+    encodeU8(newThreshold), // u8
+  ]);
 
   // ─────────────────────────────────────────────
-  // 3. Build instruction (pure)
+  // 3. Remaining accounts = approving controllers
   // ─────────────────────────────────────────────
-  const instruction = program.methods
-    .updateControllers(newControllers, newThreshold)
-    .accounts({
-      entity: entityPda,
-    })
-    .remainingAccounts(remainingAccounts)
-    .instruction();
+  const keys = [
+    { pubkey: entityPda, isSigner: false, isWritable: true },
+    ...approvingControllers.map((pk) => ({
+      pubkey: pk,
+      isSigner: true,
+      isWritable: false,
+    })),
+  ];
 
-  return {
-    instruction,
-    entityPda,
-  };
+  // ─────────────────────────────────────────────
+  // 4. Build instruction
+  // ─────────────────────────────────────────────
+  const instruction = new TransactionInstruction({
+    programId,
+    keys,
+    data,
+  });
+
+  return { instruction, entityPda };
 }

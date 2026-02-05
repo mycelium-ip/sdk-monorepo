@@ -1,58 +1,61 @@
-import * as anchor from "@coral-xyz/anchor";
-import { Program } from "@coral-xyz/anchor";
-import { Entity } from "../types/entity";
+// src/instructions/initEntityTreasury.ts
+import { PublicKey, SystemProgram, TransactionInstruction } from "@solana/web3.js";
+import { anchorDiscriminator } from "../core/encoding";
 
 export type BuildInitEntityTreasuryInstructionParams = {
-  program: Program<Entity>;
+  programId: PublicKey;
 
-  // Intent
-  entityId: Uint8Array;
-
-  // Fee payer
-  payer: anchor.web3.PublicKey;
+  entityId: Uint8Array; // 32 bytes
+  payer: PublicKey;
 };
 
 export function buildInitEntityTreasuryInstruction({
-  program,
+  programId,
   entityId,
   payer,
 }: BuildInitEntityTreasuryInstructionParams): {
-  instruction: anchor.web3.TransactionInstruction;
-  entityPda: anchor.web3.PublicKey;
-  treasuryPda: anchor.web3.PublicKey;
+  instruction: TransactionInstruction;
+  entityPda: PublicKey;
+  treasuryPda: PublicKey;
 } {
   // ─────────────────────────────────────────────
   // 1. Derive Entity PDA
   // ─────────────────────────────────────────────
-  const [entityPda] = anchor.web3.PublicKey.findProgramAddressSync(
+  const [entityPda] = PublicKey.findProgramAddressSync(
     [Buffer.from("entity"), Buffer.from(entityId)],
-    program.programId,
+    programId
   );
 
   // ─────────────────────────────────────────────
   // 2. Derive Treasury PDA
   // ─────────────────────────────────────────────
-  const [treasuryPda] = anchor.web3.PublicKey.findProgramAddressSync(
+  const [treasuryPda] = PublicKey.findProgramAddressSync(
     [Buffer.from("entity_treasury"), entityPda.toBuffer()],
-    program.programId,
+    programId
   );
 
   // ─────────────────────────────────────────────
-  // 3. Build instruction (pure)
+  // 3. Instruction data (discriminator only)
   // ─────────────────────────────────────────────
-  const instruction = program.methods
-    .initEntityTreasury([...entityId])
-    .accounts({
-      entity: entityPda,
-      treasury: treasuryPda,
-      payer,
-      systemProgram: anchor.web3.SystemProgram.programId,
-    })
-    .instruction();
+  const data = anchorDiscriminator("init_entity_treasury");
 
-  return {
-    instruction,
-    entityPda,
-    treasuryPda,
-  };
-}
+  // ─────────────────────────────────────────────
+  // 4. Accounts required by the program
+  // ─────────────────────────────────────────────
+  const keys = [
+    { pubkey: entityPda, isSigner: false, isWritable: true },
+    { pubkey: treasuryPda, isSigner: false, isWritable: true },
+    { pubkey: payer, isSigner: true, isWritable: true },
+    { pubkey: SystemProgram.programId, isSigner: false, isWritable: false },
+  ];
+
+  // ─────────────────────────────────────────────
+  // 5. Build the instruction
+  // ─────────────────────────────────────────────
+  const instruction = new TransactionInstruction({
+    programId,
+    keys,
+    data,
+  });
+
+  return { instruction, entityPda, treasuryPda }
