@@ -1,0 +1,1292 @@
+{
+  "address": "6KoJtxEmoVWPnqivBnngzSjjQyxD7G5eCXRgUuNDtXko",
+  "metadata": {
+    "name": "ipcore",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "add_derivative_link",
+      "discriminator": [
+        151,
+        62,
+        2,
+        15,
+        129,
+        24,
+        57,
+        135
+      ],
+      "accounts": [
+        {
+          "name": "registry",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  105,
+                  112,
+                  95,
+                  114,
+                  101,
+                  103,
+                  105,
+                  115,
+                  116,
+                  114,
+                  121
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "derivative_link",
+          "docs": [
+            "The derivative link account"
+          ]
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "add_ip_asset",
+      "discriminator": [
+        36,
+        207,
+        34,
+        83,
+        222,
+        161,
+        86,
+        202
+      ],
+      "accounts": [
+        {
+          "name": "registry",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  105,
+                  112,
+                  95,
+                  114,
+                  101,
+                  103,
+                  105,
+                  115,
+                  116,
+                  114,
+                  121
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "ip_asset",
+          "docs": [
+            "The IPAsset being added"
+          ]
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "create_derivative_link",
+      "discriminator": [
+        145,
+        37,
+        194,
+        127,
+        5,
+        135,
+        125,
+        122
+      ],
+      "accounts": [
+        {
+          "name": "derivative_link",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  101,
+                  114,
+                  105,
+                  118,
+                  97,
+                  116,
+                  105,
+                  118,
+                  101,
+                  95,
+                  108,
+                  105,
+                  110,
+                  107
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "parent_seed"
+              },
+              {
+                "kind": "arg",
+                "path": "child_ip_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "parent_seed",
+          "type": "bytes"
+        },
+        {
+          "name": "parent",
+          "type": {
+            "defined": {
+              "name": "ParentRef"
+            }
+          }
+        },
+        {
+          "name": "child_ip_id",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "create_provenance_claim",
+      "discriminator": [
+        250,
+        57,
+        196,
+        150,
+        208,
+        26,
+        180,
+        11
+      ],
+      "accounts": [
+        {
+          "name": "provenance_claim",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  118,
+                  101,
+                  110,
+                  97,
+                  110,
+                  99,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "ip_asset"
+              },
+              {
+                "kind": "arg",
+                "path": "evidence_hash"
+              }
+            ]
+          }
+        },
+        {
+          "name": "ip_asset",
+          "docs": [
+            "IP being referenced"
+          ]
+        },
+        {
+          "name": "entity",
+          "docs": [
+            "Entity authority check happens at instruction layer"
+          ]
+        },
+        {
+          "name": "authority",
+          "docs": [
+            "Must be a controller of the entity"
+          ],
+          "signer": true
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "evidence_hash",
+          "type": "bytes"
+        },
+        {
+          "name": "uri",
+          "type": {
+            "option": "string"
+          }
+        }
+      ]
+    },
+    {
+      "name": "init_ip_registry",
+      "discriminator": [
+        203,
+        77,
+        104,
+        116,
+        165,
+        32,
+        228,
+        42
+      ],
+      "accounts": [
+        {
+          "name": "registry",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  105,
+                  112,
+                  95,
+                  114,
+                  101,
+                  103,
+                  105,
+                  115,
+                  116,
+                  114,
+                  121
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "init_module_config",
+      "discriminator": [
+        171,
+        237,
+        151,
+        118,
+        73,
+        160,
+        171,
+        74
+      ],
+      "accounts": [
+        {
+          "name": "module_config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  109,
+                  111,
+                  100,
+                  117,
+                  108,
+                  101,
+                  95,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "ip_asset"
+              }
+            ]
+          }
+        },
+        {
+          "name": "ip_asset",
+          "docs": [
+            "The IPAsset this config belongs to"
+          ]
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "initialize_registry_config",
+      "discriminator": [
+        184,
+        229,
+        7,
+        64,
+        182,
+        13,
+        240,
+        46
+      ],
+      "accounts": [
+        {
+          "name": "registry_config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  101,
+                  103,
+                  105,
+                  115,
+                  116,
+                  114,
+                  121,
+                  95,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "ip_asset"
+              }
+            ]
+          }
+        },
+        {
+          "name": "authority",
+          "docs": [
+            "Protocol authority (governance)"
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "ip_asset",
+          "docs": [
+            "The IPAsset this config belongs to"
+          ]
+        },
+        {
+          "name": "treasury",
+          "docs": [
+            "Fee recipient (must be system-owned)"
+          ]
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "ip_registration_fee",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "register_derivative_ip",
+      "discriminator": [
+        229,
+        44,
+        126,
+        200,
+        70,
+        198,
+        241,
+        242
+      ],
+      "accounts": [
+        {
+          "name": "entity"
+        },
+        {
+          "name": "ip_asset",
+          "docs": [
+            "New IPAsset PDA"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  105,
+                  112,
+                  95,
+                  97,
+                  115,
+                  115,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "entity"
+              },
+              {
+                "kind": "arg",
+                "path": "ip_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "ip_id",
+          "type": "u64"
+        },
+        {
+          "name": "ip_name",
+          "type": "string"
+        },
+        {
+          "name": "ip_category",
+          "type": "u8"
+        },
+        {
+          "name": "parent_refs",
+          "type": {
+            "vec": "u64"
+          }
+        }
+      ]
+    },
+    {
+      "name": "register_root_ip",
+      "discriminator": [
+        24,
+        62,
+        19,
+        163,
+        31,
+        206,
+        17,
+        130
+      ],
+      "accounts": [
+        {
+          "name": "entity"
+        },
+        {
+          "name": "controller",
+          "signer": true
+        },
+        {
+          "name": "ip_asset",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  105,
+                  112,
+                  95,
+                  97,
+                  115,
+                  115,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "entity"
+              },
+              {
+                "kind": "arg",
+                "path": "ip_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "ip_id",
+          "type": "u64"
+        },
+        {
+          "name": "category",
+          "type": "u8"
+        },
+        {
+          "name": "metadata_uri",
+          "type": {
+            "option": "string"
+          }
+        },
+        {
+          "name": "provenance",
+          "type": {
+            "option": "string"
+          }
+        }
+      ]
+    },
+    {
+      "name": "resolve_parent",
+      "discriminator": [
+        132,
+        92,
+        250,
+        173,
+        142,
+        65,
+        150,
+        225
+      ],
+      "accounts": [
+        {
+          "name": "parent_ip"
+        },
+        {
+          "name": "derivative_ip"
+        },
+        {
+          "name": "parent_entity_authority",
+          "docs": [
+            "Entity controller of the parent"
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "derivative_link",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  101,
+                  114,
+                  105,
+                  118,
+                  97,
+                  116,
+                  105,
+                  118,
+                  101,
+                  95,
+                  108,
+                  105,
+                  110,
+                  107
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "parent_ip_id"
+              },
+              {
+                "kind": "arg",
+                "path": "derivative_ip_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "parent_ip_id",
+          "type": "u64"
+        },
+        {
+          "name": "derivative_ip_id",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "update_registry_config",
+      "discriminator": [
+        205,
+        108,
+        204,
+        178,
+        107,
+        143,
+        150,
+        21
+      ],
+      "accounts": [
+        {
+          "name": "registry_config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  114,
+                  101,
+                  103,
+                  105,
+                  115,
+                  116,
+                  114,
+                  121,
+                  95,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "ip_asset"
+              }
+            ]
+          }
+        },
+        {
+          "name": "ip_asset",
+          "docs": [
+            "The IPAsset this config belongs to"
+          ]
+        },
+        {
+          "name": "authority",
+          "docs": [
+            "Must be the protocol authority"
+          ],
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "new_ip_registration_fee",
+          "type": "u64"
+        },
+        {
+          "name": "new_treasury",
+          "type": "pubkey"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "DerivativeLink",
+      "discriminator": [
+        203,
+        42,
+        152,
+        142,
+        174,
+        209,
+        228,
+        117
+      ]
+    },
+    {
+      "name": "EntityAccount",
+      "discriminator": [
+        46,
+        132,
+        149,
+        104,
+        229,
+        39,
+        46,
+        87
+      ]
+    },
+    {
+      "name": "IPAsset",
+      "discriminator": [
+        157,
+        216,
+        58,
+        229,
+        111,
+        101,
+        192,
+        187
+      ]
+    },
+    {
+      "name": "IPRegistry",
+      "discriminator": [
+        128,
+        96,
+        137,
+        212,
+        42,
+        77,
+        209,
+        85
+      ]
+    },
+    {
+      "name": "ModuleConfig",
+      "discriminator": [
+        203,
+        167,
+        250,
+        68,
+        11,
+        203,
+        244,
+        76
+      ]
+    },
+    {
+      "name": "ProvenanceClaim",
+      "discriminator": [
+        164,
+        136,
+        146,
+        115,
+        227,
+        210,
+        79,
+        180
+      ]
+    },
+    {
+      "name": "RegistryConfig",
+      "discriminator": [
+        23,
+        118,
+        10,
+        246,
+        173,
+        231,
+        243,
+        156
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "ParentApprovalRequired",
+      "msg": "Parent entity approval required"
+    },
+    {
+      "code": 6001,
+      "name": "InvalidTreasuryAccount",
+      "msg": "Invalid treasury account"
+    },
+    {
+      "code": 6002,
+      "name": "Unauthorized",
+      "msg": "Caller is not registry authority"
+    }
+  ],
+  "types": [
+    {
+      "name": "DerivativeLink",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "parent",
+            "type": {
+              "defined": {
+                "name": "ParentRef"
+              }
+            }
+          },
+          {
+            "name": "child_ip_id",
+            "type": "u64"
+          },
+          {
+            "name": "created_at",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "EntityAccount",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "entity_id",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "status",
+            "type": "u8"
+          },
+          {
+            "name": "controller_threshold",
+            "type": "u8"
+          },
+          {
+            "name": "controllers",
+            "type": {
+              "vec": "pubkey"
+            }
+          },
+          {
+            "name": "created_at",
+            "type": "i64"
+          },
+          {
+            "name": "creator",
+            "type": "pubkey"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "updated_at",
+            "type": "i64"
+          },
+          {
+            "name": "metadata_schema",
+            "type": {
+              "option": "pubkey"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "IPAsset",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "entity",
+            "type": "pubkey"
+          },
+          {
+            "name": "parent",
+            "type": {
+              "option": "pubkey"
+            }
+          },
+          {
+            "name": "category",
+            "type": "u8"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "metadata_uri",
+            "type": {
+              "option": "string"
+            }
+          },
+          {
+            "name": "provenance",
+            "type": {
+              "option": "string"
+            }
+          },
+          {
+            "name": "state",
+            "docs": [
+              "Root / Anchored / Unanchored"
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "parent_claims",
+            "docs": [
+              "Parent claims (unanchored allowed)"
+            ],
+            "type": {
+              "vec": {
+                "defined": {
+                  "name": "ParentClaim"
+                }
+              }
+            }
+          },
+          {
+            "name": "is_derivative",
+            "type": "bool"
+          },
+          {
+            "name": "expected_parent_count",
+            "type": "u8"
+          },
+          {
+            "name": "resolved_parent_count",
+            "type": "u8"
+          },
+          {
+            "name": "derivative_state",
+            "type": "u8"
+          },
+          {
+            "name": "created_at",
+            "type": "i64"
+          },
+          {
+            "name": "parent_ip",
+            "type": {
+              "option": "pubkey"
+            }
+          },
+          {
+            "name": "ip_id",
+            "type": "u64"
+          },
+          {
+            "name": "parent_refs",
+            "type": {
+              "vec": "u64"
+            }
+          },
+          {
+            "name": "metadata_schema",
+            "type": {
+              "option": "pubkey"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "IPRegistry",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "total_ips",
+            "docs": [
+              "Total number of IPAssets registered"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "ip_assets",
+            "docs": [
+              "Flattened list of IPAsset keys (Phase 1: keep small, for demo)"
+            ],
+            "type": {
+              "vec": "pubkey"
+            }
+          },
+          {
+            "name": "derivative_links",
+            "docs": [
+              "Flattened list of derivative links per IP",
+              "For Phase 1, we just store them sequentially for indexers"
+            ],
+            "type": {
+              "vec": "pubkey"
+            }
+          },
+          {
+            "name": "created_at",
+            "docs": [
+              "Created timestamp"
+            ],
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ModuleConfig",
+      "docs": [
+        "Phase 1 ModuleConfig PDA"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "ip_asset",
+            "docs": [
+              "IPAsset this config belongs to"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "allowed_modules",
+            "docs": [
+              "Allowed modules (forward-compatible, Phase 1: just storage)"
+            ],
+            "type": {
+              "vec": "pubkey"
+            }
+          },
+          {
+            "name": "created_at",
+            "docs": [
+              "Created timestamp"
+            ],
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ParentClaim",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "parent_ip_id",
+            "type": "u64"
+          },
+          {
+            "name": "claim_hash",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "ParentRef",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Anchored",
+            "fields": [
+              {
+                "name": "ip_id",
+                "type": "u64"
+              }
+            ]
+          },
+          {
+            "name": "Unanchored",
+            "fields": [
+              {
+                "name": "claim_hash",
+                "type": {
+                  "array": [
+                    "u8",
+                    32
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "ProvenanceClaim",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "ip_asset",
+            "docs": [
+              "IP this evidence refers to"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "entity",
+            "type": "pubkey"
+          },
+          {
+            "name": "creator",
+            "type": "pubkey"
+          },
+          {
+            "name": "evidence_hash",
+            "docs": [
+              "Hash of off-chain evidence (e.g. SHA-256, Arweave TX, etc.)"
+            ],
+            "type": "bytes"
+          },
+          {
+            "name": "uri",
+            "docs": [
+              "URI to the evidence (IPFS, Arweave, HTTPS)"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "created_at",
+            "docs": [
+              "Creation timestamp"
+            ],
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RegistryConfig",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "docs": [
+              "Governance / protocol authority"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "ip_registration_fee",
+            "docs": [
+              "Fixed IP registration fee (lamports)"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "treasury",
+            "docs": [
+              "Treasury that receives protocol fees"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "ip_asset",
+            "type": "pubkey"
+          },
+          {
+            "name": "created_at",
+            "docs": [
+              "Creation timestamp"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "bump",
+            "docs": [
+              "Bump for PDA validation"
+            ],
+            "type": "u8"
+          }
+        ]
+      }
+    }
+  ],
+  "constants": [
+    {
+      "name": "IP_STATE_DERIVATIVE_UNANCHORED",
+      "type": "u8",
+      "value": "1"
+    },
+    {
+      "name": "IP_STATUS_ACTIVE",
+      "type": "u8",
+      "value": "1"
+    },
+    {
+      "name": "IP_STATUS_FROZEN",
+      "type": "u8",
+      "value": "2"
+    }
+  ]
+}

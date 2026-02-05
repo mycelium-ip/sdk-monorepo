@@ -22,6 +22,10 @@
   "author": "mycelium-dev",
   "license": "MIT",
   "packageManager": "pnpm@10.12.1",
-  "peerDependencies": {},
-  "dependencies": {}
+  "dependencies": {
+    "@solana/web3.js": "^1.98.4"
+  },
+  "devDependencies": {
+    "@types/node": "^25.2.0"
+  }
 }

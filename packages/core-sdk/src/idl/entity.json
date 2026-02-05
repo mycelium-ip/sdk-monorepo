@@ -1,0 +1,421 @@
+{
+  "address": "Bhz5ReL66AZ1PdFSaexBpXnjx3EsEKYGTchTnpKh1UsR",
+  "metadata": {
+    "name": "entity",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "assert_entity_authority_cpi",
+      "discriminator": [
+        215,
+        126,
+        10,
+        131,
+        134,
+        59,
+        70,
+        175
+      ],
+      "accounts": [
+        {
+          "name": "entity"
+        },
+        {
+          "name": "authority",
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "signer_pubkeys",
+          "type": {
+            "vec": "pubkey"
+          }
+        }
+      ]
+    },
+    {
+      "name": "freeze_entity",
+      "discriminator": [
+        159,
+        136,
+        30,
+        2,
+        67,
+        167,
+        214,
+        147
+      ],
+      "accounts": [
+        {
+          "name": "entity",
+          "writable": true
+        },
+        {
+          "name": "authority",
+          "signer": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "init_entity_treasury",
+      "discriminator": [
+        66,
+        233,
+        24,
+        140,
+        15,
+        239,
+        108,
+        43
+      ],
+      "accounts": [
+        {
+          "name": "entity",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  110,
+                  116,
+                  105,
+                  116,
+                  121
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "entity_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "treasury",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  110,
+                  116,
+                  105,
+                  116,
+                  121,
+                  95,
+                  116,
+                  114,
+                  101,
+                  97,
+                  115,
+                  117,
+                  114,
+                  121
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "entity"
+              }
+            ]
+          }
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "entity_id",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "register_entity",
+      "discriminator": [
+        166,
+        52,
+        122,
+        244,
+        214,
+        116,
+        215,
+        255
+      ],
+      "accounts": [
+        {
+          "name": "entity",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  110,
+                  116,
+                  105,
+                  116,
+                  121
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "entity_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "entity_id",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        },
+        {
+          "name": "controllers",
+          "type": {
+            "vec": "pubkey"
+          }
+        },
+        {
+          "name": "threshold",
+          "type": "u8"
+        },
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "description",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "update_controllers",
+      "discriminator": [
+        71,
+        2,
+        167,
+        69,
+        145,
+        109,
+        42,
+        139
+      ],
+      "accounts": [
+        {
+          "name": "entity",
+          "writable": true
+        },
+        {
+          "name": "controller",
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "new_controllers",
+          "type": {
+            "vec": "pubkey"
+          }
+        },
+        {
+          "name": "new_threshold",
+          "type": "u8"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "EntityAccount",
+      "discriminator": [
+        46,
+        132,
+        149,
+        104,
+        229,
+        39,
+        46,
+        87
+      ]
+    },
+    {
+      "name": "EntityTreasury",
+      "discriminator": [
+        158,
+        97,
+        79,
+        97,
+        49,
+        235,
+        122,
+        123
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "UnauthorizedController",
+      "msg": "Signer is not a controller of this entity"
+    },
+    {
+      "code": 6001,
+      "name": "InvalidControllerThreshold",
+      "msg": "Invalid controller threshold"
+    },
+    {
+      "code": 6002,
+      "name": "EmptyControllerSet",
+      "msg": "Controller list cannot be empty"
+    },
+    {
+      "code": 6003,
+      "name": "DuplicateControllers",
+      "msg": "Duplicate controllers are not allowed"
+    },
+    {
+      "code": 6004,
+      "name": "EntityFrozen",
+      "msg": "Entity is frozen"
+    }
+  ],
+  "types": [
+    {
+      "name": "EntityAccount",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "entity_id",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "status",
+            "type": "u8"
+          },
+          {
+            "name": "controller_threshold",
+            "type": "u8"
+          },
+          {
+            "name": "controllers",
+            "type": {
+              "vec": "pubkey"
+            }
+          },
+          {
+            "name": "created_at",
+            "type": "i64"
+          },
+          {
+            "name": "creator",
+            "type": "pubkey"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "updated_at",
+            "type": "i64"
+          },
+          {
+            "name": "metadata_schema",
+            "type": {
+              "option": "pubkey"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "EntityTreasury",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "entity",
+            "docs": [
+              "Entity this treasury belongs to"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "version",
+            "docs": [
+              "Versioning for future upgrades"
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "created_at",
+            "docs": [
+              "Created timestamp"
+            ],
+            "type": "i64"
+          }
+        ]
+      }
+    }
+  ],
+  "constants": [
+    {
+      "name": "ENTITY_STATUS_ACTIVE",
+      "type": "u8",
+      "value": "1"
+    },
+    {
+      "name": "ENTITY_STATUS_FROZEN",
+      "type": "u8",
+      "value": "2"
+    }
+  ]
+}
