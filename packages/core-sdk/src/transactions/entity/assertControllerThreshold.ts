@@ -7,7 +7,6 @@ export type AssertControllerThresholdTransactionParams = {
   program: Program<Entity>;
   entityId: Uint8Array;
   approvingControllers: anchor.web3.PublicKey[];
-  payer: anchor.web3.PublicKey;
 };
 
 /**
@@ -18,7 +17,6 @@ export async function assertControllerThresholdTransaction({
   program,
   entityId,
   approvingControllers,
-  payer,
 }: AssertControllerThresholdTransactionParams): Promise<{
   transaction: anchor.web3.Transaction;
   entityPda: anchor.web3.PublicKey;
