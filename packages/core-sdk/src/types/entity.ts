@@ -14,6 +14,21 @@ export type Entity = {
   };
   instructions: [
     {
+      name: "activateEntity";
+      discriminator: [179, 185, 27, 83, 195, 230, 123, 9];
+      accounts: [
+        {
+          name: "entity";
+          writable: true;
+        },
+        {
+          name: "authority";
+          signer: true;
+        },
+      ];
+      args: [];
+    },
+    {
       name: "assertControllerThreshold";
       discriminator: [195, 68, 103, 16, 222, 131, 246, 134];
       accounts: [
@@ -22,27 +37,6 @@ export type Entity = {
         },
       ];
       args: [];
-    },
-    {
-      name: "assertEntityAuthorityCpi";
-      discriminator: [215, 126, 10, 131, 134, 59, 70, 175];
-      accounts: [
-        {
-          name: "entity";
-        },
-        {
-          name: "authority";
-          signer: true;
-        },
-      ];
-      args: [
-        {
-          name: "signerPubkeys";
-          type: {
-            vec: "pubkey";
-          };
-        },
-      ];
     },
     {
       name: "freezeEntity";
@@ -240,6 +234,11 @@ export type Entity = {
     },
     {
       code: 6005;
+      name: "entityActive";
+      msg: "Entity is active";
+    },
+    {
+      code: 6006;
       name: "notEnoughControllerSigners";
       msg: "Not enough controller signers";
     },

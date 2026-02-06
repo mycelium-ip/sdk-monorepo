@@ -14,6 +14,24 @@ export type Ipcore = {
   };
   instructions: [
     {
+      name: "activateIp";
+      discriminator: [92, 29, 187, 41, 141, 42, 18, 82];
+      accounts: [
+        {
+          name: "entity";
+        },
+        {
+          name: "ipAsset";
+          writable: true;
+        },
+        {
+          name: "entityProgram";
+          address: "Bhz5ReL66AZ1PdFSaexBpXnjx3EsEKYGTchTnpKh1UsR";
+        },
+      ];
+      args: [];
+    },
+    {
       name: "addDerivativeLink";
       discriminator: [151, 62, 2, 15, 129, 24, 57, 135];
       accounts: [
@@ -639,6 +657,11 @@ export type Ipcore = {
       code: 6004;
       name: "ipFrozen";
       msg: "IP Already Frozen";
+    },
+    {
+      code: 6005;
+      name: "ipActive";
+      msg: "IP is active";
     },
   ];
   types: [

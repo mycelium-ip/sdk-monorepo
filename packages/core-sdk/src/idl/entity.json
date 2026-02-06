@@ -8,6 +8,21 @@
   },
   "instructions": [
     {
+      "name": "activate_entity",
+      "discriminator": [179, 185, 27, 83, 195, 230, 123, 9],
+      "accounts": [
+        {
+          "name": "entity",
+          "writable": true
+        },
+        {
+          "name": "authority",
+          "signer": true
+        }
+      ],
+      "args": []
+    },
+    {
       "name": "assert_controller_threshold",
       "discriminator": [195, 68, 103, 16, 222, 131, 246, 134],
       "accounts": [
@@ -16,27 +31,6 @@
         }
       ],
       "args": []
-    },
-    {
-      "name": "assert_entity_authority_cpi",
-      "discriminator": [215, 126, 10, 131, 134, 59, 70, 175],
-      "accounts": [
-        {
-          "name": "entity"
-        },
-        {
-          "name": "authority",
-          "signer": true
-        }
-      ],
-      "args": [
-        {
-          "name": "signer_pubkeys",
-          "type": {
-            "vec": "pubkey"
-          }
-        }
-      ]
     },
     {
       "name": "freeze_entity",
@@ -221,6 +215,11 @@
     },
     {
       "code": 6005,
+      "name": "EntityActive",
+      "msg": "Entity is active"
+    },
+    {
+      "code": 6006,
       "name": "NotEnoughControllerSigners",
       "msg": "Not enough controller signers"
     }

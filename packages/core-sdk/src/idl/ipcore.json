@@ -8,6 +8,24 @@
   },
   "instructions": [
     {
+      "name": "activate_ip",
+      "discriminator": [92, 29, 187, 41, 141, 42, 18, 82],
+      "accounts": [
+        {
+          "name": "entity"
+        },
+        {
+          "name": "ip_asset",
+          "writable": true
+        },
+        {
+          "name": "entity_program",
+          "address": "Bhz5ReL66AZ1PdFSaexBpXnjx3EsEKYGTchTnpKh1UsR"
+        }
+      ],
+      "args": []
+    },
+    {
       "name": "add_derivative_link",
       "discriminator": [151, 62, 2, 15, 129, 24, 57, 135],
       "accounts": [
@@ -547,6 +565,11 @@
       "code": 6004,
       "name": "IPFrozen",
       "msg": "IP Already Frozen"
+    },
+    {
+      "code": 6005,
+      "name": "IPActive",
+      "msg": "IP is active"
     }
   ],
   "types": [
