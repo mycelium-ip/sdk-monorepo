@@ -1,11 +1,14 @@
 {
   "name": "@mycelium/core-sdk",
-  "version": "0.1.0-beta",
+  "version": "0.1.0-alpha.1",
   "private": false,
   "type": "module",
-  "description": "",
+  "description": "Typescript Core SDK for Mycelium IP protocol in Solana",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -23,6 +26,7 @@
   "license": "MIT",
   "packageManager": "pnpm@10.12.1",
   "dependencies": {
+    "@coral-xyz/anchor": "^0.32.1",
     "@solana/web3.js": "^1.98.4"
   },
   "devDependencies": {
