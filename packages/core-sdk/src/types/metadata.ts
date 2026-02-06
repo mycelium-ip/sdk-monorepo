@@ -70,6 +70,10 @@ export type Metadata = {
           name: "systemProgram";
           address: "11111111111111111111111111111111";
         },
+        {
+          name: "entityProgram";
+          address: "Bhz5ReL66AZ1PdFSaexBpXnjx3EsEKYGTchTnpKh1UsR";
+        },
       ];
       args: [
         {
@@ -115,6 +119,10 @@ export type Metadata = {
           docs: ["IP being annotated"];
         },
         {
+          name: "entity";
+          docs: ["IP being annotated"];
+        },
+        {
           name: "schema";
           docs: ["Schema must exist (enforced reference)"];
         },
@@ -122,6 +130,10 @@ export type Metadata = {
           name: "payer";
           writable: true;
           signer: true;
+        },
+        {
+          name: "entityProgram";
+          address: "Bhz5ReL66AZ1PdFSaexBpXnjx3EsEKYGTchTnpKh1UsR";
         },
         {
           name: "systemProgram";
@@ -158,6 +170,10 @@ export type Metadata = {
           name: "authority";
           signer: true;
         },
+        {
+          name: "entityProgram";
+          address: "Bhz5ReL66AZ1PdFSaexBpXnjx3EsEKYGTchTnpKh1UsR";
+        },
       ];
       args: [];
     },
@@ -173,8 +189,15 @@ export type Metadata = {
           name: "entity";
         },
         {
+          name: "ipAsset";
+        },
+        {
           name: "authority";
           signer: true;
+        },
+        {
+          name: "entityProgram";
+          address: "Bhz5ReL66AZ1PdFSaexBpXnjx3EsEKYGTchTnpKh1UsR";
         },
       ];
       args: [];
@@ -292,6 +315,10 @@ export type Metadata = {
           name: "systemProgram";
           address: "11111111111111111111111111111111";
         },
+        {
+          name: "entityProgram";
+          address: "Bhz5ReL66AZ1PdFSaexBpXnjx3EsEKYGTchTnpKh1UsR";
+        },
       ];
       args: [
         {
@@ -359,6 +386,10 @@ export type Metadata = {
         {
           name: "systemProgram";
           address: "11111111111111111111111111111111";
+        },
+        {
+          name: "entityProgram";
+          address: "Bhz5ReL66AZ1PdFSaexBpXnjx3EsEKYGTchTnpKh1UsR";
         },
       ];
       args: [
@@ -527,12 +558,6 @@ export type Metadata = {
           {
             name: "entity";
             type: "pubkey";
-          },
-          {
-            name: "parent";
-            type: {
-              option: "pubkey";
-            };
           },
           {
             name: "category";

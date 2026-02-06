@@ -108,6 +108,14 @@ export type Ipcore = {
           name: "systemProgram";
           address: "11111111111111111111111111111111";
         },
+        {
+          name: "parentIpAsset";
+          docs: ["The IPAsset being added"];
+        },
+        {
+          name: "childIpAsset";
+          docs: ["The IPAsset being added"];
+        },
       ];
       args: [
         {
@@ -276,8 +284,8 @@ export type Ipcore = {
       args: [];
     },
     {
-      name: "initializeRegistryConfig";
-      discriminator: [184, 229, 7, 64, 182, 13, 240, 46];
+      name: "initRegistryConfig";
+      discriminator: [157, 90, 204, 184, 92, 221, 52, 86];
       accounts: [
         {
           name: "registryConfig";
@@ -326,8 +334,8 @@ export type Ipcore = {
       ];
     },
     {
-      name: "initializeRegistryConfigTreasury";
-      discriminator: [30, 16, 236, 74, 187, 119, 43, 154];
+      name: "initRegistryConfigTreasury";
+      discriminator: [235, 44, 74, 68, 47, 199, 52, 88];
       accounts: [
         {
           name: "registryConfigTreasury";
@@ -383,71 +391,8 @@ export type Ipcore = {
       args: [];
     },
     {
-      name: "registerDerivativeIp";
-      discriminator: [229, 44, 126, 200, 70, 198, 241, 242];
-      accounts: [
-        {
-          name: "entity";
-        },
-        {
-          name: "ipAsset";
-          docs: ["New IPAsset PDA"];
-          writable: true;
-          pda: {
-            seeds: [
-              {
-                kind: "const";
-                value: [105, 112, 95, 97, 115, 115, 101, 116];
-              },
-              {
-                kind: "account";
-                path: "entity";
-              },
-              {
-                kind: "arg";
-                path: "ipId";
-              },
-            ];
-          };
-        },
-        {
-          name: "entityProgram";
-          address: "Bhz5ReL66AZ1PdFSaexBpXnjx3EsEKYGTchTnpKh1UsR";
-        },
-        {
-          name: "payer";
-          writable: true;
-          signer: true;
-        },
-        {
-          name: "systemProgram";
-          address: "11111111111111111111111111111111";
-        },
-      ];
-      args: [
-        {
-          name: "ipId";
-          type: "u64";
-        },
-        {
-          name: "ipName";
-          type: "string";
-        },
-        {
-          name: "ipCategory";
-          type: "u8";
-        },
-        {
-          name: "parentRefs";
-          type: {
-            vec: "u64";
-          };
-        },
-      ];
-    },
-    {
-      name: "registerRootIp";
-      discriminator: [24, 62, 19, 163, 31, 206, 17, 130];
+      name: "registerIpAsset";
+      discriminator: [155, 232, 254, 51, 137, 19, 196, 113];
       accounts: [
         {
           name: "entity";
@@ -692,7 +637,7 @@ export type Ipcore = {
     },
     {
       code: 6004;
-      name: "ipFreezeError";
+      name: "ipFrozen";
       msg: "IP Already Frozen";
     },
   ];
@@ -775,12 +720,6 @@ export type Ipcore = {
           {
             name: "entity";
             type: "pubkey";
-          },
-          {
-            name: "parent";
-            type: {
-              option: "pubkey";
-            };
           },
           {
             name: "category";
