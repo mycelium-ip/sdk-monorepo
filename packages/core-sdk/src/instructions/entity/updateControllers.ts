@@ -1,6 +1,7 @@
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import { Entity } from "../../types/entity";
+import { deriveEntityPda } from "../../pda";
 
 export type BuildUpdateControllersInstructionParams = {
   program: Program<Entity>;
@@ -27,10 +28,7 @@ export function buildUpdateControllersInstruction({
   // ─────────────────────────────────────────────
   // 1. Derive Entity PDA
   // ─────────────────────────────────────────────
-  const [entityPda] = anchor.web3.PublicKey.findProgramAddressSync(
-    [Buffer.from("entity"), Buffer.from(entityId)],
-    program.programId,
-  );
+  const [entityPda] = deriveEntityPda(entityId);
 
   // ─────────────────────────────────────────────
   // 2. Remaining accounts (multisig signers)

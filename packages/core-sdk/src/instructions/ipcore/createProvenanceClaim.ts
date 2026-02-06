@@ -1,6 +1,7 @@
 import { Program } from "@coral-xyz/anchor";
 import { PublicKey, TransactionInstruction } from "@solana/web3.js";
 import { Ipcore } from "../../types/ipcore";
+import { deriveIPAssetPda, deriveProvenanceClaimPda } from "../../pda";
 
 export type CreateProvenanceClaimIx = {
   instruction: TransactionInstruction;
@@ -10,7 +11,7 @@ export type CreateProvenanceClaimIx = {
 export async function buildCreateProvenanceClaimInstruction(
   program: Program<Ipcore>,
   params: {
-    ipAsset: PublicKey;
+    ipAssetPda: PublicKey;
     entity: PublicKey;
     payer: PublicKey;
 
@@ -20,15 +21,9 @@ export async function buildCreateProvenanceClaimInstruction(
     controllers: PublicKey[];
   },
 ): Promise<CreateProvenanceClaimIx> {
-  const { ipAsset, entity, payer, evidenceHash, uri, controllers } = params;
+  const { ipAssetPda, entity, payer, evidenceHash, uri, controllers } = params;
 
-  // ─────────────────────────────────────────────
-  // 1. Derive ProvenanceClaim PDA
-  // ─────────────────────────────────────────────
-  const [provenancePda] = PublicKey.findProgramAddressSync(
-    [Buffer.from("provenance"), ipAsset.toBuffer(), evidenceHash],
-    program.programId,
-  );
+  const [provenancePda] = deriveProvenanceClaimPda(ipAssetPda, evidenceHash);
 
   // ─────────────────────────────────────────────
   // 2. Build instruction
@@ -36,7 +31,7 @@ export async function buildCreateProvenanceClaimInstruction(
   const instruction = await program.methods
     .createProvenanceClaim(evidenceHash, uri)
     .accounts({
-      ipAsset,
+      ipAsset: ipAssetPda,
       entity,
       payer,
     })

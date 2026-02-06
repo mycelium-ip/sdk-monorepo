@@ -1,6 +1,7 @@
 import { Program, BN } from "@coral-xyz/anchor";
 import { PublicKey, TransactionInstruction } from "@solana/web3.js";
 import { Ipcore } from "../../types/ipcore";
+import { deriveIPAssetPda } from "../../pda";
 
 export type RegisterRootIpIx = {
   instruction: TransactionInstruction;
@@ -41,14 +42,7 @@ export async function buildRegisterRootIpInstruction(
   // ─────────────────────────────────────────────
   // 1. Derive IPAsset PDA
   // ─────────────────────────────────────────────
-  const [ipAssetPda] = PublicKey.findProgramAddressSync(
-    [
-      Buffer.from("ip_asset"),
-      entity.toBuffer(),
-      ipId.toArrayLike(Buffer, "le", 8),
-    ],
-    program.programId,
-  );
+  const [ipAssetPda] = deriveIPAssetPda(entity, ipId);
 
   // ─────────────────────────────────────────────
   // 2. Build instruction

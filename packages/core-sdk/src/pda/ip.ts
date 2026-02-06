@@ -36,3 +36,13 @@ export function deriveDerivativeLinkPda(
     IPCORE_PROGRAM_ID,
   );
 }
+
+export function deriveProvenanceClaimPda(
+  ipAssetPda: PublicKey,
+  evidenceHash: Buffer,
+) {
+  return PublicKey.findProgramAddressSync(
+    [Buffer.from("provenance"), ipAssetPda.toBuffer(), evidenceHash],
+    IPCORE_PROGRAM_ID,
+  );
+}

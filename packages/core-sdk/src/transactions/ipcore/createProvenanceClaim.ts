@@ -5,7 +5,7 @@ import { buildCreateProvenanceClaimInstruction } from "../../instructions";
 
 export type CreateProvenanceClaimTransactionParams = {
   program: Program<Ipcore>;
-  ipAsset: PublicKey;
+  ipAssetPda: PublicKey;
   entity: PublicKey;
   payer: PublicKey;
 
@@ -21,7 +21,7 @@ export type CreateProvenanceClaimTransactionParams = {
  */
 export async function createProvenanceClaimTransaction({
   program,
-  ipAsset,
+  ipAssetPda,
   entity,
   payer,
   evidenceHash,
@@ -34,7 +34,7 @@ export async function createProvenanceClaimTransaction({
   // Build the instruction
   const { instruction, provenancePda } =
     await buildCreateProvenanceClaimInstruction(program, {
-      ipAsset,
+      ipAssetPda,
       entity,
       payer,
       evidenceHash,

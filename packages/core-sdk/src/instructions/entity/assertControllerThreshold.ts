@@ -1,6 +1,7 @@
 import * as anchor from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import { Entity } from "../../types/entity";
+import { deriveEntityPda } from "../../pda";
 
 export type BuildAssertControllerThresholdInstructionParams = {
   program: Program<Entity>;
@@ -23,10 +24,7 @@ export function buildAssertControllerThresholdInstruction({
   // ─────────────────────────────────────────────
   // 1. Derive Entity PDA
   // ─────────────────────────────────────────────
-  const [entityPda] = anchor.web3.PublicKey.findProgramAddressSync(
-    [Buffer.from("entity"), Buffer.from(entityId)],
-    program.programId,
-  );
+  const [entityPda] = deriveEntityPda(entityId);
 
   // ─────────────────────────────────────────────
   // 2. Remaining accounts (controller signers)

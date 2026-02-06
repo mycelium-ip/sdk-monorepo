@@ -1,6 +1,7 @@
 import { Program } from "@coral-xyz/anchor";
 import { PublicKey, TransactionInstruction } from "@solana/web3.js";
 import { Ipcore } from "../../types/ipcore";
+import { deriveIPRegistryPda } from "../../pda";
 
 export type InitIpRegistryIx = {
   instruction: TransactionInstruction;
@@ -14,10 +15,7 @@ export async function buildInitIpRegistryInstruction(
   // ─────────────────────────────────────────────
   // 1. Derive Registry PDA
   // ─────────────────────────────────────────────
-  const [registryPda] = PublicKey.findProgramAddressSync(
-    [Buffer.from("ip_registry")],
-    program.programId,
-  );
+  const [registryPda] = deriveIPRegistryPda();
 
   // ─────────────────────────────────────────────
   // 2. Build instruction (NO send, NO sign)

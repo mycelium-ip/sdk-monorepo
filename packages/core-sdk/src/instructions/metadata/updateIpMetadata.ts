@@ -10,7 +10,6 @@ export async function buildUpdateIpMetadataIx(params: {
   ipAssetPda: anchor.web3.PublicKey;
   entityPda: anchor.web3.PublicKey;
   previousMetadataPda: anchor.web3.PublicKey;
-  newMetadataPda: anchor.web3.PublicKey;
   schemaPda: anchor.web3.PublicKey;
   authority: anchor.web3.PublicKey;
   payer: anchor.web3.PublicKey;
@@ -23,7 +22,6 @@ export async function buildUpdateIpMetadataIx(params: {
     ipAssetPda,
     entityPda,
     previousMetadataPda,
-    newMetadataPda,
     schemaPda,
     authority,
     payer,
