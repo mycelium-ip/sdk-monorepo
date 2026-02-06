@@ -8,14 +8,12 @@ export async function buildUpdateRegistryConfigIx(params: {
   authority: anchor.web3.PublicKey;
   newFeeLamports: anchor.BN;
 }): Promise<anchor.web3.TransactionInstruction> {
-  const { program, registryConfig, authority, newFeeLamports } = params;
+  const { program, authority, newFeeLamports } = params;
 
   return await program.methods
     .updateRegistryConfig(newFeeLamports)
     .accounts({
-      registryConfig,
       authority,
-      systemProgram: anchor.web3.SystemProgram.programId,
     })
     .instruction();
 }

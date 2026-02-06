@@ -9,16 +9,14 @@ export type AddDerivativeLinkIx = {
 export async function buildAddDerivativeLinkInstruction(
   program: Program<Ipcore>,
   params: {
-    registry: PublicKey;
     derivativeLink: PublicKey;
   },
 ): Promise<AddDerivativeLinkIx> {
-  const { registry, derivativeLink } = params;
+  const { derivativeLink } = params;
 
   const instruction = await program.methods
     .addDerivativeLink()
     .accounts({
-      registry,
       derivativeLink,
     })
     .instruction();

@@ -4,19 +4,16 @@ import { Ipcore } from "../../types/ipcore";
 
 export async function buildInitializeRegistryConfigTreasuryIx(params: {
   program: Program<Ipcore>;
-  registryConfigTreasury: anchor.web3.PublicKey;
   registryConfig: anchor.web3.PublicKey;
   authority: anchor.web3.PublicKey;
 }): Promise<anchor.web3.TransactionInstruction> {
-  const { program, registryConfigTreasury, registryConfig, authority } = params;
+  const { program, registryConfig, authority } = params;
 
   return await program.methods
-    .initializeRegistryConfigTreasury()
+    .initRegistryConfigTreasury()
     .accounts({
-      registryConfigTreasury,
       registryConfig,
       authority,
-      systemProgram: anchor.web3.SystemProgram.programId,
     })
     .instruction();
 }

@@ -1,10 +1,7 @@
 import { Program, BN } from "@coral-xyz/anchor";
-import {
-  PublicKey,
-  SystemProgram,
-  TransactionInstruction,
-} from "@solana/web3.js";
+import { PublicKey, TransactionInstruction } from "@solana/web3.js";
 import { Ipcore } from "../../types/ipcore";
+import * as anchor from "@coral-xyz/anchor";
 
 export type CreateDerivativeLinkIx = {
   instruction: TransactionInstruction;
@@ -17,9 +14,28 @@ export async function buildCreateDerivativeLinkInstruction(
     parentIpId: BN;
     childIpId: BN;
     authority: PublicKey;
+    entityPda: PublicKey;
   },
 ): Promise<CreateDerivativeLinkIx> {
-  const { parentIpId, childIpId, authority } = params;
+  const { parentIpId, childIpId, authority, entityPda } = params;
+
+  const [childIpPda] = anchor.web3.PublicKey.findProgramAddressSync(
+    [
+      Buffer.from("ip_asset"),
+      entityPda.toBuffer(),
+      childIpId.toArrayLike(Buffer, "le", 8),
+    ],
+    program.programId,
+  );
+
+  const [parentIpPda] = anchor.web3.PublicKey.findProgramAddressSync(
+    [
+      Buffer.from("ip_asset"),
+      entityPda.toBuffer(),
+      parentIpId.toArrayLike(Buffer, "le", 8),
+    ],
+    program.programId,
+  );
 
   // ─────────────────────────────────────────────
   // 1. Derive DerivativeLink PDA
@@ -39,9 +55,9 @@ export async function buildCreateDerivativeLinkInstruction(
   const instruction = await program.methods
     .createDerivativeLink(parentIpId, childIpId)
     .accounts({
-      derivativeLink: derivativeLinkPda,
       authority,
-      systemProgram: SystemProgram.programId,
+      parentIpAsset: parentIpPda,
+      childIpAsset: childIpPda,
     })
     .instruction();
 

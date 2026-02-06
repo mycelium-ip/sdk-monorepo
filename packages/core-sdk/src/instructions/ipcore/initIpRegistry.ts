@@ -1,9 +1,5 @@
 import { Program } from "@coral-xyz/anchor";
-import {
-  PublicKey,
-  SystemProgram,
-  TransactionInstruction,
-} from "@solana/web3.js";
+import { PublicKey, TransactionInstruction } from "@solana/web3.js";
 import { Ipcore } from "../../types/ipcore";
 
 export type InitIpRegistryIx = {
@@ -29,9 +25,7 @@ export async function buildInitIpRegistryInstruction(
   const instruction = await program.methods
     .initIpRegistry()
     .accounts({
-      registry: registryPda,
       payer,
-      systemProgram: SystemProgram.programId,
     })
     .instruction();
 

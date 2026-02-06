@@ -38,11 +38,9 @@ export async function buildUpdateIpMetadataIx(params: {
       ipAsset: ipAssetPda,
       entity: entityPda,
       previousMetadata: previousMetadataPda,
-      newMetadata: newMetadataPda,
       schema: schemaPda,
       authority,
       payer,
-      systemProgram: anchor.web3.SystemProgram.programId,
     })
     .instruction();
 }

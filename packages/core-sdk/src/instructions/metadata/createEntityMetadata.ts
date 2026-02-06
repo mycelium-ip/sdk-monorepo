@@ -17,24 +17,12 @@ export async function buildCreateEntityMetadataIx(params: {
   const { program, entityPda, schemaPda, version, uri, contentHash, payer } =
     params;
 
-  // Derive the entity metadata PDA
-  const [entityMetadataPda] = anchor.web3.PublicKey.findProgramAddressSync(
-    [
-      Buffer.from("entity_metadata"),
-      entityPda.toBuffer(),
-      version.toArrayLike(Buffer, "le", 8),
-    ],
-    program.programId,
-  );
-
   return program.methods
     .createEntityMetadata(version, uri, contentHash)
     .accounts({
-      entityMetadata: entityMetadataPda,
       entity: entityPda,
       schema: schemaPda,
       payer,
-      systemProgram: anchor.web3.SystemProgram.programId,
     })
     .instruction();
 }

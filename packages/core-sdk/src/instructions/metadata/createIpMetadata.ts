@@ -9,32 +9,30 @@ export async function buildCreateIpMetadataIx(params: {
   program: Program<Metadata>;
   ipAssetPda: anchor.web3.PublicKey;
   schemaPda: anchor.web3.PublicKey;
+  entityPda: anchor.web3.PublicKey;
   version: BN;
   uri: string;
   contentHash: Buffer;
   payer: anchor.web3.PublicKey;
 }): Promise<anchor.web3.TransactionInstruction> {
-  const { program, ipAssetPda, schemaPda, version, uri, contentHash, payer } =
-    params;
-
-  // Derive the IP metadata PDA
-  const [ipMetadataPda] = anchor.web3.PublicKey.findProgramAddressSync(
-    [
-      Buffer.from("ip_metadata"),
-      ipAssetPda.toBuffer(),
-      version.toArrayLike(Buffer, "le", 8),
-    ],
-    program.programId,
-  );
+  const {
+    program,
+    ipAssetPda,
+    schemaPda,
+    entityPda,
+    version,
+    uri,
+    contentHash,
+    payer,
+  } = params;
 
   return program.methods
     .createIpMetadata(version, uri, contentHash)
     .accounts({
-      ipMetadata: ipMetadataPda,
       ipAsset: ipAssetPda,
       schema: schemaPda,
       payer,
-      systemProgram: anchor.web3.SystemProgram.programId,
+      entity: entityPda,
     })
     .instruction();
 }

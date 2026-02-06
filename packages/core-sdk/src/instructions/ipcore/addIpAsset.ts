@@ -8,15 +8,9 @@ export async function buildAddIpAssetInstruction(params: {
 }): Promise<anchor.web3.TransactionInstruction> {
   const { program, ipAsset } = params;
 
-  const [registryPda] = anchor.web3.PublicKey.findProgramAddressSync(
-    [Buffer.from("ip_registry")],
-    program.programId,
-  );
-
   return await program.methods
     .addIpAsset()
     .accounts({
-      registry: registryPda,
       ipAsset,
     })
     .instruction();

@@ -9,9 +9,10 @@ export function buildLockIpMetadataIx(params: {
   program: Program<Metadata>;
   metadataPda: anchor.web3.PublicKey;
   entityPda: anchor.web3.PublicKey;
+  ipAssetPda: anchor.web3.PublicKey;
   authority: anchor.web3.PublicKey;
 }): Promise<anchor.web3.TransactionInstruction> {
-  const { program, metadataPda, entityPda, authority } = params;
+  const { program, metadataPda, entityPda, ipAssetPda, authority } = params;
 
   return program.methods
     .lockIpMetadata()
@@ -19,6 +20,7 @@ export function buildLockIpMetadataIx(params: {
       metadata: metadataPda,
       entity: entityPda,
       authority,
+      ipAsset: ipAssetPda,
     })
     .instruction();
 }

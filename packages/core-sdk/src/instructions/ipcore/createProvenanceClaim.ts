@@ -1,9 +1,5 @@
 import { Program } from "@coral-xyz/anchor";
-import {
-  PublicKey,
-  SystemProgram,
-  TransactionInstruction,
-} from "@solana/web3.js";
+import { PublicKey, TransactionInstruction } from "@solana/web3.js";
 import { Ipcore } from "../../types/ipcore";
 
 export type CreateProvenanceClaimIx = {
@@ -16,7 +12,6 @@ export async function buildCreateProvenanceClaimInstruction(
   params: {
     ipAsset: PublicKey;
     entity: PublicKey;
-    entityProgram: PublicKey;
     payer: PublicKey;
 
     evidenceHash: Buffer; // <= 32 bytes
@@ -25,15 +20,7 @@ export async function buildCreateProvenanceClaimInstruction(
     controllers: PublicKey[];
   },
 ): Promise<CreateProvenanceClaimIx> {
-  const {
-    ipAsset,
-    entity,
-    entityProgram,
-    payer,
-    evidenceHash,
-    uri,
-    controllers,
-  } = params;
+  const { ipAsset, entity, payer, evidenceHash, uri, controllers } = params;
 
   // ─────────────────────────────────────────────
   // 1. Derive ProvenanceClaim PDA
@@ -49,12 +36,9 @@ export async function buildCreateProvenanceClaimInstruction(
   const instruction = await program.methods
     .createProvenanceClaim(evidenceHash, uri)
     .accounts({
-      provenanceClaim: provenancePda,
       ipAsset,
       entity,
       payer,
-      systemProgram: SystemProgram.programId,
-      entityProgram,
     })
     .remainingAccounts(
       controllers.map((pk) => ({

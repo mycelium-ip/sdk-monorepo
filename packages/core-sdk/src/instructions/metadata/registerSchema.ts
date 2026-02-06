@@ -14,22 +14,10 @@ export async function buildRegisterSchemaIx(params: {
 }): Promise<anchor.web3.TransactionInstruction> {
   const { program, category, schemaUri, version, creator } = params;
 
-  // Derive the schema PDA
-  const [schemaPda] = anchor.web3.PublicKey.findProgramAddressSync(
-    [
-      Buffer.from("schema"),
-      Buffer.from(category),
-      Buffer.from(Uint8Array.of(version, version >> 8)), // u16 LE
-    ],
-    program.programId,
-  );
-
   return program.methods
     .registerSchema(category, schemaUri, version)
     .accounts({
-      schema: schemaPda,
       creator,
-      systemProgram: anchor.web3.SystemProgram.programId,
     })
     .instruction();
 }

@@ -8,7 +8,6 @@ export async function buildResolveParentIx(params: {
   program: Program<Ipcore>;
   parentIp: anchor.web3.PublicKey;
   derivativeIp: anchor.web3.PublicKey;
-  derivativeLink: anchor.web3.PublicKey;
   parentEntityAuthority: anchor.web3.PublicKey;
   signer: anchor.web3.Signer; // the controller signing the tx
 }): Promise<anchor.web3.TransactionInstruction> {
@@ -18,7 +17,6 @@ export async function buildResolveParentIx(params: {
     program,
     parentIp,
     derivativeIp,
-    derivativeLink,
     parentEntityAuthority,
     signer,
   } = params;
@@ -28,9 +26,7 @@ export async function buildResolveParentIx(params: {
     .accounts({
       parentIp,
       derivativeIp,
-      derivativeLink,
       parentEntityAuthority,
-      systemProgram: anchor.web3.SystemProgram.programId,
     })
     .signers([signer])
     .instruction();

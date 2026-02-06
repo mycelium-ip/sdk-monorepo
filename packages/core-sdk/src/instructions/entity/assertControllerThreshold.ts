@@ -10,16 +10,12 @@ export type BuildAssertControllerThresholdInstructionParams = {
 
   // Controllers asserting the threshold
   approvingControllers: anchor.web3.PublicKey[];
-
-  // Fee payer (even though no state change, still required by your instruction)
-  payer: anchor.web3.PublicKey;
 };
 
 export function buildAssertControllerThresholdInstruction({
   program,
   entityId,
   approvingControllers,
-  payer,
 }: BuildAssertControllerThresholdInstructionParams): {
   instruction: Promise<anchor.web3.TransactionInstruction>;
   entityPda: anchor.web3.PublicKey;
@@ -48,8 +44,6 @@ export function buildAssertControllerThresholdInstruction({
     .assertControllerThreshold()
     .accounts({
       entity: entityPda,
-      payer,
-      systemProgram: anchor.web3.SystemProgram.programId,
     })
     .remainingAccounts(remainingAccounts)
     .instruction();

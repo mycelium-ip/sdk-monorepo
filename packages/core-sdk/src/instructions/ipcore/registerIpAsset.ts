@@ -1,9 +1,5 @@
 import { Program, BN } from "@coral-xyz/anchor";
-import {
-  PublicKey,
-  SystemProgram,
-  TransactionInstruction,
-} from "@solana/web3.js";
+import { PublicKey, TransactionInstruction } from "@solana/web3.js";
 import { Ipcore } from "../../types/ipcore";
 
 export type RegisterRootIpIx = {
@@ -60,7 +56,7 @@ export async function buildRegisterRootIpInstruction(
   // 2. Build instruction
   // ─────────────────────────────────────────────
   const instruction = await program.methods
-    .registerRootIp(
+    .registerIpAsset(
       ipId,
       category,
       metadataUri,
@@ -69,10 +65,7 @@ export async function buildRegisterRootIpInstruction(
     )
     .accounts({
       entity,
-      ipAsset: ipAssetPda,
       payer,
-      systemProgram: SystemProgram.programId,
-      entityProgram,
       registryConfig,
       registryConfigTreasury,
     })

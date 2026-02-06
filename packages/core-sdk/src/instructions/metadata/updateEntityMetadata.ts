@@ -21,7 +21,6 @@ export async function buildUpdateEntityMetadataIx(params: {
     program,
     entityPda,
     previousMetadataPda,
-    newMetadataPda,
     schemaPda,
     authority,
     payer,
@@ -35,11 +34,9 @@ export async function buildUpdateEntityMetadataIx(params: {
     .accounts({
       entity: entityPda,
       previousMetadata: previousMetadataPda,
-      newMetadata: newMetadataPda,
       schema: schemaPda,
       authority,
       payer,
-      systemProgram: anchor.web3.SystemProgram.programId,
     })
     .instruction();
 }
