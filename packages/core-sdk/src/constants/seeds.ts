@@ -5,6 +5,7 @@ const SEEDS = {
   IP_ASSET: "ip_asset",
   IP_REGISTRY: "ip_registry",
   DERIVATIVE_LINK: "derivative_link",
+  PROVENANCE: "provenance",
 
   ENTITY_METADATA: "entity_metadata",
   IP_METADATA: "ip_metadata",

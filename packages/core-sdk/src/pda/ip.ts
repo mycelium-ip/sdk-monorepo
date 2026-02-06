@@ -42,7 +42,7 @@ export function deriveProvenanceClaimPda(
   evidenceHash: Buffer,
 ) {
   return PublicKey.findProgramAddressSync(
-    [Buffer.from("provenance"), ipAssetPda.toBuffer(), evidenceHash],
+    [Buffer.from(SEEDS.PROVENANCE), ipAssetPda.toBuffer(), evidenceHash],
     IPCORE_PROGRAM_ID,
   );
 }
