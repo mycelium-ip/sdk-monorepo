@@ -2,3 +2,4 @@
 // Do not export internal modules directly.
 
 export * from "./transactions";
+export * from "./types";
