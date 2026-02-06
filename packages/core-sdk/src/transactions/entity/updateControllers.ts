@@ -1,7 +1,7 @@
+import type { Program } from "@coral-xyz/anchor";
 import * as anchor from "@coral-xyz/anchor";
-import { Program } from "@coral-xyz/anchor";
-import { Entity } from "../../types/entity";
 import { buildUpdateControllersInstruction } from "../../instructions";
+import type { Entity } from "../../types/entity";
 
 export type UpdateControllersTransactionParams = {
   program: Program<Entity>;

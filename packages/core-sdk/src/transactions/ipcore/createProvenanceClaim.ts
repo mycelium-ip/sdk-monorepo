@@ -1,7 +1,7 @@
-import { Program } from "@coral-xyz/anchor";
-import { Transaction, PublicKey } from "@solana/web3.js";
-import { Ipcore } from "../../types/ipcore";
+import type { Program } from "@coral-xyz/anchor";
+import { type PublicKey, Transaction } from "@solana/web3.js";
 import { buildCreateProvenanceClaimInstruction } from "../../instructions";
+import type { Ipcore } from "../../types/ipcore";
 
 export type CreateProvenanceClaimTransactionParams = {
   program: Program<Ipcore>;

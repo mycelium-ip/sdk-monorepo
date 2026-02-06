@@ -1,7 +1,7 @@
-import { Program, BN } from "@coral-xyz/anchor";
-import { PublicKey, TransactionInstruction } from "@solana/web3.js";
-import { Ipcore } from "../../types/ipcore";
+import type { BN, Program } from "@coral-xyz/anchor";
+import type { PublicKey, TransactionInstruction } from "@solana/web3.js";
 import { deriveIPAssetPda } from "../../pda";
+import type { Ipcore } from "../../types/ipcore";
 
 export type RegisterRootIpIx = {
   instruction: TransactionInstruction;

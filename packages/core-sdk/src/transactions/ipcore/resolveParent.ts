@@ -1,8 +1,8 @@
-import * as anchor from "@coral-xyz/anchor";
-import { BN, Program } from "@coral-xyz/anchor";
-import { Transaction, Signer } from "@solana/web3.js";
-import { Ipcore } from "../../types/ipcore";
+import type * as anchor from "@coral-xyz/anchor";
+import type { BN, Program } from "@coral-xyz/anchor";
+import { type Signer, Transaction } from "@solana/web3.js";
 import { buildResolveParentIx } from "../../instructions";
+import type { Ipcore } from "../../types/ipcore";
 
 export async function createResolveParentTransaction(params: {
   program: Program<Ipcore>;

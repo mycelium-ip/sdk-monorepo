@@ -1,7 +1,7 @@
+import type { Program } from "@coral-xyz/anchor";
 import * as anchor from "@coral-xyz/anchor";
-import { Program } from "@coral-xyz/anchor";
-import { Entity } from "../../types/entity";
 import { buildAssertControllerThresholdInstruction } from "../../instructions";
+import type { Entity } from "../../types/entity";
 
 export type AssertControllerThresholdTransactionParams = {
   program: Program<Entity>;

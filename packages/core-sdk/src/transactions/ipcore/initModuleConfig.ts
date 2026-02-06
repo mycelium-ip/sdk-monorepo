@@ -1,8 +1,8 @@
+import type { Program } from "@coral-xyz/anchor";
 import * as anchor from "@coral-xyz/anchor";
-import { Transaction, PublicKey } from "@solana/web3.js";
-import { Program } from "@coral-xyz/anchor";
-import { Ipcore } from "../../types/ipcore";
+import { type PublicKey, Transaction } from "@solana/web3.js";
 import { buildInitModuleConfigInstruction } from "../../instructions";
+import type { Ipcore } from "../../types/ipcore";
 
 export async function createInitModuleConfigTransaction(params: {
   program: Program<Ipcore>;

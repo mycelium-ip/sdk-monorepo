@@ -1,6 +1,6 @@
-import * as anchor from "@coral-xyz/anchor";
-import { Program } from "@coral-xyz/anchor";
-import { Ipcore } from "../../types/ipcore";
+import type * as anchor from "@coral-xyz/anchor";
+import type { Program } from "@coral-xyz/anchor";
+import type { Ipcore } from "../../types/ipcore";
 
 export async function buildUpdateRegistryConfigIx(params: {
   program: Program<Ipcore>;

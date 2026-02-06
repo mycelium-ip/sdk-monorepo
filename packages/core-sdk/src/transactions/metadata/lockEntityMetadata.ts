@@ -1,8 +1,7 @@
-import * as anchor from "@coral-xyz/anchor";
-import { Program } from "@coral-xyz/anchor";
-import { Metadata } from "../../types/metadata";
+import type { Program } from "@coral-xyz/anchor";
+import { type PublicKey, Transaction } from "@solana/web3.js";
 import { buildLockEntityMetadataIx } from "../../instructions";
-import { PublicKey, Transaction } from "@solana/web3.js";
+import type { Metadata } from "../../types/metadata";
 
 export async function createLockEntityMetadataTransaction(params: {
   program: Program<Metadata>;

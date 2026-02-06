@@ -1,8 +1,7 @@
-import { Program, BN } from "@coral-xyz/anchor";
-import { PublicKey, TransactionInstruction } from "@solana/web3.js";
-import { Ipcore } from "../../types/ipcore";
-import * as anchor from "@coral-xyz/anchor";
+import type { BN, Program } from "@coral-xyz/anchor";
+import type { PublicKey, TransactionInstruction } from "@solana/web3.js";
 import { deriveDerivativeLinkPda, deriveIPAssetPda } from "../../pda";
+import type { Ipcore } from "../../types/ipcore";
 
 export type CreateDerivativeLinkIx = {
   instruction: TransactionInstruction;

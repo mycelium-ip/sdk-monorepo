@@ -1,7 +1,7 @@
-import { Program, BN } from "@coral-xyz/anchor";
-import { PublicKey, Transaction, SystemProgram } from "@solana/web3.js";
-import { Ipcore } from "../../types/ipcore";
+import type { BN, Program } from "@coral-xyz/anchor";
+import { type PublicKey, Transaction } from "@solana/web3.js";
 import { buildRegisterRootIpInstruction } from "../../instructions";
+import type { Ipcore } from "../../types/ipcore";
 
 export async function createRegisterIpAssetTransaction(params: {
   program: Program<Ipcore>;

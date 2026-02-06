@@ -1,6 +1,6 @@
-import * as anchor from "@coral-xyz/anchor";
-import { Program } from "@coral-xyz/anchor";
-import { Metadata } from "../../types/metadata";
+import type * as anchor from "@coral-xyz/anchor";
+import type { Program } from "@coral-xyz/anchor";
+import type { Metadata } from "../../types/metadata";
 
 /**
  * Build the instruction for locking entity metadata

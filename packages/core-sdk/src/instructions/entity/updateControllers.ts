@@ -1,7 +1,7 @@
-import * as anchor from "@coral-xyz/anchor";
-import { Program } from "@coral-xyz/anchor";
-import { Entity } from "../../types/entity";
+import type * as anchor from "@coral-xyz/anchor";
+import type { Program } from "@coral-xyz/anchor";
 import { deriveEntityPda } from "../../pda";
+import type { Entity } from "../../types/entity";
 
 export type BuildUpdateControllersInstructionParams = {
   program: Program<Entity>;

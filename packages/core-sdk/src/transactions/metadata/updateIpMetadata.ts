@@ -1,8 +1,7 @@
-import * as anchor from "@coral-xyz/anchor";
-import { Program, BN } from "@coral-xyz/anchor";
-import { Metadata } from "../../types/metadata";
-import { PublicKey, Transaction } from "@solana/web3.js";
+import type { BN, Program } from "@coral-xyz/anchor";
+import { type PublicKey, Transaction } from "@solana/web3.js";
 import { buildUpdateIpMetadataIx } from "../../instructions";
+import type { Metadata } from "../../types/metadata";
 
 export async function createUpdateIpMetadataTransaction(params: {
   program: Program<Metadata>;
@@ -22,7 +21,6 @@ export async function createUpdateIpMetadataTransaction(params: {
     ipAssetPda,
     entityPda,
     previousMetadataPda,
-    newMetadataPda,
     schemaPda,
     authority,
     payer,
@@ -39,7 +37,6 @@ export async function createUpdateIpMetadataTransaction(params: {
     ipAssetPda,
     entityPda,
     previousMetadataPda,
-    newMetadataPda,
     schemaPda,
     authority,
     payer,

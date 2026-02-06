@@ -1,8 +1,7 @@
-import * as anchor from "@coral-xyz/anchor";
-import { Program, BN } from "@coral-xyz/anchor";
-import { Transaction, PublicKey } from "@solana/web3.js";
-import { Ipcore } from "../../types/ipcore";
+import type { BN, Program } from "@coral-xyz/anchor";
+import { type PublicKey, Transaction } from "@solana/web3.js";
 import { buildUpdateRegistryConfigIx } from "../../instructions";
+import type { Ipcore } from "../../types/ipcore";
 
 export async function createUpdateRegistryConfigTransaction(params: {
   program: Program<Ipcore>;

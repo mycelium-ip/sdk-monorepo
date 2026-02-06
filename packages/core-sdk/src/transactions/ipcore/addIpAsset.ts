@@ -1,8 +1,8 @@
-import * as anchor from "@coral-xyz/anchor";
-import { Program } from "@coral-xyz/anchor";
+import type * as anchor from "@coral-xyz/anchor";
+import type { Program } from "@coral-xyz/anchor";
 import { Transaction } from "@solana/web3.js";
-import { Ipcore } from "../../types/ipcore";
 import { buildAddIpAssetInstruction } from "../../instructions";
+import type { Ipcore } from "../../types/ipcore";
 
 export type AddIpAssetTransactionParams = {
   program: Program<Ipcore>;

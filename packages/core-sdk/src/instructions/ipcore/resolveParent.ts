@@ -1,6 +1,6 @@
-import * as anchor from "@coral-xyz/anchor";
-import { BN, Program } from "@coral-xyz/anchor";
-import { Ipcore } from "../../types/ipcore";
+import type * as anchor from "@coral-xyz/anchor";
+import type { BN, Program } from "@coral-xyz/anchor";
+import type { Ipcore } from "../../types/ipcore";
 
 export async function buildResolveParentIx(params: {
   parentIpId: BN;

@@ -1,8 +1,7 @@
-import * as anchor from "@coral-xyz/anchor";
-import { Program, BN } from "@coral-xyz/anchor";
-import { Metadata } from "../../types/metadata";
-import { PublicKey, Transaction } from "@solana/web3.js";
+import type { BN, Program } from "@coral-xyz/anchor";
+import { type PublicKey, Transaction } from "@solana/web3.js";
 import { buildUpdateEntityMetadataIx } from "../../instructions";
+import type { Metadata } from "../../types/metadata";
 
 export async function createUpdateEntityMetadataTransaction(params: {
   program: Program<Metadata>;

@@ -1,8 +1,8 @@
-import * as anchor from "@coral-xyz/anchor";
-import { Program, BN } from "@coral-xyz/anchor";
+import type * as anchor from "@coral-xyz/anchor";
+import type { BN, Program } from "@coral-xyz/anchor";
 import { Transaction } from "@solana/web3.js";
-import { Ipcore } from "../../types/ipcore";
 import { buildCreateDerivativeLinkInstruction } from "../../instructions";
+import type { Ipcore } from "../../types/ipcore";
 
 export type CreateDerivativeLinkTransactionParams = {
   program: Program<Ipcore>;

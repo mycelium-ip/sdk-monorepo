@@ -1,7 +1,7 @@
-import { Program } from "@coral-xyz/anchor";
-import { Metadata } from "../../types/metadata";
-import { PublicKey, Transaction } from "@solana/web3.js";
+import type { Program } from "@coral-xyz/anchor";
+import { type PublicKey, Transaction } from "@solana/web3.js";
 import { buildRegisterSchemaIx } from "../../instructions";
+import type { Metadata } from "../../types/metadata";
 
 export async function createRegisterSchemaTransaction(params: {
   program: Program<Metadata>;

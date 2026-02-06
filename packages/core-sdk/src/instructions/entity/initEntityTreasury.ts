@@ -1,12 +1,12 @@
-import * as anchor from "@coral-xyz/anchor";
-import { Program } from "@coral-xyz/anchor";
-import { Entity } from "../../types/entity";
+import type * as anchor from "@coral-xyz/anchor";
+import type { Program } from "@coral-xyz/anchor";
+import type { Entity } from "../../types/entity";
 
 export type BuildInitEntityTreasuryInstructionParams = {
   program: Program<Entity>;
 
   // Intent
-  entityId: Uint8Array<ArrayBufferLike>;
+  entityId: Uint8Array;
 
   // Fee payer
   payer: anchor.web3.PublicKey;

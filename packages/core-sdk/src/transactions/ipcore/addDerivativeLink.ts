@@ -1,7 +1,7 @@
-import { Program } from "@coral-xyz/anchor";
-import { PublicKey, Transaction } from "@solana/web3.js";
-import { Ipcore } from "../../types/ipcore";
+import type { Program } from "@coral-xyz/anchor";
+import { type PublicKey, Transaction } from "@solana/web3.js";
 import { buildAddDerivativeLinkInstruction } from "../../instructions";
+import type { Ipcore } from "../../types/ipcore";
 
 export type AddDerivativeLinkTransactionParams = {
   program: Program<Ipcore>;
