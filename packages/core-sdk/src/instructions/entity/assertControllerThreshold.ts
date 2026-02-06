@@ -21,7 +21,7 @@ export function buildAssertControllerThresholdInstruction({
   approvingControllers,
   payer,
 }: BuildAssertControllerThresholdInstructionParams): {
-  instruction: anchor.web3.TransactionInstruction;
+  instruction: Promise<anchor.web3.TransactionInstruction>;
   entityPda: anchor.web3.PublicKey;
 } {
   // ─────────────────────────────────────────────

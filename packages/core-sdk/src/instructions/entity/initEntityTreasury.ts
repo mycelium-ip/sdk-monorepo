@@ -17,7 +17,7 @@ export function buildInitEntityTreasuryInstruction({
   entityId,
   payer,
 }: BuildInitEntityTreasuryInstructionParams): {
-  instruction: anchor.web3.TransactionInstruction;
+  instruction: Promise<anchor.web3.TransactionInstruction>;
   entityPda: anchor.web3.PublicKey;
   treasuryPda: anchor.web3.PublicKey;
 } {
