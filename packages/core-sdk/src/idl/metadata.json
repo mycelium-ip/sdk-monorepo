@@ -1,5 +1,5 @@
 {
-  "address": "Bwa3soySFuwawNvuApEUdrkmdP5ji2ynX3gJn5u6kSJp",
+  "address": "GrEC9xKdjWQw7cdTUKoFEbMAsSkEQJTqt3oM6po6KFFL",
   "metadata": {
     "name": "metadata",
     "version": "0.1.0",
@@ -50,6 +50,10 @@
         {
           "name": "system_program",
           "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "entity_program",
+          "address": "Bhz5ReL66AZ1PdFSaexBpXnjx3EsEKYGTchTnpKh1UsR"
         }
       ],
       "args": [
@@ -96,6 +100,10 @@
           "docs": ["IP being annotated"]
         },
         {
+          "name": "entity",
+          "docs": ["IP being annotated"]
+        },
+        {
           "name": "schema",
           "docs": ["Schema must exist (enforced reference)"]
         },
@@ -103,6 +111,10 @@
           "name": "payer",
           "writable": true,
           "signer": true
+        },
+        {
+          "name": "entity_program",
+          "address": "Bhz5ReL66AZ1PdFSaexBpXnjx3EsEKYGTchTnpKh1UsR"
         },
         {
           "name": "system_program",
@@ -138,6 +150,10 @@
         {
           "name": "authority",
           "signer": true
+        },
+        {
+          "name": "entity_program",
+          "address": "Bhz5ReL66AZ1PdFSaexBpXnjx3EsEKYGTchTnpKh1UsR"
         }
       ],
       "args": []
@@ -154,8 +170,15 @@
           "name": "entity"
         },
         {
+          "name": "ip_asset"
+        },
+        {
           "name": "authority",
           "signer": true
+        },
+        {
+          "name": "entity_program",
+          "address": "Bhz5ReL66AZ1PdFSaexBpXnjx3EsEKYGTchTnpKh1UsR"
         }
       ],
       "args": []
@@ -259,6 +282,10 @@
         {
           "name": "system_program",
           "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "entity_program",
+          "address": "Bhz5ReL66AZ1PdFSaexBpXnjx3EsEKYGTchTnpKh1UsR"
         }
       ],
       "args": [
@@ -327,6 +354,10 @@
         {
           "name": "system_program",
           "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "entity_program",
+          "address": "Bhz5ReL66AZ1PdFSaexBpXnjx3EsEKYGTchTnpKh1UsR"
         }
       ],
       "args": [
@@ -495,12 +526,6 @@
           {
             "name": "entity",
             "type": "pubkey"
-          },
-          {
-            "name": "parent",
-            "type": {
-              "option": "pubkey"
-            }
           },
           {
             "name": "category",
