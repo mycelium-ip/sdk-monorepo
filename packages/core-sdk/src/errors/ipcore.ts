@@ -1,9 +1,9 @@
-// ---------------------
-// IP Asset errors
-
 import { SDKError } from "./base";
 
 // ---------------------
+// IP Asset errors
+// ---------------------
+
 export class ParentApprovalRequiredError extends SDKError {
   constructor() {
     super("Parent entity approval required");

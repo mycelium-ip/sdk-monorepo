@@ -1,8 +1,7 @@
-// ---------------------
-// Entity errors
-
 import { SDKError } from "./base";
 
+// ---------------------
+// Entity errors
 // ---------------------
 export class UnauthorizedControllerError extends SDKError {
   constructor() {

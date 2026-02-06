@@ -1,8 +1,7 @@
-// ---------------------
-// Metadata errors
-
 import { SDKError } from "./base";
 
+// ---------------------
+// Metadata errors
 // ---------------------
 export class MetadataUnauthorizedError extends SDKError {
   constructor() {
