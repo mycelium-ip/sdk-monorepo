@@ -6,18 +6,16 @@ import { buildInitializeRegistryConfigIx } from "../../instructions";
 
 export async function createInitializeRegistryConfigTransaction(params: {
   program: Program<Ipcore>;
-  registryConfig: PublicKey;
   authority: PublicKey;
   feeLamports: anchor.BN;
-}): Promise<{ transaction: Transaction; registryConfig: PublicKey }> {
-  const { program, registryConfig, authority, feeLamports } = params;
+}): Promise<{ transaction: Transaction }> {
+  const { program, authority, feeLamports } = params;
 
   // ─────────────────────────────────────────────
   // 1. Build instruction
   // ─────────────────────────────────────────────
   const instruction = await buildInitializeRegistryConfigIx({
     program,
-    registryConfig,
     authority,
     feeLamports,
   });
@@ -27,5 +25,5 @@ export async function createInitializeRegistryConfigTransaction(params: {
   // ─────────────────────────────────────────────
   const transaction = new Transaction().add(instruction);
 
-  return { transaction, registryConfig };
+  return { transaction };
 }

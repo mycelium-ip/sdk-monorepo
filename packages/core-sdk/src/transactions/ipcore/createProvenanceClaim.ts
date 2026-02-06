@@ -7,7 +7,6 @@ export type CreateProvenanceClaimTransactionParams = {
   program: Program<Ipcore>;
   ipAsset: PublicKey;
   entity: PublicKey;
-  entityProgram: PublicKey;
   payer: PublicKey;
 
   evidenceHash: Buffer;
@@ -24,7 +23,6 @@ export async function createProvenanceClaimTransaction({
   program,
   ipAsset,
   entity,
-  entityProgram,
   payer,
   evidenceHash,
   uri,
@@ -38,7 +36,6 @@ export async function createProvenanceClaimTransaction({
     await buildCreateProvenanceClaimInstruction(program, {
       ipAsset,
       entity,
-      entityProgram,
       payer,
       evidenceHash,
       uri,

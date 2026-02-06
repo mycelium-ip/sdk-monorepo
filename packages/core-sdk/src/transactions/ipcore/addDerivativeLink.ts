@@ -5,7 +5,6 @@ import { buildAddDerivativeLinkInstruction } from "../../instructions";
 
 export type AddDerivativeLinkTransactionParams = {
   program: Program<Ipcore>;
-  registry: PublicKey;
   derivativeLink: PublicKey;
 };
 
@@ -15,14 +14,12 @@ export type AddDerivativeLinkTransactionParams = {
  */
 export async function addDerivativeLinkTransaction({
   program,
-  registry,
   derivativeLink,
 }: AddDerivativeLinkTransactionParams): Promise<{
   transaction: Transaction;
 }> {
   // Build the instruction
   const { instruction } = await buildAddDerivativeLinkInstruction(program, {
-    registry,
     derivativeLink,
   });
 

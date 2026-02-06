@@ -28,7 +28,6 @@ export async function assertControllerThresholdTransaction({
     program,
     entityId,
     approvingControllers,
-    payer,
   });
 
   // Create a transaction and add the instruction

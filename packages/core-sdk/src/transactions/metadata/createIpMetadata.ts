@@ -8,13 +8,22 @@ export async function createIpMetadataTransaction(params: {
   program: Program<Metadata>;
   ipAssetPda: PublicKey;
   schemaPda: PublicKey;
+  entityPda: PublicKey;
   version: BN;
   uri: string;
   contentHash: Buffer;
   payer: PublicKey;
 }): Promise<{ transaction: Transaction }> {
-  const { program, ipAssetPda, schemaPda, version, uri, contentHash, payer } =
-    params;
+  const {
+    program,
+    ipAssetPda,
+    schemaPda,
+    entityPda,
+    version,
+    uri,
+    contentHash,
+    payer,
+  } = params;
 
   // ─────────────────────────────────────────────
   // 1. Build the instruction
@@ -22,6 +31,7 @@ export async function createIpMetadataTransaction(params: {
   const instruction = await buildCreateIpMetadataIx({
     program,
     ipAssetPda,
+    entityPda,
     schemaPda,
     version,
     uri,

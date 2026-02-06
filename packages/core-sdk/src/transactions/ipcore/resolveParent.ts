@@ -10,7 +10,6 @@ export async function createResolveParentTransaction(params: {
   derivativeIpId: BN;
   parentIp: anchor.web3.PublicKey;
   derivativeIp: anchor.web3.PublicKey;
-  derivativeLink: anchor.web3.PublicKey;
   parentEntityAuthority: anchor.web3.PublicKey;
   signer: Signer;
 }): Promise<{ transaction: Transaction }> {
@@ -20,7 +19,6 @@ export async function createResolveParentTransaction(params: {
     derivativeIpId,
     parentIp,
     derivativeIp,
-    derivativeLink,
     parentEntityAuthority,
     signer,
   } = params;
@@ -34,7 +32,6 @@ export async function createResolveParentTransaction(params: {
     derivativeIpId,
     parentIp,
     derivativeIp,
-    derivativeLink,
     parentEntityAuthority,
     signer,
   });

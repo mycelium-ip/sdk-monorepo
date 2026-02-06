@@ -19,15 +19,16 @@ export async function initEntityTreasuryTransaction({
   payer,
 }: InitEntityTreasuryTransactionParams): Promise<{
   transaction: anchor.web3.Transaction;
-  entityPda: anchor.web3.PublicKey;
-  treasuryPda: anchor.web3.PublicKey;
 }> {
   // Build the instruction
-  const { instruction, entityPda, treasuryPda } =
-    buildInitEntityTreasuryInstruction({ program, entityId, payer });
+  const { instruction } = buildInitEntityTreasuryInstruction({
+    program,
+    entityId,
+    payer,
+  });
 
   // Create a transaction and add the instruction
   const transaction = new anchor.web3.Transaction().add(await instruction);
 
-  return { transaction, entityPda, treasuryPda };
+  return { transaction };
 }

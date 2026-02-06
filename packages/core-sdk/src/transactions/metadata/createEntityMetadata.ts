@@ -1,4 +1,3 @@
-import * as anchor from "@coral-xyz/anchor";
 import { Program, BN } from "@coral-xyz/anchor";
 import { Transaction, PublicKey } from "@solana/web3.js";
 import { Metadata } from "../../types/metadata";

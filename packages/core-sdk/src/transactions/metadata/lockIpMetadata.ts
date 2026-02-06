@@ -7,10 +7,11 @@ import { buildLockIpMetadataIx } from "../../instructions";
 export async function createLockIpMetadataTransaction(params: {
   program: Program<Metadata>;
   metadataPda: PublicKey;
+  ipAssetPda: PublicKey;
   entityPda: PublicKey;
   authority: PublicKey;
 }): Promise<{ transaction: Transaction }> {
-  const { program, metadataPda, entityPda, authority } = params;
+  const { program, metadataPda, ipAssetPda, entityPda, authority } = params;
 
   // ─────────────────────────────────────────────
   // 1. Build the instruction
@@ -19,6 +20,7 @@ export async function createLockIpMetadataTransaction(params: {
     program,
     metadataPda,
     entityPda,
+    ipAssetPda,
     authority,
   });
 

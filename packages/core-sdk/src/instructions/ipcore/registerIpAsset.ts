@@ -11,7 +11,6 @@ export async function buildRegisterRootIpInstruction(
   program: Program<Ipcore>,
   params: {
     entity: PublicKey;
-    entityProgram: PublicKey;
     payer: PublicKey;
 
     registryConfig: PublicKey;
@@ -28,7 +27,6 @@ export async function buildRegisterRootIpInstruction(
 ): Promise<RegisterRootIpIx> {
   const {
     entity,
-    entityProgram,
     payer,
     registryConfig,
     registryConfigTreasury,

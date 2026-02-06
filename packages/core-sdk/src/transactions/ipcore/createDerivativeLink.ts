@@ -9,6 +9,7 @@ export type CreateDerivativeLinkTransactionParams = {
   parentIpId: BN;
   childIpId: BN;
   authority: anchor.web3.PublicKey;
+  entityPda: anchor.web3.PublicKey;
 };
 
 /**
@@ -20,6 +21,7 @@ export async function createDerivativeLinkTransaction({
   parentIpId,
   childIpId,
   authority,
+  entityPda,
 }: CreateDerivativeLinkTransactionParams): Promise<{
   transaction: Transaction;
   derivativeLinkPda: anchor.web3.PublicKey;
@@ -30,6 +32,7 @@ export async function createDerivativeLinkTransaction({
       parentIpId,
       childIpId,
       authority,
+      entityPda,
     });
 
   // Create a transaction and add the instruction

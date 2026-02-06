@@ -6,7 +6,6 @@ export * from "./initializeRegistryConfig";
 export * from "./initializeRegistryConfigTreasury";
 export * from "./initIpRegistry";
 export * from "./initModuleConfig";
-export * from "./registerDerivativeIp";
-export * from "./registerRootIp";
+export * from "./registerIpAsset";
 export * from "./resolveParent";
 export * from "./updateRegistryConfig";

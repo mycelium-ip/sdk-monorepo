@@ -3,7 +3,7 @@ import { PublicKey, Transaction, SystemProgram } from "@solana/web3.js";
 import { Ipcore } from "../../types/ipcore";
 import { buildRegisterRootIpInstruction } from "../../instructions";
 
-export async function createRegisterRootIpTransaction(params: {
+export async function createRegisterIpAssetTransaction(params: {
   program: Program<Ipcore>;
   entity: PublicKey;
   entityProgram: PublicKey;
@@ -23,7 +23,6 @@ export async function createRegisterRootIpTransaction(params: {
   const {
     program,
     entity,
-    entityProgram,
     payer,
     registryConfig,
     registryConfigTreasury,
@@ -42,7 +41,6 @@ export async function createRegisterRootIpTransaction(params: {
     program,
     {
       entity,
-      entityProgram,
       payer,
       registryConfig,
       registryConfigTreasury,

@@ -23,10 +23,9 @@ export async function createEntityTransaction({
   payer,
 }: CreateEntityTransactionParams): Promise<{
   transaction: anchor.web3.Transaction;
-  entityPda: anchor.web3.PublicKey;
 }> {
   // Build the instruction using our reusable helper
-  const { instruction, entityPda } = buildRegisterEntityInstruction({
+  const { instruction } = buildRegisterEntityInstruction({
     program,
     entityId,
     controllers,
@@ -37,5 +36,5 @@ export async function createEntityTransaction({
   // Create a transaction and add the instruction
   const transaction = new anchor.web3.Transaction().add(await instruction);
 
-  return { transaction, entityPda };
+  return { transaction };
 }
