@@ -1,0 +1,31 @@
+import * as anchor from "@coral-xyz/anchor";
+import { Program } from "@coral-xyz/anchor";
+import { Metadata } from "../../types/metadata";
+import { buildLockEntityMetadataIx } from "../../instructions";
+import { PublicKey, Transaction } from "@solana/web3.js";
+
+export async function createLockEntityMetadataTransaction(params: {
+  program: Program<Metadata>;
+  metadataPda: PublicKey;
+  entityPda: PublicKey;
+  authority: PublicKey;
+}): Promise<{ transaction: Transaction }> {
+  const { program, metadataPda, entityPda, authority } = params;
+
+  // ─────────────────────────────────────────────
+  // 1. Build the instruction
+  // ─────────────────────────────────────────────
+  const instruction = await buildLockEntityMetadataIx({
+    program,
+    metadataPda,
+    entityPda,
+    authority,
+  });
+
+  // ─────────────────────────────────────────────
+  // 2. Create transaction and add instruction
+  // ─────────────────────────────────────────────
+  const transaction = new Transaction().add(instruction);
+
+  return { transaction };
+}
