@@ -2,6 +2,7 @@ import type { Program } from "@coral-xyz/anchor";
 import * as anchor from "@coral-xyz/anchor";
 import { buildRegisterEntityInstruction } from "../../instructions";
 import type { Entity } from "../../types/entity";
+import { Blockhash } from "@solana/web3.js";
 
 export type CreateEntityTransactionParams = {
   program: Program<Entity>;
@@ -9,6 +10,7 @@ export type CreateEntityTransactionParams = {
   controllers: anchor.web3.PublicKey[];
   threshold: number;
   payer: anchor.web3.PublicKey;
+  recentBlockhash: Blockhash;
 };
 
 /**
@@ -21,6 +23,7 @@ export async function createEntityTransaction({
   controllers,
   threshold,
   payer,
+  recentBlockhash,
 }: CreateEntityTransactionParams): Promise<{
   transaction: anchor.web3.Transaction;
 }> {
@@ -34,7 +37,10 @@ export async function createEntityTransaction({
   });
 
   // Create a transaction and add the instruction
-  const transaction = new anchor.web3.Transaction().add(await instruction);
+  const transaction = new anchor.web3.Transaction({
+    recentBlockhash,
+    feePayer: payer,
+  }).add(await instruction);
 
   return { transaction };
 }

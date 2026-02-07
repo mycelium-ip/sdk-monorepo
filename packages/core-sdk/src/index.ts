@@ -3,3 +3,6 @@
 
 export * from "./transactions";
 export * from "./types";
+export * from "./idl";
+export * from "./constants";
+export * from "./instructions";

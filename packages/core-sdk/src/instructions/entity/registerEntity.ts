@@ -1,6 +1,7 @@
-import type * as anchor from "@coral-xyz/anchor";
+import * as anchor from "@coral-xyz/anchor";
 import type { Program } from "@coral-xyz/anchor";
 import type { Entity } from "../../types/entity";
+import { deriveEntityPda } from "../../pda";
 
 export type BuildRegisterEntityInstructionParams = {
   program: Program<Entity>;
