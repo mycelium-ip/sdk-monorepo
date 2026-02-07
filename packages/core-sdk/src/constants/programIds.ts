@@ -1,15 +1,12 @@
 import { PublicKey } from "@solana/web3.js";
+import entityIdl from "../idl/entity.json";
+import ipcoreIdl from "../idl/ipcore.json";
+import metadataIdl from "../idl/metadata.json";
 
-const ENTITY_PROGRAM_ID = new PublicKey(
-  "5n1BMzb89SY53CpMEwg5V6vMMFhWzVPeiyU1ygR114vq",
-);
+const ENTITY_PROGRAM_ID = new PublicKey(entityIdl.address);
 
-const IPCORE_PROGRAM_ID = new PublicKey(
-  "CWrHgr4Kmt1JQ4SPjrETv8dWyrN7qkVMvhYzzJPi5iEh",
-);
+const IPCORE_PROGRAM_ID = new PublicKey(ipcoreIdl.address);
 
-const METADATA_PROGRAM_ID = new PublicKey(
-  "54oAJcxV1w9miM3E3yNrAZzWUCeZrttGp5YkP146w8QB",
-);
+const METADATA_PROGRAM_ID = new PublicKey(metadataIdl.address);
 
 export { ENTITY_PROGRAM_ID, IPCORE_PROGRAM_ID, METADATA_PROGRAM_ID };
