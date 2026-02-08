@@ -58,7 +58,7 @@ export async function createEntityTransaction({
   const [schemaPda] = deriveSchemaPda(schemaCategory, schemaVersion);
 
   const currentSchema =
-    await metadataProgram.account.schemaRegistry.fetch(schemaPda);
+    await metadataProgram.account.schemaRegistry.fetchNullable(schemaPda);
 
   const schemaInstruction = buildRegisterSchemaIx({
     program: metadataProgram,
