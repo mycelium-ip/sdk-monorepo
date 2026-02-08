@@ -21,6 +21,7 @@ export async function createUpdateIpMetadataTransaction(params: {
   ipType: string;
   description: string;
   isParticipantOfHackathon: boolean;
+  controllers: PublicKey[];
 }): Promise<{ transaction: Transaction }> {
   const {
     program,
@@ -39,6 +40,7 @@ export async function createUpdateIpMetadataTransaction(params: {
     ipType,
     description,
     isParticipantOfHackathon,
+    controllers,
   } = params;
 
   // ─────────────────────────────────────────────
@@ -61,6 +63,7 @@ export async function createUpdateIpMetadataTransaction(params: {
     ipType,
     description,
     isParticipantOfHackathon,
+    controllers,
   });
 
   // ─────────────────────────────────────────────

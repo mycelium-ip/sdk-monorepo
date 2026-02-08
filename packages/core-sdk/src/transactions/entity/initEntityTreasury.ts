@@ -7,6 +7,7 @@ export type InitEntityTreasuryTransactionParams = {
   program: Program<Entity>;
   entityId: Uint8Array;
   payer: anchor.web3.PublicKey;
+  controllers: anchor.web3.PublicKey[];
 };
 
 /**
@@ -17,6 +18,7 @@ export async function initEntityTreasuryTransaction({
   program,
   entityId,
   payer,
+  controllers,
 }: InitEntityTreasuryTransactionParams): Promise<{
   transaction: anchor.web3.Transaction;
 }> {
@@ -25,6 +27,7 @@ export async function initEntityTreasuryTransaction({
     program,
     entityId,
     payer,
+    controllers,
   });
 
   // Create a transaction and add the instruction

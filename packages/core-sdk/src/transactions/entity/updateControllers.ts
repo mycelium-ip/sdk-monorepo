@@ -8,7 +8,7 @@ export type UpdateControllersTransactionParams = {
   entityId: Uint8Array;
   newControllers: anchor.web3.PublicKey[];
   newThreshold: number;
-  approvingControllers: anchor.web3.PublicKey[];
+  controllers: anchor.web3.PublicKey[];
 };
 
 /**
@@ -20,7 +20,7 @@ export async function updateControllersTransaction({
   entityId,
   newControllers,
   newThreshold,
-  approvingControllers,
+  controllers,
 }: UpdateControllersTransactionParams): Promise<{
   transaction: anchor.web3.Transaction;
   entityPda: anchor.web3.PublicKey;
@@ -31,7 +31,7 @@ export async function updateControllersTransaction({
     entityId,
     newControllers,
     newThreshold,
-    approvingControllers,
+    controllers,
   });
 
   // Create a transaction and add the instruction

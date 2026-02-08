@@ -18,6 +18,7 @@ export async function createIpMetadataTransaction(params: {
   description: string;
   isParticipantOfHackathon: boolean;
   payer: PublicKey;
+  controllers: PublicKey[];
 }): Promise<{ transaction: Transaction }> {
   const {
     program,
@@ -34,6 +35,7 @@ export async function createIpMetadataTransaction(params: {
     description,
     isParticipantOfHackathon,
     payer,
+    controllers,
   } = params;
 
   // ─────────────────────────────────────────────
@@ -54,6 +56,7 @@ export async function createIpMetadataTransaction(params: {
     description,
     isParticipantOfHackathon,
     payer,
+    controllers,
   });
 
   // ─────────────────────────────────────────────

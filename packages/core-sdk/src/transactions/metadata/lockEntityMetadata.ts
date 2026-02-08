@@ -8,8 +8,9 @@ export async function createLockEntityMetadataTransaction(params: {
   metadataPda: PublicKey;
   entityPda: PublicKey;
   authority: PublicKey;
+  controllers: PublicKey[];
 }): Promise<{ transaction: Transaction }> {
-  const { program, metadataPda, entityPda, authority } = params;
+  const { program, metadataPda, entityPda, authority, controllers } = params;
 
   // ─────────────────────────────────────────────
   // 1. Build the instruction
@@ -19,6 +20,7 @@ export async function createLockEntityMetadataTransaction(params: {
     metadataPda,
     entityPda,
     authority,
+    controllers,
   });
 
   // ─────────────────────────────────────────────

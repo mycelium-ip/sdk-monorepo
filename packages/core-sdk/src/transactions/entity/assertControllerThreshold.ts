@@ -6,7 +6,7 @@ import type { Entity } from "../../types/entity";
 export type AssertControllerThresholdTransactionParams = {
   program: Program<Entity>;
   entityId: Uint8Array;
-  approvingControllers: anchor.web3.PublicKey[];
+  controllers: anchor.web3.PublicKey[];
 };
 
 /**
@@ -16,7 +16,7 @@ export type AssertControllerThresholdTransactionParams = {
 export async function assertControllerThresholdTransaction({
   program,
   entityId,
-  approvingControllers,
+  controllers,
 }: AssertControllerThresholdTransactionParams): Promise<{
   transaction: anchor.web3.Transaction;
   entityPda: anchor.web3.PublicKey;
@@ -25,7 +25,7 @@ export async function assertControllerThresholdTransaction({
   const { instruction, entityPda } = buildAssertControllerThresholdInstruction({
     program,
     entityId,
-    approvingControllers,
+    controllers,
   });
 
   // Create a transaction and add the instruction
