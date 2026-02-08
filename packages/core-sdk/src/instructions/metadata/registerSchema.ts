@@ -9,7 +9,7 @@ export async function buildRegisterSchemaIx(params: {
   program: Program<Metadata>;
   category: string;
   schemaUri: string;
-  version: number;
+  version: anchor.BN;
   creator: anchor.web3.PublicKey;
 }): Promise<anchor.web3.TransactionInstruction> {
   const { program, category, schemaUri, version, creator } = params;

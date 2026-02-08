@@ -1,5 +1,5 @@
 {
-  "address": "94nEaBDZ7vABQJztocEEgGvU9FGKuvXdoN1vVqoZnhtN",
+  "address": "AqG1Lky5RLQbASx1mJ4nxg3v6g6SEDk7EZykSf2SzCdG",
   "metadata": {
     "name": "metadata",
     "version": "0.1.0",
@@ -53,7 +53,7 @@
         },
         {
           "name": "entity_program",
-          "address": "2RMW8ChJxvifFwEFU2xuQZ5QNkKL1GqzSgUFWdGSiP8h"
+          "address": "D2urY658MyDWtrTqgSdNpt6GNZE7TuFiSGYNcgzxZFgf"
         }
       ],
       "args": [
@@ -62,12 +62,20 @@
           "type": "u64"
         },
         {
-          "name": "uri",
+          "name": "name",
           "type": "string"
         },
         {
-          "name": "content_hash",
-          "type": "bytes"
+          "name": "handle",
+          "type": "string"
+        },
+        {
+          "name": "bio",
+          "type": "string"
+        },
+        {
+          "name": "picture_url",
+          "type": "string"
         }
       ]
     },
@@ -114,7 +122,7 @@
         },
         {
           "name": "entity_program",
-          "address": "2RMW8ChJxvifFwEFU2xuQZ5QNkKL1GqzSgUFWdGSiP8h"
+          "address": "D2urY658MyDWtrTqgSdNpt6GNZE7TuFiSGYNcgzxZFgf"
         },
         {
           "name": "system_program",
@@ -127,12 +135,36 @@
           "type": "u64"
         },
         {
-          "name": "uri",
+          "name": "logo_url",
           "type": "string"
         },
         {
-          "name": "content_hash",
-          "type": "bytes"
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "creator_name",
+          "type": "string"
+        },
+        {
+          "name": "country",
+          "type": "string"
+        },
+        {
+          "name": "city",
+          "type": "string"
+        },
+        {
+          "name": "ip_type",
+          "type": "string"
+        },
+        {
+          "name": "description",
+          "type": "string"
+        },
+        {
+          "name": "is_participant_of_hackathon",
+          "type": "bool"
         }
       ]
     },
@@ -153,7 +185,7 @@
         },
         {
           "name": "entity_program",
-          "address": "2RMW8ChJxvifFwEFU2xuQZ5QNkKL1GqzSgUFWdGSiP8h"
+          "address": "D2urY658MyDWtrTqgSdNpt6GNZE7TuFiSGYNcgzxZFgf"
         }
       ],
       "args": []
@@ -178,7 +210,7 @@
         },
         {
           "name": "entity_program",
-          "address": "2RMW8ChJxvifFwEFU2xuQZ5QNkKL1GqzSgUFWdGSiP8h"
+          "address": "D2urY658MyDWtrTqgSdNpt6GNZE7TuFiSGYNcgzxZFgf"
         }
       ],
       "args": []
@@ -228,7 +260,7 @@
         },
         {
           "name": "version",
-          "type": "u16"
+          "type": "u64"
         }
       ]
     },
@@ -285,7 +317,7 @@
         },
         {
           "name": "entity_program",
-          "address": "2RMW8ChJxvifFwEFU2xuQZ5QNkKL1GqzSgUFWdGSiP8h"
+          "address": "D2urY658MyDWtrTqgSdNpt6GNZE7TuFiSGYNcgzxZFgf"
         }
       ],
       "args": [
@@ -294,12 +326,20 @@
           "type": "u64"
         },
         {
-          "name": "uri",
+          "name": "name",
           "type": "string"
         },
         {
-          "name": "content_hash",
-          "type": "bytes"
+          "name": "handle",
+          "type": "string"
+        },
+        {
+          "name": "bio",
+          "type": "string"
+        },
+        {
+          "name": "picture_url",
+          "type": "string"
         }
       ]
     },
@@ -357,7 +397,7 @@
         },
         {
           "name": "entity_program",
-          "address": "2RMW8ChJxvifFwEFU2xuQZ5QNkKL1GqzSgUFWdGSiP8h"
+          "address": "D2urY658MyDWtrTqgSdNpt6GNZE7TuFiSGYNcgzxZFgf"
         }
       ],
       "args": [
@@ -366,12 +406,36 @@
           "type": "u64"
         },
         {
-          "name": "uri",
+          "name": "logo_url",
           "type": "string"
         },
         {
-          "name": "content_hash",
-          "type": "bytes"
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "creator_name",
+          "type": "string"
+        },
+        {
+          "name": "country",
+          "type": "string"
+        },
+        {
+          "name": "city",
+          "type": "string"
+        },
+        {
+          "name": "ip_type",
+          "type": "string"
+        },
+        {
+          "name": "description",
+          "type": "string"
+        },
+        {
+          "name": "is_participant_of_hackathon",
+          "type": "bool"
         }
       ]
     }
@@ -467,12 +531,6 @@
           {
             "name": "updated_at",
             "type": "i64"
-          },
-          {
-            "name": "metadata_schema",
-            "type": {
-              "option": "pubkey"
-            }
           }
         ]
       }
@@ -497,14 +555,20 @@
             "type": "u64"
           },
           {
-            "name": "uri",
-            "docs": ["URI pointing to off-chain entity metadata"],
+            "name": "name",
             "type": "string"
           },
           {
-            "name": "content_hash",
-            "docs": ["Hash of the metadata content (integrity only)"],
-            "type": "bytes"
+            "name": "handle",
+            "type": "string"
+          },
+          {
+            "name": "bio",
+            "type": "string"
+          },
+          {
+            "name": "picture_url",
+            "type": "string"
           },
           {
             "name": "created_at",
@@ -528,44 +592,9 @@
             "type": "pubkey"
           },
           {
-            "name": "category",
-            "type": "u8"
-          },
-          {
-            "name": "name",
-            "type": "string"
-          },
-          {
-            "name": "metadata_uri",
-            "type": {
-              "option": "string"
-            }
-          },
-          {
-            "name": "provenance",
-            "type": {
-              "option": "string"
-            }
-          },
-          {
             "name": "status",
             "docs": ["Active / Frozen"],
             "type": "u8"
-          },
-          {
-            "name": "parent_claims",
-            "docs": ["Parent claims (unanchored allowed)"],
-            "type": {
-              "vec": {
-                "defined": {
-                  "name": "ParentClaim"
-                }
-              }
-            }
-          },
-          {
-            "name": "is_derivative",
-            "type": "bool"
           },
           {
             "name": "expected_parent_count",
@@ -584,26 +613,12 @@
             "type": "i64"
           },
           {
-            "name": "parent_ip",
-            "type": {
-              "option": "pubkey"
-            }
-          },
-          {
             "name": "ip_id",
             "type": "u64"
           },
           {
-            "name": "parent_refs",
-            "type": {
-              "vec": "u64"
-            }
-          },
-          {
-            "name": "metadata_schema",
-            "type": {
-              "option": "pubkey"
-            }
+            "name": "creator",
+            "type": "pubkey"
           }
         ]
       }
@@ -628,14 +643,36 @@
             "type": "u64"
           },
           {
-            "name": "uri",
-            "docs": ["URI pointing to metadata content (IPFS, Arweave, HTTPS)"],
+            "name": "logo_url",
             "type": "string"
           },
           {
-            "name": "content_hash",
-            "docs": ["Hash of the metadata content (integrity only)"],
-            "type": "bytes"
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "creator_name",
+            "type": "string"
+          },
+          {
+            "name": "country",
+            "type": "string"
+          },
+          {
+            "name": "city",
+            "type": "string"
+          },
+          {
+            "name": "ip_type",
+            "type": "string"
+          },
+          {
+            "name": "description",
+            "type": "string"
+          },
+          {
+            "name": "is_participant_of_hackathon",
+            "type": "bool"
           },
           {
             "name": "created_at",
@@ -650,24 +687,6 @@
       }
     },
     {
-      "name": "ParentClaim",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "parent_ip_id",
-            "type": "u64"
-          },
-          {
-            "name": "claim_hash",
-            "type": {
-              "array": ["u8", 32]
-            }
-          }
-        ]
-      }
-    },
-    {
       "name": "SchemaRegistry",
       "type": {
         "kind": "struct",
@@ -677,7 +696,7 @@
             "docs": [
               "The version of this schema (allows for iteration via new PDAs)"
             ],
-            "type": "u16"
+            "type": "u64"
           },
           {
             "name": "category",

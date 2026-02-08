@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/metadata.json`.
  */
 export type Metadata = {
-  address: "GrEC9xKdjWQw7cdTUKoFEbMAsSkEQJTqt3oM6po6KFFL";
+  address: "AqG1Lky5RLQbASx1mJ4nxg3v6g6SEDk7EZykSf2SzCdG";
   metadata: {
     name: "metadata";
     version: "0.1.0";
@@ -72,7 +72,7 @@ export type Metadata = {
         },
         {
           name: "entityProgram";
-          address: "Bhz5ReL66AZ1PdFSaexBpXnjx3EsEKYGTchTnpKh1UsR";
+          address: "D2urY658MyDWtrTqgSdNpt6GNZE7TuFiSGYNcgzxZFgf";
         },
       ];
       args: [
@@ -81,12 +81,20 @@ export type Metadata = {
           type: "u64";
         },
         {
-          name: "uri";
+          name: "name";
           type: "string";
         },
         {
-          name: "contentHash";
-          type: "bytes";
+          name: "handle";
+          type: "string";
+        },
+        {
+          name: "bio";
+          type: "string";
+        },
+        {
+          name: "pictureUrl";
+          type: "string";
         },
       ];
     },
@@ -133,7 +141,7 @@ export type Metadata = {
         },
         {
           name: "entityProgram";
-          address: "Bhz5ReL66AZ1PdFSaexBpXnjx3EsEKYGTchTnpKh1UsR";
+          address: "D2urY658MyDWtrTqgSdNpt6GNZE7TuFiSGYNcgzxZFgf";
         },
         {
           name: "systemProgram";
@@ -146,12 +154,36 @@ export type Metadata = {
           type: "u64";
         },
         {
-          name: "uri";
+          name: "logoUrl";
           type: "string";
         },
         {
-          name: "contentHash";
-          type: "bytes";
+          name: "name";
+          type: "string";
+        },
+        {
+          name: "creatorName";
+          type: "string";
+        },
+        {
+          name: "country";
+          type: "string";
+        },
+        {
+          name: "city";
+          type: "string";
+        },
+        {
+          name: "ipType";
+          type: "string";
+        },
+        {
+          name: "description";
+          type: "string";
+        },
+        {
+          name: "isParticipantOfHackathon";
+          type: "bool";
         },
       ];
     },
@@ -172,7 +204,7 @@ export type Metadata = {
         },
         {
           name: "entityProgram";
-          address: "Bhz5ReL66AZ1PdFSaexBpXnjx3EsEKYGTchTnpKh1UsR";
+          address: "D2urY658MyDWtrTqgSdNpt6GNZE7TuFiSGYNcgzxZFgf";
         },
       ];
       args: [];
@@ -197,7 +229,7 @@ export type Metadata = {
         },
         {
           name: "entityProgram";
-          address: "Bhz5ReL66AZ1PdFSaexBpXnjx3EsEKYGTchTnpKh1UsR";
+          address: "D2urY658MyDWtrTqgSdNpt6GNZE7TuFiSGYNcgzxZFgf";
         },
       ];
       args: [];
@@ -247,7 +279,7 @@ export type Metadata = {
         },
         {
           name: "version";
-          type: "u16";
+          type: "u64";
         },
       ];
     },
@@ -317,7 +349,7 @@ export type Metadata = {
         },
         {
           name: "entityProgram";
-          address: "Bhz5ReL66AZ1PdFSaexBpXnjx3EsEKYGTchTnpKh1UsR";
+          address: "D2urY658MyDWtrTqgSdNpt6GNZE7TuFiSGYNcgzxZFgf";
         },
       ];
       args: [
@@ -326,12 +358,20 @@ export type Metadata = {
           type: "u64";
         },
         {
-          name: "uri";
+          name: "name";
           type: "string";
         },
         {
-          name: "contentHash";
-          type: "bytes";
+          name: "handle";
+          type: "string";
+        },
+        {
+          name: "bio";
+          type: "string";
+        },
+        {
+          name: "pictureUrl";
+          type: "string";
         },
       ];
     },
@@ -389,7 +429,7 @@ export type Metadata = {
         },
         {
           name: "entityProgram";
-          address: "Bhz5ReL66AZ1PdFSaexBpXnjx3EsEKYGTchTnpKh1UsR";
+          address: "D2urY658MyDWtrTqgSdNpt6GNZE7TuFiSGYNcgzxZFgf";
         },
       ];
       args: [
@@ -398,12 +438,36 @@ export type Metadata = {
           type: "u64";
         },
         {
-          name: "uri";
+          name: "logoUrl";
           type: "string";
         },
         {
-          name: "contentHash";
-          type: "bytes";
+          name: "name";
+          type: "string";
+        },
+        {
+          name: "creatorName";
+          type: "string";
+        },
+        {
+          name: "country";
+          type: "string";
+        },
+        {
+          name: "city";
+          type: "string";
+        },
+        {
+          name: "ipType";
+          type: "string";
+        },
+        {
+          name: "description";
+          type: "string";
+        },
+        {
+          name: "isParticipantOfHackathon";
+          type: "bool";
         },
       ];
     },
@@ -500,12 +564,6 @@ export type Metadata = {
             name: "updatedAt";
             type: "i64";
           },
-          {
-            name: "metadataSchema";
-            type: {
-              option: "pubkey";
-            };
-          },
         ];
       };
     },
@@ -529,14 +587,20 @@ export type Metadata = {
             type: "u64";
           },
           {
-            name: "uri";
-            docs: ["URI pointing to off-chain entity metadata"];
+            name: "name";
             type: "string";
           },
           {
-            name: "contentHash";
-            docs: ["Hash of the metadata content (integrity only)"];
-            type: "bytes";
+            name: "handle";
+            type: "string";
+          },
+          {
+            name: "bio";
+            type: "string";
+          },
+          {
+            name: "pictureUrl";
+            type: "string";
           },
           {
             name: "createdAt";
@@ -560,44 +624,9 @@ export type Metadata = {
             type: "pubkey";
           },
           {
-            name: "category";
-            type: "u8";
-          },
-          {
-            name: "name";
-            type: "string";
-          },
-          {
-            name: "metadataUri";
-            type: {
-              option: "string";
-            };
-          },
-          {
-            name: "provenance";
-            type: {
-              option: "string";
-            };
-          },
-          {
             name: "status";
             docs: ["Active / Frozen"];
             type: "u8";
-          },
-          {
-            name: "parentClaims";
-            docs: ["Parent claims (unanchored allowed)"];
-            type: {
-              vec: {
-                defined: {
-                  name: "parentClaim";
-                };
-              };
-            };
-          },
-          {
-            name: "isDerivative";
-            type: "bool";
           },
           {
             name: "expectedParentCount";
@@ -616,26 +645,12 @@ export type Metadata = {
             type: "i64";
           },
           {
-            name: "parentIp";
-            type: {
-              option: "pubkey";
-            };
-          },
-          {
             name: "ipId";
             type: "u64";
           },
           {
-            name: "parentRefs";
-            type: {
-              vec: "u64";
-            };
-          },
-          {
-            name: "metadataSchema";
-            type: {
-              option: "pubkey";
-            };
+            name: "creator";
+            type: "pubkey";
           },
         ];
       };
@@ -660,14 +675,36 @@ export type Metadata = {
             type: "u64";
           },
           {
-            name: "uri";
-            docs: ["URI pointing to metadata content (IPFS, Arweave, HTTPS)"];
+            name: "logoUrl";
             type: "string";
           },
           {
-            name: "contentHash";
-            docs: ["Hash of the metadata content (integrity only)"];
-            type: "bytes";
+            name: "name";
+            type: "string";
+          },
+          {
+            name: "creatorName";
+            type: "string";
+          },
+          {
+            name: "country";
+            type: "string";
+          },
+          {
+            name: "city";
+            type: "string";
+          },
+          {
+            name: "ipType";
+            type: "string";
+          },
+          {
+            name: "description";
+            type: "string";
+          },
+          {
+            name: "isParticipantOfHackathon";
+            type: "bool";
           },
           {
             name: "createdAt";
@@ -682,24 +719,6 @@ export type Metadata = {
       };
     },
     {
-      name: "parentClaim";
-      type: {
-        kind: "struct";
-        fields: [
-          {
-            name: "parentIpId";
-            type: "u64";
-          },
-          {
-            name: "claimHash";
-            type: {
-              array: ["u8", 32];
-            };
-          },
-        ];
-      };
-    },
-    {
       name: "schemaRegistry";
       type: {
         kind: "struct";
@@ -709,7 +728,7 @@ export type Metadata = {
             docs: [
               "The version of this schema (allows for iteration via new PDAs)",
             ];
-            type: "u16";
+            type: "u64";
           },
           {
             name: "category";

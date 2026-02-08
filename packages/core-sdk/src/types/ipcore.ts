@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/ipcore.json`.
  */
 export type Ipcore = {
-  address: "6KoJtxEmoVWPnqivBnngzSjjQyxD7G5eCXRgUuNDtXko";
+  address: "Hb2iKqx65KkjahvC6yMLaMQua3m2LbqjofVUxAjKKQ5p";
   metadata: {
     name: "ipcore";
     version: "0.1.0";
@@ -26,7 +26,7 @@ export type Ipcore = {
         },
         {
           name: "entityProgram";
-          address: "Bhz5ReL66AZ1PdFSaexBpXnjx3EsEKYGTchTnpKh1UsR";
+          address: "D2urY658MyDWtrTqgSdNpt6GNZE7TuFiSGYNcgzxZFgf";
         },
       ];
       args: [];
@@ -172,7 +172,7 @@ export type Ipcore = {
         },
         {
           name: "entityProgram";
-          address: "Bhz5ReL66AZ1PdFSaexBpXnjx3EsEKYGTchTnpKh1UsR";
+          address: "D2urY658MyDWtrTqgSdNpt6GNZE7TuFiSGYNcgzxZFgf";
         },
         {
           name: "ipAsset";
@@ -218,7 +218,7 @@ export type Ipcore = {
         },
         {
           name: "entityProgram";
-          address: "Bhz5ReL66AZ1PdFSaexBpXnjx3EsEKYGTchTnpKh1UsR";
+          address: "D2urY658MyDWtrTqgSdNpt6GNZE7TuFiSGYNcgzxZFgf";
         },
       ];
       args: [];
@@ -417,7 +417,7 @@ export type Ipcore = {
         },
         {
           name: "entityProgram";
-          address: "Bhz5ReL66AZ1PdFSaexBpXnjx3EsEKYGTchTnpKh1UsR";
+          address: "D2urY658MyDWtrTqgSdNpt6GNZE7TuFiSGYNcgzxZFgf";
         },
         {
           name: "ipAsset";
@@ -460,22 +460,6 @@ export type Ipcore = {
         {
           name: "ipId";
           type: "u64";
-        },
-        {
-          name: "category";
-          type: "u8";
-        },
-        {
-          name: "metadataUri";
-          type: {
-            option: "string";
-          };
-        },
-        {
-          name: "provenance";
-          type: {
-            option: "string";
-          };
         },
         {
           name: "registrationFeeLamports";
@@ -726,12 +710,6 @@ export type Ipcore = {
             name: "updatedAt";
             type: "i64";
           },
-          {
-            name: "metadataSchema";
-            type: {
-              option: "pubkey";
-            };
-          },
         ];
       };
     },
@@ -745,44 +723,9 @@ export type Ipcore = {
             type: "pubkey";
           },
           {
-            name: "category";
-            type: "u8";
-          },
-          {
-            name: "name";
-            type: "string";
-          },
-          {
-            name: "metadataUri";
-            type: {
-              option: "string";
-            };
-          },
-          {
-            name: "provenance";
-            type: {
-              option: "string";
-            };
-          },
-          {
             name: "status";
             docs: ["Active / Frozen"];
             type: "u8";
-          },
-          {
-            name: "parentClaims";
-            docs: ["Parent claims (unanchored allowed)"];
-            type: {
-              vec: {
-                defined: {
-                  name: "parentClaim";
-                };
-              };
-            };
-          },
-          {
-            name: "isDerivative";
-            type: "bool";
           },
           {
             name: "expectedParentCount";
@@ -801,26 +744,12 @@ export type Ipcore = {
             type: "i64";
           },
           {
-            name: "parentIp";
-            type: {
-              option: "pubkey";
-            };
-          },
-          {
             name: "ipId";
             type: "u64";
           },
           {
-            name: "parentRefs";
-            type: {
-              vec: "u64";
-            };
-          },
-          {
-            name: "metadataSchema";
-            type: {
-              option: "pubkey";
-            };
+            name: "creator";
+            type: "pubkey";
           },
         ];
       };
@@ -886,24 +815,6 @@ export type Ipcore = {
             name: "createdAt";
             docs: ["Created timestamp"];
             type: "i64";
-          },
-        ];
-      };
-    },
-    {
-      name: "parentClaim";
-      type: {
-        kind: "struct";
-        fields: [
-          {
-            name: "parentIpId";
-            type: "u64";
-          },
-          {
-            name: "claimHash";
-            type: {
-              array: ["u8", 32];
-            };
           },
         ];
       };

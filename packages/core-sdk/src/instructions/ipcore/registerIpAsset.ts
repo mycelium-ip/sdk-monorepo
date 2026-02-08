@@ -18,9 +18,6 @@ export async function buildRegisterRootIpInstruction(
     registryConfigTreasury: PublicKey;
 
     ipId: BN;
-    category: number;
-    metadataUri: string;
-    provenance: string;
     registrationFeeLamports: BN;
 
     controllers: PublicKey[];
@@ -32,9 +29,6 @@ export async function buildRegisterRootIpInstruction(
     registryConfig,
     registryConfigTreasury,
     ipId,
-    category,
-    metadataUri,
-    provenance,
     registrationFeeLamports,
     controllers,
   } = params;
@@ -48,13 +42,7 @@ export async function buildRegisterRootIpInstruction(
   // 2. Build instruction
   // ─────────────────────────────────────────────
   const instruction = await program.methods
-    .registerIpAsset(
-      ipId,
-      category,
-      metadataUri,
-      provenance,
-      registrationFeeLamports,
-    )
+    .registerIpAsset(ipId, registrationFeeLamports)
     .accounts({
       entity,
       payer,

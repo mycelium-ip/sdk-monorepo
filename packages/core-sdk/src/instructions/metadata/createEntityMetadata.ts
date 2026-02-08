@@ -10,15 +10,26 @@ export async function buildCreateEntityMetadataIx(params: {
   entityPda: anchor.web3.PublicKey;
   schemaPda: anchor.web3.PublicKey;
   version: BN;
-  uri: string;
-  contentHash: Buffer;
+  name: string;
+  handle: string;
+  bio: string;
+  pictureUrl: string;
   payer: anchor.web3.PublicKey;
 }): Promise<anchor.web3.TransactionInstruction> {
-  const { program, entityPda, schemaPda, version, uri, contentHash, payer } =
-    params;
+  const {
+    program,
+    entityPda,
+    schemaPda,
+    version,
+    name,
+    handle,
+    bio,
+    pictureUrl,
+    payer,
+  } = params;
 
   return program.methods
-    .createEntityMetadata(version, uri, contentHash)
+    .createEntityMetadata(version, name, handle, bio, pictureUrl)
     .accounts({
       entity: entityPda,
       schema: schemaPda,

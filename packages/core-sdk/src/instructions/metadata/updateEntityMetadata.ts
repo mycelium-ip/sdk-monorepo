@@ -14,8 +14,10 @@ export async function buildUpdateEntityMetadataIx(params: {
   authority: anchor.web3.PublicKey;
   payer: anchor.web3.PublicKey;
   version: BN;
-  uri: string;
-  contentHash: Buffer;
+  name: string;
+  handle: string;
+  bio: string;
+  pictureUrl: string;
 }): Promise<anchor.web3.TransactionInstruction> {
   const {
     program,
@@ -25,12 +27,14 @@ export async function buildUpdateEntityMetadataIx(params: {
     authority,
     payer,
     version,
-    uri,
-    contentHash,
+    name,
+    handle,
+    bio,
+    pictureUrl,
   } = params;
 
   return program.methods
-    .updateEntityMetadata(version, uri, contentHash)
+    .updateEntityMetadata(version, name, handle, bio, pictureUrl)
     .accounts({
       entity: entityPda,
       previousMetadata: previousMetadataPda,

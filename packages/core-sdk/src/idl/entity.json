@@ -1,5 +1,5 @@
 {
-  "address": "2RMW8ChJxvifFwEFU2xuQZ5QNkKL1GqzSgUFWdGSiP8h",
+  "address": "D2urY658MyDWtrTqgSdNpt6GNZE7TuFiSGYNcgzxZFgf",
   "metadata": {
     "name": "entity",
     "version": "0.1.0",
@@ -261,12 +261,6 @@
           {
             "name": "updated_at",
             "type": "i64"
-          },
-          {
-            "name": "metadata_schema",
-            "type": {
-              "option": "pubkey"
-            }
           }
         ]
       }

@@ -1,5 +1,5 @@
 {
-  "address": "5Ta4yP9gYmRER6LhqT47dUmRdiD6fVFmXUK3DYM6BcYs",
+  "address": "Hb2iKqx65KkjahvC6yMLaMQua3m2LbqjofVUxAjKKQ5p",
   "metadata": {
     "name": "ipcore",
     "version": "0.1.0",
@@ -20,7 +20,7 @@
         },
         {
           "name": "entity_program",
-          "address": "2RMW8ChJxvifFwEFU2xuQZ5QNkKL1GqzSgUFWdGSiP8h"
+          "address": "D2urY658MyDWtrTqgSdNpt6GNZE7TuFiSGYNcgzxZFgf"
         }
       ],
       "args": []
@@ -153,7 +153,7 @@
         },
         {
           "name": "entity_program",
-          "address": "2RMW8ChJxvifFwEFU2xuQZ5QNkKL1GqzSgUFWdGSiP8h"
+          "address": "D2urY658MyDWtrTqgSdNpt6GNZE7TuFiSGYNcgzxZFgf"
         },
         {
           "name": "ip_asset",
@@ -199,7 +199,7 @@
         },
         {
           "name": "entity_program",
-          "address": "2RMW8ChJxvifFwEFU2xuQZ5QNkKL1GqzSgUFWdGSiP8h"
+          "address": "D2urY658MyDWtrTqgSdNpt6GNZE7TuFiSGYNcgzxZFgf"
         }
       ],
       "args": []
@@ -351,7 +351,7 @@
         },
         {
           "name": "entity_program",
-          "address": "2RMW8ChJxvifFwEFU2xuQZ5QNkKL1GqzSgUFWdGSiP8h"
+          "address": "D2urY658MyDWtrTqgSdNpt6GNZE7TuFiSGYNcgzxZFgf"
         },
         {
           "name": "ip_asset",
@@ -394,22 +394,6 @@
         {
           "name": "ip_id",
           "type": "u64"
-        },
-        {
-          "name": "category",
-          "type": "u8"
-        },
-        {
-          "name": "metadata_uri",
-          "type": {
-            "option": "string"
-          }
-        },
-        {
-          "name": "provenance",
-          "type": {
-            "option": "string"
-          }
         },
         {
           "name": "registration_fee_lamports",
@@ -633,12 +617,6 @@
           {
             "name": "updated_at",
             "type": "i64"
-          },
-          {
-            "name": "metadata_schema",
-            "type": {
-              "option": "pubkey"
-            }
           }
         ]
       }
@@ -653,44 +631,9 @@
             "type": "pubkey"
           },
           {
-            "name": "category",
-            "type": "u8"
-          },
-          {
-            "name": "name",
-            "type": "string"
-          },
-          {
-            "name": "metadata_uri",
-            "type": {
-              "option": "string"
-            }
-          },
-          {
-            "name": "provenance",
-            "type": {
-              "option": "string"
-            }
-          },
-          {
             "name": "status",
             "docs": ["Active / Frozen"],
             "type": "u8"
-          },
-          {
-            "name": "parent_claims",
-            "docs": ["Parent claims (unanchored allowed)"],
-            "type": {
-              "vec": {
-                "defined": {
-                  "name": "ParentClaim"
-                }
-              }
-            }
-          },
-          {
-            "name": "is_derivative",
-            "type": "bool"
           },
           {
             "name": "expected_parent_count",
@@ -709,26 +652,12 @@
             "type": "i64"
           },
           {
-            "name": "parent_ip",
-            "type": {
-              "option": "pubkey"
-            }
-          },
-          {
             "name": "ip_id",
             "type": "u64"
           },
           {
-            "name": "parent_refs",
-            "type": {
-              "vec": "u64"
-            }
-          },
-          {
-            "name": "metadata_schema",
-            "type": {
-              "option": "pubkey"
-            }
+            "name": "creator",
+            "type": "pubkey"
           }
         ]
       }
@@ -794,24 +723,6 @@
             "name": "created_at",
             "docs": ["Created timestamp"],
             "type": "i64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "ParentClaim",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "parent_ip_id",
-            "type": "u64"
-          },
-          {
-            "name": "claim_hash",
-            "type": {
-              "array": ["u8", 32]
-            }
           }
         ]
       }
