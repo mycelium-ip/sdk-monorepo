@@ -21,9 +21,7 @@ export function buildRegisterEntityInstruction({
   controllers,
   threshold,
   payer,
-}: BuildRegisterEntityInstructionParams): {
-  instruction: Promise<anchor.web3.TransactionInstruction>;
-} {
+}: BuildRegisterEntityInstructionParams): Promise<anchor.web3.TransactionInstruction> {
   // ─────────────────────────────────────────────
   // 2. Build instruction (NO send, NO sign)
   // ─────────────────────────────────────────────
@@ -34,7 +32,5 @@ export function buildRegisterEntityInstruction({
     })
     .instruction();
 
-  return {
-    instruction,
-  };
+  return instruction;
 }

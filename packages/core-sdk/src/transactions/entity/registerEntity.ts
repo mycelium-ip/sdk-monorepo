@@ -41,7 +41,7 @@ export async function createEntityTransaction({
   transaction: anchor.web3.Transaction;
 }> {
   // Build the instruction using our reusable helper
-  const { instruction } = buildRegisterEntityInstruction({
+  const instruction = await buildRegisterEntityInstruction({
     program,
     entityId,
     controllers,
@@ -60,7 +60,7 @@ export async function createEntityTransaction({
   const currentSchema =
     await metadataProgram.account.schemaRegistry.fetchNullable(schemaPda);
 
-  const schemaInstruction = buildRegisterSchemaIx({
+  const schemaInstruction = await buildRegisterSchemaIx({
     program: metadataProgram,
     category: schemaCategory,
     version: schemaVersion,
@@ -68,11 +68,11 @@ export async function createEntityTransaction({
     schemaUri: schemaUri,
   });
 
-  const metadataInstruction = buildCreateEntityMetadataIx({
+  const metadataInstruction = await buildCreateEntityMetadataIx({
     program: metadataProgram,
     entityPda: entityPda,
     schemaPda: schemaPda,
-    version: anchor.BN(1),
+    version: new anchor.BN(1),
     name,
     handle,
     bio,
@@ -81,12 +81,12 @@ export async function createEntityTransaction({
   });
 
   // Create a transaction and add the instruction
-  const transaction = new anchor.web3.Transaction().add(await instruction);
+  const transaction = new anchor.web3.Transaction().add(instruction);
 
   if (!currentSchema) {
-    transaction.add(await schemaInstruction);
+    transaction.add(schemaInstruction);
   }
 
-  transaction.add(await metadataInstruction);
+  // transaction.add(metadataInstruction);
   return { transaction };
 }
