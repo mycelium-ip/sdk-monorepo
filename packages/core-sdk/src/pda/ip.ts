@@ -46,3 +46,17 @@ export function deriveProvenanceClaimPda(
     IPCORE_PROGRAM_ID,
   );
 }
+
+export function deriveRegistryConfigPda() {
+  return PublicKey.findProgramAddressSync(
+    [Buffer.from(SEEDS.REGISTRY_CONFIG)],
+    IPCORE_PROGRAM_ID,
+  );
+}
+
+export function deriveRegistryConfigTreasuryPda() {
+  return PublicKey.findProgramAddressSync(
+    [Buffer.from(SEEDS.REGISTRY_CONFIG_TREASURY)],
+    IPCORE_PROGRAM_ID,
+  );
+}

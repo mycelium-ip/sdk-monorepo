@@ -12,6 +12,7 @@ const SEEDS = {
   SCHEMA: "schema",
 
   REGISTRY_CONFIG: "registry_config",
+  REGISTRY_CONFIG_TREASURY: "registry_config_treasury",
   MODULE_CONFIG: "module_config",
 } as const;
 
