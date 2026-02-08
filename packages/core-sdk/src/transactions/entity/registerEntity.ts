@@ -3,9 +3,9 @@ import * as anchor from "@coral-xyz/anchor";
 import {
   buildCreateEntityMetadataIx,
   buildRegisterEntityInstruction,
+  buildRegisterSchemaIx,
 } from "../../instructions";
 import type { Entity } from "../../types/entity";
-import { Blockhash } from "@solana/web3.js";
 import { Metadata } from "../../types";
 import { deriveEntityPda, deriveSchemaPda } from "../../pda";
 
@@ -51,7 +51,22 @@ export async function createEntityTransaction({
 
   const [entityPda] = deriveEntityPda(entityId);
 
-  const [schemaPda] = deriveSchemaPda("1", 1);
+  const schemaCategory = "1";
+  const schemaVersion = new anchor.BN(1);
+  const schemaUri = "https://example.com";
+
+  const [schemaPda] = deriveSchemaPda(schemaCategory, schemaVersion);
+
+  const currentSchema =
+    await metadataProgram.account.schemaRegistry.fetch(schemaPda);
+
+  const schemaInstruction = buildRegisterSchemaIx({
+    program: metadataProgram,
+    category: schemaCategory,
+    version: schemaVersion,
+    creator: payer,
+    schemaUri: schemaUri,
+  });
 
   const metadataInstruction = buildCreateEntityMetadataIx({
     program: metadataProgram,
@@ -66,9 +81,12 @@ export async function createEntityTransaction({
   });
 
   // Create a transaction and add the instruction
-  const transaction = new anchor.web3.Transaction()
-    .add(await instruction)
-    .add(await metadataInstruction);
+  const transaction = new anchor.web3.Transaction().add(await instruction);
 
+  if (!currentSchema) {
+    transaction.add(await schemaInstruction);
+  }
+
+  transaction.add(await metadataInstruction);
   return { transaction };
 }

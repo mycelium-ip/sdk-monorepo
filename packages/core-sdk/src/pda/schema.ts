@@ -1,17 +1,16 @@
-import { PublicKey } from "@solana/web3.js";
 import { METADATA_PROGRAM_ID, SEEDS } from "../constants";
+import * as anchor from "@coral-xyz/anchor";
 
-export function deriveSchemaPda(
+export const deriveSchemaPda = (
   category: string,
-  version: number,
-): [PublicKey, number] {
-  const categoryBuf = Buffer.from(category.trim().toLowerCase());
-
-  const versionBuf = Buffer.alloc(2);
-  versionBuf.writeUInt16LE(version);
-
-  return PublicKey.findProgramAddressSync(
-    [Buffer.from(SEEDS.SCHEMA), categoryBuf, versionBuf],
+  version: anchor.BN,
+): [anchor.web3.PublicKey, number] => {
+  return anchor.web3.PublicKey.findProgramAddressSync(
+    [
+      Buffer.from(SEEDS.SCHEMA),
+      Buffer.from(category),
+      version.toArrayLike(Buffer, "le", 8),
+    ],
     METADATA_PROGRAM_ID,
   );
-}
+};
