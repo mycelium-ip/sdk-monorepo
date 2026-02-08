@@ -14,6 +14,7 @@ export async function buildUpdateIpMetadataIx(params: {
   authority: anchor.web3.PublicKey;
   payer: anchor.web3.PublicKey;
   version: BN;
+  controllers: anchor.web3.PublicKey[];
   logoUrl: string;
   name: string;
   creatorName: string;
@@ -32,6 +33,7 @@ export async function buildUpdateIpMetadataIx(params: {
     authority,
     payer,
     version,
+    controllers,
     logoUrl,
     name,
     creatorName,
@@ -62,5 +64,12 @@ export async function buildUpdateIpMetadataIx(params: {
       authority,
       payer,
     })
+    .remainingAccounts(
+      controllers.map((kp) => ({
+        pubkey: kp,
+        isSigner: true,
+        isWritable: false,
+      })),
+    )
     .instruction();
 }

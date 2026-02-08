@@ -10,13 +10,13 @@ export type BuildAssertControllerThresholdInstructionParams = {
   entityId: Uint8Array;
 
   // Controllers asserting the threshold
-  approvingControllers: anchor.web3.PublicKey[];
+  controllers: anchor.web3.PublicKey[];
 };
 
 export function buildAssertControllerThresholdInstruction({
   program,
   entityId,
-  approvingControllers,
+  controllers,
 }: BuildAssertControllerThresholdInstructionParams): {
   instruction: Promise<anchor.web3.TransactionInstruction>;
   entityPda: anchor.web3.PublicKey;
@@ -29,7 +29,7 @@ export function buildAssertControllerThresholdInstruction({
   // ─────────────────────────────────────────────
   // 2. Remaining accounts (controller signers)
   // ─────────────────────────────────────────────
-  const remainingAccounts = approvingControllers.map((pk) => ({
+  const remainingAccounts = controllers.map((pk) => ({
     pubkey: pk,
     isSigner: true,
     isWritable: false,

@@ -10,8 +10,9 @@ export function buildLockEntityMetadataIx(params: {
   metadataPda: anchor.web3.PublicKey;
   entityPda: anchor.web3.PublicKey;
   authority: anchor.web3.PublicKey;
+  controllers: anchor.web3.PublicKey[];
 }): Promise<anchor.web3.TransactionInstruction> {
-  const { program, metadataPda, entityPda, authority } = params;
+  const { program, metadataPda, entityPda, authority, controllers } = params;
 
   return program.methods
     .lockEntityMetadata()
@@ -20,5 +21,12 @@ export function buildLockEntityMetadataIx(params: {
       entity: entityPda,
       authority,
     })
+    .remainingAccounts(
+      controllers.map((kp) => ({
+        pubkey: kp,
+        isSigner: true,
+        isWritable: false,
+      })),
+    )
     .instruction();
 }

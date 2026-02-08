@@ -20,6 +20,7 @@ export async function buildCreateIpMetadataIx(params: {
   description: string;
   isParticipantOfHackathon: boolean;
   payer: anchor.web3.PublicKey;
+  controllers: anchor.web3.PublicKey[];
 }): Promise<anchor.web3.TransactionInstruction> {
   const {
     program,
@@ -36,6 +37,7 @@ export async function buildCreateIpMetadataIx(params: {
     description,
     isParticipantOfHackathon,
     payer,
+    controllers,
   } = params;
 
   return program.methods
@@ -56,5 +58,12 @@ export async function buildCreateIpMetadataIx(params: {
       payer,
       entity: entityPda,
     })
+    .remainingAccounts(
+      controllers.map((kp) => ({
+        pubkey: kp,
+        isSigner: true,
+        isWritable: false,
+      })),
+    )
     .instruction();
 }

@@ -12,7 +12,7 @@ export type BuildUpdateControllersInstructionParams = {
   newThreshold: number;
 
   // Existing controllers approving this change
-  approvingControllers: anchor.web3.PublicKey[];
+  controllers: anchor.web3.PublicKey[];
 };
 
 export function buildUpdateControllersInstruction({
@@ -20,7 +20,7 @@ export function buildUpdateControllersInstruction({
   entityId,
   newControllers,
   newThreshold,
-  approvingControllers,
+  controllers,
 }: BuildUpdateControllersInstructionParams): {
   instruction: Promise<anchor.web3.TransactionInstruction>;
   entityPda: anchor.web3.PublicKey;
@@ -33,7 +33,7 @@ export function buildUpdateControllersInstruction({
   // ─────────────────────────────────────────────
   // 2. Remaining accounts (multisig signers)
   // ─────────────────────────────────────────────
-  const remainingAccounts = approvingControllers.map((pk) => ({
+  const remainingAccounts = controllers.map((pk) => ({
     pubkey: pk,
     isSigner: true,
     isWritable: false,

@@ -78,6 +78,7 @@ export async function createEntityTransaction({
     bio,
     pictureUrl,
     payer,
+    controllers,
   });
 
   // Create a transaction and add the instruction

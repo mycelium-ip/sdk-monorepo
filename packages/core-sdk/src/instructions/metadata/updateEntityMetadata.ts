@@ -13,6 +13,7 @@ export async function buildUpdateEntityMetadataIx(params: {
   schemaPda: anchor.web3.PublicKey;
   authority: anchor.web3.PublicKey;
   payer: anchor.web3.PublicKey;
+  controllers: anchor.web3.PublicKey[];
   version: BN;
   name: string;
   handle: string;
@@ -26,6 +27,7 @@ export async function buildUpdateEntityMetadataIx(params: {
     schemaPda,
     authority,
     payer,
+    controllers,
     version,
     name,
     handle,
@@ -42,5 +44,12 @@ export async function buildUpdateEntityMetadataIx(params: {
       authority,
       payer,
     })
+    .remainingAccounts(
+      controllers.map((kp) => ({
+        pubkey: kp,
+        isSigner: true,
+        isWritable: false,
+      })),
+    )
     .instruction();
 }

@@ -10,12 +10,14 @@ export type BuildInitEntityTreasuryInstructionParams = {
 
   // Fee payer
   payer: anchor.web3.PublicKey;
+  controllers: anchor.web3.PublicKey[];
 };
 
 export function buildInitEntityTreasuryInstruction({
   program,
   entityId,
   payer,
+  controllers,
 }: BuildInitEntityTreasuryInstructionParams): {
   instruction: Promise<anchor.web3.TransactionInstruction>;
 } {
@@ -27,6 +29,13 @@ export function buildInitEntityTreasuryInstruction({
     .accounts({
       payer,
     })
+    .remainingAccounts(
+      controllers.map((kp) => ({
+        pubkey: kp,
+        isSigner: true,
+        isWritable: false,
+      })),
+    )
     .instruction();
 
   return {

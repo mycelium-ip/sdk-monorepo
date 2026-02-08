@@ -15,6 +15,7 @@ export async function buildCreateEntityMetadataIx(params: {
   bio: string;
   pictureUrl: string;
   payer: anchor.web3.PublicKey;
+  controllers: anchor.web3.PublicKey[];
 }): Promise<anchor.web3.TransactionInstruction> {
   const {
     program,
@@ -26,6 +27,7 @@ export async function buildCreateEntityMetadataIx(params: {
     bio,
     pictureUrl,
     payer,
+    controllers,
   } = params;
 
   return program.methods
@@ -35,5 +37,12 @@ export async function buildCreateEntityMetadataIx(params: {
       schema: schemaPda,
       payer,
     })
+    .remainingAccounts(
+      controllers.map((kp) => ({
+        pubkey: kp,
+        isSigner: true,
+        isWritable: false,
+      })),
+    )
     .instruction();
 }
