@@ -87,6 +87,6 @@ export async function createEntityTransaction({
     transaction.add(schemaInstruction);
   }
 
-  // transaction.add(metadataInstruction);
+  transaction.add(metadataInstruction);
   return { transaction };
 }
