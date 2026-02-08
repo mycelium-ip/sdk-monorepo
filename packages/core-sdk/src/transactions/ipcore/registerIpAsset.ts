@@ -10,6 +10,7 @@ import {
 import type { Ipcore } from "../../types/ipcore";
 import { Metadata } from "../../types";
 import {
+  deriveEntityPda,
   deriveRegistryConfigPda,
   deriveRegistryConfigTreasuryPda,
   deriveSchemaPda,
@@ -19,8 +20,7 @@ import * as anchor from "@coral-xyz/anchor";
 export async function createRegisterIpAssetTransaction(params: {
   program: Program<Ipcore>;
   metadataProgram: Program<Metadata>;
-  entity: PublicKey;
-  entityProgram: PublicKey;
+  entity: Uint8Array;
   payer: PublicKey;
   authority: PublicKey;
 
@@ -56,6 +56,7 @@ export async function createRegisterIpAssetTransaction(params: {
     description,
     isParticipantOfHackathon,
   } = params;
+  const [entityPda] = deriveEntityPda(entity);
   const [registryConfigPda] = deriveRegistryConfigPda();
   const [registryConfigTreasuryPda] = deriveRegistryConfigTreasuryPda();
 
@@ -84,7 +85,7 @@ export async function createRegisterIpAssetTransaction(params: {
   // ─────────────────────────────────────────────
   const { instruction: ipAssetInstruction, ipAssetPda } =
     await buildRegisterRootIpInstruction(program, {
-      entity,
+      entity: entityPda,
       payer,
       registryConfig: registryConfigPda,
       registryConfigTreasury: registryConfigTreasuryPda,
@@ -112,7 +113,7 @@ export async function createRegisterIpAssetTransaction(params: {
   const metadataInstruction = await buildCreateIpMetadataIx({
     program: metadataProgram,
     ipAssetPda: ipAssetPda,
-    entityPda: entity,
+    entityPda: entityPda,
     schemaPda: schemaPda,
     version: new anchor.BN(1),
     name,

@@ -1,15 +1,17 @@
 import { PublicKey } from "@solana/web3.js";
 import { IPCORE_PROGRAM_ID, SEEDS } from "../constants";
+import * as anchor from "@coral-xyz/anchor";
 
 export function deriveIPAssetPda(
   entity: PublicKey,
-  ipId: bigint,
+  ipId: anchor.BN,
 ): [PublicKey, number] {
-  const ipIdBuf = Buffer.alloc(8);
-  ipIdBuf.writeBigUInt64LE(ipId);
-
   return PublicKey.findProgramAddressSync(
-    [Buffer.from(SEEDS.IP_ASSET), entity.toBuffer(), ipIdBuf],
+    [
+      Buffer.from(SEEDS.IP_ASSET),
+      entity.toBuffer(),
+      ipId.toArrayLike(Buffer, "le", 8),
+    ],
     IPCORE_PROGRAM_ID,
   );
 }
