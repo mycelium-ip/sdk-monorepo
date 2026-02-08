@@ -13,9 +13,6 @@ export async function createRegisterIpAssetTransaction(params: {
   registryConfigTreasury: PublicKey;
 
   ipId: BN;
-  category: number;
-  metadataUri: string;
-  provenance: string;
   registrationFeeLamports: BN;
 
   controllers: PublicKey[];
@@ -27,9 +24,6 @@ export async function createRegisterIpAssetTransaction(params: {
     registryConfig,
     registryConfigTreasury,
     ipId,
-    category,
-    metadataUri,
-    provenance,
     registrationFeeLamports,
     controllers,
   } = params;
@@ -45,9 +39,6 @@ export async function createRegisterIpAssetTransaction(params: {
       registryConfig,
       registryConfigTreasury,
       ipId,
-      category,
-      metadataUri,
-      provenance,
       registrationFeeLamports,
       controllers,
     },

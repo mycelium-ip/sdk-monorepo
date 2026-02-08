@@ -15,6 +15,10 @@ export type CreateEntityTransactionParams = {
   entityId: Uint8Array;
   controllers: anchor.web3.PublicKey[];
   threshold: number;
+  name: string;
+  handle: string;
+  bio: string;
+  pictureUrl: string;
   payer: anchor.web3.PublicKey;
 };
 
@@ -28,6 +32,10 @@ export async function createEntityTransaction({
   entityId,
   controllers,
   threshold,
+  name,
+  handle,
+  bio,
+  pictureUrl,
   payer,
 }: CreateEntityTransactionParams): Promise<{
   transaction: anchor.web3.Transaction;
@@ -50,8 +58,10 @@ export async function createEntityTransaction({
     entityPda: entityPda,
     schemaPda: schemaPda,
     version: anchor.BN(1),
-    uri: "",
-    contentHash: Buffer.from("", "base64"),
+    name,
+    handle,
+    bio,
+    pictureUrl,
     payer,
   });
 

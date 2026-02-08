@@ -12,8 +12,10 @@ export async function createUpdateEntityMetadataTransaction(params: {
   authority: PublicKey;
   payer: PublicKey;
   version: BN;
-  uri: string;
-  contentHash: Buffer;
+  name: string;
+  handle: string;
+  bio: string;
+  pictureUrl: string;
 }): Promise<{ transaction: Transaction }> {
   const {
     program,
@@ -24,8 +26,10 @@ export async function createUpdateEntityMetadataTransaction(params: {
     authority,
     payer,
     version,
-    uri,
-    contentHash,
+    name,
+    handle,
+    bio,
+    pictureUrl,
   } = params;
 
   // ─────────────────────────────────────────────
@@ -40,8 +44,10 @@ export async function createUpdateEntityMetadataTransaction(params: {
     authority,
     payer,
     version,
-    uri,
-    contentHash,
+    name,
+    handle,
+    bio,
+    pictureUrl,
   });
 
   // ─────────────────────────────────────────────

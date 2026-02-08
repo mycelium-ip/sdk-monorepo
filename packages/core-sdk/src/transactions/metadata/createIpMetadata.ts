@@ -9,8 +9,14 @@ export async function createIpMetadataTransaction(params: {
   schemaPda: PublicKey;
   entityPda: PublicKey;
   version: BN;
-  uri: string;
-  contentHash: Buffer;
+  logoUrl: string;
+  name: string;
+  creatorName: string;
+  country: string;
+  city: string;
+  ipType: string;
+  description: string;
+  isParticipantOfHackathon: boolean;
   payer: PublicKey;
 }): Promise<{ transaction: Transaction }> {
   const {
@@ -19,8 +25,14 @@ export async function createIpMetadataTransaction(params: {
     schemaPda,
     entityPda,
     version,
-    uri,
-    contentHash,
+    logoUrl,
+    name,
+    creatorName,
+    country,
+    city,
+    ipType,
+    description,
+    isParticipantOfHackathon,
     payer,
   } = params;
 
@@ -33,8 +45,14 @@ export async function createIpMetadataTransaction(params: {
     entityPda,
     schemaPda,
     version,
-    uri,
-    contentHash,
+    logoUrl,
+    name,
+    creatorName,
+    country,
+    city,
+    ipType,
+    description,
+    isParticipantOfHackathon,
     payer,
   });
 

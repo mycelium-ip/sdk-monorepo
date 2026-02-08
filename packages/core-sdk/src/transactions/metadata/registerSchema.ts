@@ -2,12 +2,13 @@ import type { Program } from "@coral-xyz/anchor";
 import { type PublicKey, Transaction } from "@solana/web3.js";
 import { buildRegisterSchemaIx } from "../../instructions";
 import type { Metadata } from "../../types/metadata";
+import { BN } from "@coral-xyz/anchor";
 
 export async function createRegisterSchemaTransaction(params: {
   program: Program<Metadata>;
   category: string;
   schemaUri: string;
-  version: number;
+  version: BN;
   creator: PublicKey;
 }): Promise<{ transaction: Transaction }> {
   const { program, category, schemaUri, version, creator } = params;
