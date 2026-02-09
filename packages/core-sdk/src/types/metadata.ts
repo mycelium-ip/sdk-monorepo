@@ -81,19 +81,7 @@ export type Metadata = {
           type: "u64";
         },
         {
-          name: "name";
-          type: "string";
-        },
-        {
-          name: "handle";
-          type: "string";
-        },
-        {
-          name: "bio";
-          type: "string";
-        },
-        {
-          name: "pictureUrl";
+          name: "metadataUri";
           type: "string";
         },
       ];
@@ -154,36 +142,8 @@ export type Metadata = {
           type: "u64";
         },
         {
-          name: "logoUrl";
+          name: "metadataUri";
           type: "string";
-        },
-        {
-          name: "name";
-          type: "string";
-        },
-        {
-          name: "creatorName";
-          type: "string";
-        },
-        {
-          name: "country";
-          type: "string";
-        },
-        {
-          name: "city";
-          type: "string";
-        },
-        {
-          name: "ipType";
-          type: "string";
-        },
-        {
-          name: "description";
-          type: "string";
-        },
-        {
-          name: "isParticipantOfHackathon";
-          type: "bool";
         },
       ];
     },
@@ -358,19 +318,7 @@ export type Metadata = {
           type: "u64";
         },
         {
-          name: "name";
-          type: "string";
-        },
-        {
-          name: "handle";
-          type: "string";
-        },
-        {
-          name: "bio";
-          type: "string";
-        },
-        {
-          name: "pictureUrl";
+          name: "metadataUri";
           type: "string";
         },
       ];
@@ -438,36 +386,8 @@ export type Metadata = {
           type: "u64";
         },
         {
-          name: "logoUrl";
+          name: "metadataUri";
           type: "string";
-        },
-        {
-          name: "name";
-          type: "string";
-        },
-        {
-          name: "creatorName";
-          type: "string";
-        },
-        {
-          name: "country";
-          type: "string";
-        },
-        {
-          name: "city";
-          type: "string";
-        },
-        {
-          name: "ipType";
-          type: "string";
-        },
-        {
-          name: "description";
-          type: "string";
-        },
-        {
-          name: "isParticipantOfHackathon";
-          type: "bool";
         },
       ];
     },
@@ -587,19 +507,7 @@ export type Metadata = {
             type: "u64";
           },
           {
-            name: "name";
-            type: "string";
-          },
-          {
-            name: "handle";
-            type: "string";
-          },
-          {
-            name: "bio";
-            type: "string";
-          },
-          {
-            name: "pictureUrl";
+            name: "uri";
             type: "string";
           },
           {
@@ -675,36 +583,8 @@ export type Metadata = {
             type: "u64";
           },
           {
-            name: "logoUrl";
+            name: "uri";
             type: "string";
-          },
-          {
-            name: "name";
-            type: "string";
-          },
-          {
-            name: "creatorName";
-            type: "string";
-          },
-          {
-            name: "country";
-            type: "string";
-          },
-          {
-            name: "city";
-            type: "string";
-          },
-          {
-            name: "ipType";
-            type: "string";
-          },
-          {
-            name: "description";
-            type: "string";
-          },
-          {
-            name: "isParticipantOfHackathon";
-            type: "bool";
           },
           {
             name: "createdAt";
