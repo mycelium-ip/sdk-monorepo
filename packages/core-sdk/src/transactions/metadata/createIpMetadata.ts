@@ -9,14 +9,7 @@ export async function createIpMetadataTransaction(params: {
   schemaPda: PublicKey;
   entityPda: PublicKey;
   version: BN;
-  logoUrl: string;
-  name: string;
-  creatorName: string;
-  country: string;
-  city: string;
-  ipType: string;
-  description: string;
-  isParticipantOfHackathon: boolean;
+  metadataUri: string;
   payer: PublicKey;
   controllers: PublicKey[];
 }): Promise<{ transaction: Transaction }> {
@@ -26,14 +19,7 @@ export async function createIpMetadataTransaction(params: {
     schemaPda,
     entityPda,
     version,
-    logoUrl,
-    name,
-    creatorName,
-    country,
-    city,
-    ipType,
-    description,
-    isParticipantOfHackathon,
+    metadataUri,
     payer,
     controllers,
   } = params;
@@ -47,14 +33,7 @@ export async function createIpMetadataTransaction(params: {
     entityPda,
     schemaPda,
     version,
-    logoUrl,
-    name,
-    creatorName,
-    country,
-    city,
-    ipType,
-    description,
-    isParticipantOfHackathon,
+    metadataUri,
     payer,
     controllers,
   });

@@ -15,14 +15,7 @@ export async function buildUpdateIpMetadataIx(params: {
   payer: anchor.web3.PublicKey;
   version: BN;
   controllers: anchor.web3.PublicKey[];
-  logoUrl: string;
-  name: string;
-  creatorName: string;
-  country: string;
-  city: string;
-  ipType: string;
-  description: string;
-  isParticipantOfHackathon: boolean;
+  metadataUri: string;
 }): Promise<anchor.web3.TransactionInstruction> {
   const {
     program,
@@ -34,28 +27,11 @@ export async function buildUpdateIpMetadataIx(params: {
     payer,
     version,
     controllers,
-    logoUrl,
-    name,
-    creatorName,
-    country,
-    city,
-    ipType,
-    description,
-    isParticipantOfHackathon,
+    metadataUri,
   } = params;
 
   return program.methods
-    .updateIpMetadata(
-      version,
-      logoUrl,
-      name,
-      creatorName,
-      country,
-      city,
-      ipType,
-      description,
-      isParticipantOfHackathon,
-    )
+    .updateIpMetadata(version, metadataUri)
     .accounts({
       ipAsset: ipAssetPda,
       entity: entityPda,

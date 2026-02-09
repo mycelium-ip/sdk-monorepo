@@ -27,14 +27,7 @@ export async function createRegisterIpAssetTransaction(params: {
   ipId: BN;
   registrationFeeLamports: BN;
 
-  name: string;
-  logoUrl: string;
-  creatorName: string;
-  country: string;
-  city: string;
-  ipType: string;
-  description: string;
-  isParticipantOfHackathon: boolean;
+  metadataUri: string;
 
   controllers: PublicKey[];
 }): Promise<{ transaction: Transaction; ipAssetPda: PublicKey }> {
@@ -43,18 +36,11 @@ export async function createRegisterIpAssetTransaction(params: {
     metadataProgram,
     entity,
     payer,
+    metadataUri,
     authority,
     ipId,
     registrationFeeLamports,
     controllers,
-    name,
-    logoUrl,
-    creatorName,
-    country,
-    city,
-    ipType,
-    description,
-    isParticipantOfHackathon,
   } = params;
   const [entityPda] = deriveEntityPda(entity);
   const [registryConfigPda] = deriveRegistryConfigPda();
@@ -116,14 +102,7 @@ export async function createRegisterIpAssetTransaction(params: {
     entityPda: entityPda,
     schemaPda: schemaPda,
     version: new anchor.BN(1),
-    name,
-    logoUrl,
-    creatorName,
-    city,
-    country,
-    ipType,
-    description,
-    isParticipantOfHackathon,
+    metadataUri,
     payer,
     controllers,
   });

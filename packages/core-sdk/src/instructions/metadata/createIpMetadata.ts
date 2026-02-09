@@ -11,14 +11,7 @@ export async function buildCreateIpMetadataIx(params: {
   schemaPda: anchor.web3.PublicKey;
   entityPda: anchor.web3.PublicKey;
   version: BN;
-  logoUrl: string;
-  name: string;
-  creatorName: string;
-  country: string;
-  city: string;
-  ipType: string;
-  description: string;
-  isParticipantOfHackathon: boolean;
+  metadataUri: string;
   payer: anchor.web3.PublicKey;
   controllers: anchor.web3.PublicKey[];
 }): Promise<anchor.web3.TransactionInstruction> {
@@ -28,30 +21,13 @@ export async function buildCreateIpMetadataIx(params: {
     schemaPda,
     entityPda,
     version,
-    logoUrl,
-    name,
-    creatorName,
-    country,
-    city,
-    ipType,
-    description,
-    isParticipantOfHackathon,
+    metadataUri,
     payer,
     controllers,
   } = params;
 
   return program.methods
-    .createIpMetadata(
-      version,
-      logoUrl,
-      name,
-      creatorName,
-      country,
-      city,
-      ipType,
-      description,
-      isParticipantOfHackathon,
-    )
+    .createIpMetadata(version, metadataUri)
     .accounts({
       ipAsset: ipAssetPda,
       schema: schemaPda,
