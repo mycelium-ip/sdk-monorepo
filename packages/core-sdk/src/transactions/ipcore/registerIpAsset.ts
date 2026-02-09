@@ -24,7 +24,7 @@ export async function createRegisterIpAssetTransaction(params: {
   payer: PublicKey;
   authority: PublicKey;
 
-  ipId: BN;
+  ipId: number;
   registrationFee: number;
 
   metadataUri: string;
@@ -75,7 +75,7 @@ export async function createRegisterIpAssetTransaction(params: {
       payer,
       registryConfig: registryConfigPda,
       registryConfigTreasury: registryConfigTreasuryPda,
-      ipId,
+      ipId: new anchor.BN(ipId),
       registrationFeeLamports: new anchor.BN(
         registrationFee * LAMPORTS_PER_SOL,
       ),
