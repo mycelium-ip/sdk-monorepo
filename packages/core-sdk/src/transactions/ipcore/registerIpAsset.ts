@@ -1,5 +1,5 @@
 import type { BN, Program } from "@coral-xyz/anchor";
-import { LAMPORTS_PER_SOL, PublicKey, Transaction } from "@solana/web3.js";
+import { LAMPORTS_PER_SOL, type PublicKey, Transaction } from "@solana/web3.js";
 import {
   buildCreateIpMetadataIx,
   buildInitializeRegistryConfigIx,
@@ -20,16 +20,16 @@ import * as anchor from "@coral-xyz/anchor";
 export async function createRegisterIpAssetTransaction(params: {
   program: Program<Ipcore>;
   metadataProgram: Program<Metadata>;
-  entity: string;
-  payer: string;
-  authority: string;
+  entity: Uint8Array;
+  payer: PublicKey;
+  authority: PublicKey;
 
   ipId: number;
   registrationFee: number;
 
   metadataUri: string;
 
-  controllers: string[];
+  controllers: PublicKey[];
 }): Promise<{ transaction: Transaction; ipAssetPda: PublicKey }> {
   const {
     program,
@@ -42,20 +42,13 @@ export async function createRegisterIpAssetTransaction(params: {
     registrationFee,
     controllers,
   } = params;
-
-  const entityPublicKey = new PublicKey(entity);
-  const entityIdUint = entityPublicKey.toBytes();
-  const authorityPublicKey = new PublicKey(authority);
-  const payerPublicKey = new PublicKey(payer);
-  const controllersPublicKey = controllers.map((c) => new PublicKey(c));
-
-  const [entityPda] = deriveEntityPda(entityIdUint);
+  const [entityPda] = deriveEntityPda(entity);
   const [registryConfigPda] = deriveRegistryConfigPda();
   const [registryConfigTreasuryPda] = deriveRegistryConfigTreasuryPda();
 
   const registryConfigIx = await buildInitializeRegistryConfigIx({
     program: program,
-    authority: authorityPublicKey,
+    authority: authority,
     feeLamports: new anchor.BN(0.005 * LAMPORTS_PER_SOL),
   });
 
@@ -63,7 +56,7 @@ export async function createRegisterIpAssetTransaction(params: {
     await buildInitializeRegistryConfigTreasuryIx({
       program: program,
       registryConfig: registryConfigPda,
-      authority: authorityPublicKey,
+      authority: authority,
     });
 
   const currentRegistryConfig =
@@ -79,14 +72,14 @@ export async function createRegisterIpAssetTransaction(params: {
   const { instruction: ipAssetInstruction, ipAssetPda } =
     await buildRegisterRootIpInstruction(program, {
       entity: entityPda,
-      payer: payerPublicKey,
+      payer,
       registryConfig: registryConfigPda,
       registryConfigTreasury: registryConfigTreasuryPda,
       ipId: new anchor.BN(ipId),
       registrationFeeLamports: new anchor.BN(
         registrationFee * LAMPORTS_PER_SOL,
       ),
-      controllers: controllersPublicKey,
+      controllers,
     });
 
   const schemaCategory = "1";
@@ -101,7 +94,7 @@ export async function createRegisterIpAssetTransaction(params: {
     program: metadataProgram,
     category: schemaCategory,
     version: schemaVersion,
-    creator: payerPublicKey,
+    creator: payer,
     schemaUri: schemaUri,
   });
 
@@ -112,16 +105,14 @@ export async function createRegisterIpAssetTransaction(params: {
     schemaPda: schemaPda,
     version: new anchor.BN(1),
     metadataUri,
-    payer: payerPublicKey,
-    controllers: controllersPublicKey,
+    payer,
+    controllers,
   });
 
   // ─────────────────────────────────────────────
   // 2. Create transaction and add instruction
   // ─────────────────────────────────────────────
-  const transaction = new Transaction({
-    feePayer: payerPublicKey,
-  });
+  const transaction = new Transaction();
 
   if (!currentRegistryConfig) {
     transaction.add(registryConfigIx);
