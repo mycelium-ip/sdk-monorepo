@@ -39,6 +39,7 @@ export async function createEntityTransaction({
   const entityIdUint = entityPublicKey.toBytes();
   const payerPublicKey = new PublicKey(payer);
   const controllersPublicKey = controllers.map((c) => new PublicKey(c));
+
   // Build the instruction using our reusable helper
   const instruction = await buildRegisterEntityInstruction({
     program,
