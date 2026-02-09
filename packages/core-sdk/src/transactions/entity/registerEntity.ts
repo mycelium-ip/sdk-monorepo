@@ -8,15 +8,16 @@ import {
 import type { Entity } from "../../types/entity";
 import { Metadata } from "../../types";
 import { deriveEntityPda, deriveSchemaPda } from "../../pda";
+import { PublicKey } from "@solana/web3.js";
 
 export type CreateEntityTransactionParams = {
   program: Program<Entity>;
   metadataProgram: Program<Metadata>;
-  entityId: Uint8Array;
-  controllers: anchor.web3.PublicKey[];
+  entityId: string;
+  controllers: string[];
   threshold: number;
   metadataUri: string;
-  payer: anchor.web3.PublicKey;
+  payer: string;
 };
 
 /**
@@ -34,16 +35,20 @@ export async function createEntityTransaction({
 }: CreateEntityTransactionParams): Promise<{
   transaction: anchor.web3.Transaction;
 }> {
+  const entityPublicKey = new PublicKey(entityId);
+  const entityIdUint = entityPublicKey.toBytes();
+  const payerPublicKey = new PublicKey(payer);
+  const controllersPublicKey = controllers.map((c) => new PublicKey(c));
   // Build the instruction using our reusable helper
   const instruction = await buildRegisterEntityInstruction({
     program,
-    entityId,
-    controllers,
+    entityId: entityPublicKey?.toBytes(),
+    controllers: controllersPublicKey,
     threshold,
-    payer,
+    payer: payerPublicKey,
   });
 
-  const [entityPda] = deriveEntityPda(entityId);
+  const [entityPda] = deriveEntityPda(entityIdUint);
 
   const schemaCategory = "1";
   const schemaVersion = new anchor.BN(1);
@@ -58,7 +63,7 @@ export async function createEntityTransaction({
     program: metadataProgram,
     category: schemaCategory,
     version: schemaVersion,
-    creator: payer,
+    creator: payerPublicKey,
     schemaUri: schemaUri,
   });
 
@@ -68,12 +73,14 @@ export async function createEntityTransaction({
     schemaPda: schemaPda,
     version: new anchor.BN(1),
     metadataUri,
-    payer,
-    controllers,
+    payer: payerPublicKey,
+    controllers: controllersPublicKey,
   });
 
   // Create a transaction and add the instruction
-  const transaction = new anchor.web3.Transaction().add(instruction);
+  const transaction = new anchor.web3.Transaction({
+    feePayer: payerPublicKey,
+  }).add(instruction);
 
   if (!currentSchema) {
     transaction.add(schemaInstruction);
