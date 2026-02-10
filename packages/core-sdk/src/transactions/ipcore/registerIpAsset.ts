@@ -2,15 +2,11 @@ import type { BN, Program } from "@coral-xyz/anchor";
 import { LAMPORTS_PER_SOL, type PublicKey, Transaction } from "@solana/web3.js";
 import {
   buildCreateIpMetadataIx,
-  buildInitializeRegistryConfigIx,
-  buildInitializeRegistryConfigTreasuryIx,
   buildRegisterRootIpInstruction,
-  buildRegisterSchemaIx,
 } from "../../instructions";
 import type { Ipcore } from "../../types/ipcore";
-import { Entity, Metadata } from "../../types";
+import { Metadata } from "../../types";
 import {
-  deriveEntityCounterPda,
   deriveEntityPda,
   deriveIPAssetPda,
   deriveIpCounterPda,
@@ -19,13 +15,11 @@ import {
   deriveSchemaPda,
 } from "../../pda";
 import * as anchor from "@coral-xyz/anchor";
-import { buildInitIpCounterInstruction } from "../../instructions/ipcore/initIpCounter";
 
 export async function createRegisterIpAssetTransaction(params: {
   program: Program<Ipcore>;
   metadataProgram: Program<Metadata>;
   payer: PublicKey;
-  authority: PublicKey;
   entityIndex: number;
 
   registrationFee: number;
@@ -39,7 +33,6 @@ export async function createRegisterIpAssetTransaction(params: {
     metadataProgram,
     payer,
     metadataUri,
-    authority,
     registrationFee,
     controllers,
     entityIndex,
@@ -64,25 +57,21 @@ export async function createRegisterIpAssetTransaction(params: {
 
   const [ipAssetPda] = deriveIPAssetPda(entityPda, currentIpCounterIndex);
 
-  const registryConfigIx = await buildInitializeRegistryConfigIx({
-    program: program,
-    authority: authority,
-    feeLamports: new anchor.BN(0.005 * LAMPORTS_PER_SOL),
-  });
-
-  const registryConfigTreasuryIx =
-    await buildInitializeRegistryConfigTreasuryIx({
-      program: program,
-      registryConfig: registryConfigPda,
-      authority: authority,
-    });
-
   const currentRegistryConfig =
     await program.account.registryConfig.fetchNullable(registryConfigPda);
+
   const currentRegistryConfigTreasury =
     await program.account.registryConfigTreasury.fetchNullable(
       registryConfigTreasuryPda,
     );
+
+  if (!currentRegistryConfig) {
+    throw new Error("Registry config not initialized.");
+  }
+
+  if (!currentRegistryConfigTreasury) {
+    throw new Error("Registry config treasury not initialized.");
+  }
 
   // ─────────────────────────────────────────────
   // 1. Build the instruction
@@ -98,19 +87,16 @@ export async function createRegisterIpAssetTransaction(params: {
 
   const schemaCategory = "1";
   const schemaVersion = new anchor.BN(1);
-  const schemaUri = "https://example.com";
   const [schemaPda] = deriveSchemaPda(schemaCategory, schemaVersion);
 
   const currentSchema =
     await metadataProgram.account.schemaRegistry.fetchNullable(schemaPda);
 
-  const schemaInstruction = await buildRegisterSchemaIx({
-    program: metadataProgram,
-    category: schemaCategory,
-    version: schemaVersion,
-    creator: payer,
-    schemaUri: schemaUri,
-  });
+  if (!currentSchema) {
+    throw new Error(
+      `Schema not registered: category=${schemaCategory}, version=${schemaVersion.toString()}`,
+    );
+  }
 
   const metadataInstruction = await buildCreateIpMetadataIx({
     program: metadataProgram,
@@ -128,19 +114,7 @@ export async function createRegisterIpAssetTransaction(params: {
   // ─────────────────────────────────────────────
   const transaction = new Transaction();
 
-  if (!currentRegistryConfig) {
-    transaction.add(registryConfigIx);
-  }
-
-  if (!currentRegistryConfigTreasury) {
-    transaction.add(registryConfigTreasuryIx);
-  }
-
   transaction.add(ipAssetInstruction);
-
-  if (!currentSchema) {
-    transaction.add(schemaInstruction);
-  }
 
   transaction.add(metadataInstruction);
 
