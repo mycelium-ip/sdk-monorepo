@@ -7,9 +7,10 @@ export type BuildUpdateControllersInstructionParams = {
   program: Program<Entity>;
 
   // Intent
-  entityId: Uint8Array;
+  owner: anchor.web3.PublicKey;
   newControllers: anchor.web3.PublicKey[];
   newThreshold: number;
+  entityIndex: anchor.BN;
 
   // Existing controllers approving this change
   controllers: anchor.web3.PublicKey[];
@@ -17,9 +18,10 @@ export type BuildUpdateControllersInstructionParams = {
 
 export function buildUpdateControllersInstruction({
   program,
-  entityId,
+  owner,
   newControllers,
   newThreshold,
+  entityIndex,
   controllers,
 }: BuildUpdateControllersInstructionParams): {
   instruction: Promise<anchor.web3.TransactionInstruction>;
@@ -28,7 +30,7 @@ export function buildUpdateControllersInstruction({
   // ─────────────────────────────────────────────
   // 1. Derive Entity PDA
   // ─────────────────────────────────────────────
-  const [entityPda] = deriveEntityPda(entityId);
+  const [entityPda] = deriveEntityPda(owner, entityIndex);
 
   // ─────────────────────────────────────────────
   // 2. Remaining accounts (multisig signers)

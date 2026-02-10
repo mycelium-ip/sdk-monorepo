@@ -205,6 +205,41 @@
       "args": []
     },
     {
+      "name": "init_ip_counter",
+      "discriminator": [188, 104, 248, 176, 75, 130, 32, 73],
+      "accounts": [
+        {
+          "name": "entity"
+        },
+        {
+          "name": "ip_counter",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [105, 112, 95, 99, 111, 117, 110, 116, 101, 114]
+              },
+              {
+                "kind": "account",
+                "path": "entity"
+              }
+            ]
+          }
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
       "name": "init_ip_registry",
       "discriminator": [203, 77, 104, 116, 165, 32, 228, 42],
       "accounts": [
@@ -354,6 +389,10 @@
           "address": "D2urY658MyDWtrTqgSdNpt6GNZE7TuFiSGYNcgzxZFgf"
         },
         {
+          "name": "ip_counter",
+          "writable": true
+        },
+        {
           "name": "ip_asset",
           "writable": true,
           "pda": {
@@ -367,8 +406,9 @@
                 "path": "entity"
               },
               {
-                "kind": "arg",
-                "path": "ip_id"
+                "kind": "account",
+                "path": "ip_counter.next_ip_index",
+                "account": "IPCounter"
               }
             ]
           }
@@ -391,10 +431,6 @@
         }
       ],
       "args": [
-        {
-          "name": "ip_id",
-          "type": "u64"
-        },
         {
           "name": "registration_fee_lamports",
           "type": "u64"
@@ -504,6 +540,10 @@
       "discriminator": [157, 216, 58, 229, 111, 101, 192, 187]
     },
     {
+      "name": "IPCounter",
+      "discriminator": [154, 39, 148, 24, 230, 111, 125, 183]
+    },
+    {
       "name": "IPRegistry",
       "discriminator": [128, 96, 137, 212, 42, 77, 209, 85]
     },
@@ -587,12 +627,6 @@
         "kind": "struct",
         "fields": [
           {
-            "name": "entity_id",
-            "type": {
-              "array": ["u8", 32]
-            }
-          },
-          {
             "name": "status",
             "type": "u8"
           },
@@ -617,6 +651,10 @@
           {
             "name": "updated_at",
             "type": "i64"
+          },
+          {
+            "name": "entity_index",
+            "type": "u64"
           }
         ]
       }
@@ -652,12 +690,28 @@
             "type": "i64"
           },
           {
-            "name": "ip_id",
-            "type": "u64"
-          },
-          {
             "name": "creator",
             "type": "pubkey"
+          },
+          {
+            "name": "ip_index",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "IPCounter",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "entity",
+            "type": "pubkey"
+          },
+          {
+            "name": "next_ip_index",
+            "type": "u64"
           }
         ]
       }

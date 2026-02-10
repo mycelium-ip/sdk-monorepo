@@ -1,9 +1,17 @@
 import { PublicKey } from "@solana/web3.js";
 import { ENTITY_PROGRAM_ID, SEEDS } from "../constants";
+import * as anchor from "@coral-xyz/anchor";
 
-export function deriveEntityPda(entityId: Uint8Array): [PublicKey, number] {
+export function deriveEntityPda(
+  owner: PublicKey,
+  entityIndex: anchor.BN,
+): [PublicKey, number] {
   return PublicKey.findProgramAddressSync(
-    [Buffer.from(SEEDS.ENTITY), Buffer.from(entityId)],
+    [
+      Buffer.from(SEEDS.ENTITY),
+      owner.toBuffer(),
+      entityIndex.toArrayLike(Buffer, "le", 8),
+    ],
     ENTITY_PROGRAM_ID,
   );
 }

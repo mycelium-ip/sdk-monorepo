@@ -48,24 +48,46 @@
       "args": []
     },
     {
-      "name": "init_entity_treasury",
-      "discriminator": [66, 233, 24, 140, 15, 239, 108, 43],
+      "name": "init_entity_counter",
+      "discriminator": [192, 181, 149, 83, 121, 120, 190, 113],
       "accounts": [
         {
-          "name": "entity",
+          "name": "entity_counter",
           "writable": true,
           "pda": {
             "seeds": [
               {
                 "kind": "const",
-                "value": [101, 110, 116, 105, 116, 121]
+                "value": [
+                  101, 110, 116, 105, 116, 121, 95, 99, 111, 117, 110, 116, 101,
+                  114
+                ]
               },
               {
-                "kind": "arg",
-                "path": "entity_id"
+                "kind": "account",
+                "path": "payer"
               }
             ]
           }
+        },
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "init_entity_treasury",
+      "discriminator": [66, 233, 24, 140, 15, 239, 108, 43],
+      "accounts": [
+        {
+          "name": "entity"
         },
         {
           "name": "treasury",
@@ -96,19 +118,16 @@
           "address": "11111111111111111111111111111111"
         }
       ],
-      "args": [
-        {
-          "name": "entity_id",
-          "type": {
-            "array": ["u8", 32]
-          }
-        }
-      ]
+      "args": []
     },
     {
       "name": "register_entity",
       "discriminator": [166, 52, 122, 244, 214, 116, 215, 255],
       "accounts": [
+        {
+          "name": "entity_counter",
+          "writable": true
+        },
         {
           "name": "entity",
           "writable": true,
@@ -119,8 +138,13 @@
                 "value": [101, 110, 116, 105, 116, 121]
               },
               {
-                "kind": "arg",
-                "path": "entity_id"
+                "kind": "account",
+                "path": "payer"
+              },
+              {
+                "kind": "account",
+                "path": "entity_counter.next_entity_index",
+                "account": "EntityCounter"
               }
             ]
           }
@@ -136,12 +160,6 @@
         }
       ],
       "args": [
-        {
-          "name": "entity_id",
-          "type": {
-            "array": ["u8", 32]
-          }
-        },
         {
           "name": "controllers",
           "type": {
@@ -181,6 +199,10 @@
     {
       "name": "EntityAccount",
       "discriminator": [46, 132, 149, 104, 229, 39, 46, 87]
+    },
+    {
+      "name": "EntityCounter",
+      "discriminator": [101, 1, 28, 203, 184, 98, 155, 3]
     },
     {
       "name": "EntityTreasury",
@@ -231,12 +253,6 @@
         "kind": "struct",
         "fields": [
           {
-            "name": "entity_id",
-            "type": {
-              "array": ["u8", 32]
-            }
-          },
-          {
             "name": "status",
             "type": "u8"
           },
@@ -261,6 +277,26 @@
           {
             "name": "updated_at",
             "type": "i64"
+          },
+          {
+            "name": "entity_index",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "EntityCounter",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "next_entity_index",
+            "type": "u64"
           }
         ]
       }

@@ -453,12 +453,6 @@ export type Metadata = {
         kind: "struct";
         fields: [
           {
-            name: "entityId";
-            type: {
-              array: ["u8", 32];
-            };
-          },
-          {
             name: "status";
             type: "u8";
           },
@@ -483,6 +477,10 @@ export type Metadata = {
           {
             name: "updatedAt";
             type: "i64";
+          },
+          {
+            name: "entityIndex";
+            type: "u64";
           },
         ];
       };
@@ -553,12 +551,12 @@ export type Metadata = {
             type: "i64";
           },
           {
-            name: "ipId";
-            type: "u64";
-          },
-          {
             name: "creator";
             type: "pubkey";
+          },
+          {
+            name: "ipIndex";
+            type: "u64";
           },
         ];
       };

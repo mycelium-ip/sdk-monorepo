@@ -6,7 +6,7 @@ export type BuildInitEntityTreasuryInstructionParams = {
   program: Program<Entity>;
 
   // Intent
-  entityId: Uint8Array;
+  entityPda: anchor.web3.PublicKey;
 
   // Fee payer
   payer: anchor.web3.PublicKey;
@@ -15,7 +15,7 @@ export type BuildInitEntityTreasuryInstructionParams = {
 
 export function buildInitEntityTreasuryInstruction({
   program,
-  entityId,
+  entityPda,
   payer,
   controllers,
 }: BuildInitEntityTreasuryInstructionParams): {
@@ -25,9 +25,10 @@ export function buildInitEntityTreasuryInstruction({
   // 3. Build instruction (pure)
   // ─────────────────────────────────────────────
   const instruction = program.methods
-    .initEntityTreasury([...entityId])
+    .initEntityTreasury()
     .accounts({
       payer,
+      entity: entityPda,
     })
     .remainingAccounts(
       controllers.map((kp) => ({

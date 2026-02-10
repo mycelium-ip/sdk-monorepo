@@ -421,12 +421,6 @@
         "kind": "struct",
         "fields": [
           {
-            "name": "entity_id",
-            "type": {
-              "array": ["u8", 32]
-            }
-          },
-          {
             "name": "status",
             "type": "u8"
           },
@@ -451,6 +445,10 @@
           {
             "name": "updated_at",
             "type": "i64"
+          },
+          {
+            "name": "entity_index",
+            "type": "u64"
           }
         ]
       }
@@ -521,12 +519,12 @@
             "type": "i64"
           },
           {
-            "name": "ip_id",
-            "type": "u64"
-          },
-          {
             "name": "creator",
             "type": "pubkey"
+          },
+          {
+            "name": "ip_index",
+            "type": "u64"
           }
         ]
       }

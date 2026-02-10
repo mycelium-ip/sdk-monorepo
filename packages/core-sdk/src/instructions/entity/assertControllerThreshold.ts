@@ -7,7 +7,8 @@ export type BuildAssertControllerThresholdInstructionParams = {
   program: Program<Entity>;
 
   // Intent
-  entityId: Uint8Array;
+  owner: anchor.web3.PublicKey;
+  entityIndex: anchor.BN;
 
   // Controllers asserting the threshold
   controllers: anchor.web3.PublicKey[];
@@ -15,7 +16,8 @@ export type BuildAssertControllerThresholdInstructionParams = {
 
 export function buildAssertControllerThresholdInstruction({
   program,
-  entityId,
+  owner,
+  entityIndex,
   controllers,
 }: BuildAssertControllerThresholdInstructionParams): {
   instruction: Promise<anchor.web3.TransactionInstruction>;
@@ -24,7 +26,7 @@ export function buildAssertControllerThresholdInstruction({
   // ─────────────────────────────────────────────
   // 1. Derive Entity PDA
   // ─────────────────────────────────────────────
-  const [entityPda] = deriveEntityPda(entityId);
+  const [entityPda] = deriveEntityPda(owner, entityIndex);
 
   // ─────────────────────────────────────────────
   // 2. Remaining accounts (controller signers)

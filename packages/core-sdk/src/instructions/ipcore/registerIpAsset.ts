@@ -17,8 +17,9 @@ export async function buildRegisterRootIpInstruction(
     registryConfig: PublicKey;
     registryConfigTreasury: PublicKey;
 
-    ipId: BN;
+    ipCounterPda: PublicKey;
     registrationFeeLamports: BN;
+    ipIndex: BN;
 
     controllers: PublicKey[];
   },
@@ -28,26 +29,28 @@ export async function buildRegisterRootIpInstruction(
     payer,
     registryConfig,
     registryConfigTreasury,
-    ipId,
+    ipCounterPda,
     registrationFeeLamports,
+    ipIndex,
     controllers,
   } = params;
 
   // ─────────────────────────────────────────────
   // 1. Derive IPAsset PDA
   // ─────────────────────────────────────────────
-  const [ipAssetPda] = deriveIPAssetPda(entity, ipId);
+  const [ipAssetPda] = deriveIPAssetPda(entity, ipIndex);
 
   // ─────────────────────────────────────────────
   // 2. Build instruction
   // ─────────────────────────────────────────────
   const instruction = await program.methods
-    .registerIpAsset(ipId, registrationFeeLamports)
+    .registerIpAsset(registrationFeeLamports)
     .accounts({
       entity,
       payer,
       registryConfig,
       registryConfigTreasury,
+      ipCounter: ipCounterPda,
     })
     .remainingAccounts(
       controllers.map((pk) => ({

@@ -224,6 +224,41 @@ export type Ipcore = {
       args: [];
     },
     {
+      name: "initIpCounter";
+      discriminator: [188, 104, 248, 176, 75, 130, 32, 73];
+      accounts: [
+        {
+          name: "entity";
+        },
+        {
+          name: "ipCounter";
+          writable: true;
+          pda: {
+            seeds: [
+              {
+                kind: "const";
+                value: [105, 112, 95, 99, 111, 117, 110, 116, 101, 114];
+              },
+              {
+                kind: "account";
+                path: "entity";
+              },
+            ];
+          };
+        },
+        {
+          name: "payer";
+          writable: true;
+          signer: true;
+        },
+        {
+          name: "systemProgram";
+          address: "11111111111111111111111111111111";
+        },
+      ];
+      args: [];
+    },
+    {
       name: "initIpRegistry";
       discriminator: [203, 77, 104, 116, 165, 32, 228, 42];
       accounts: [
@@ -420,6 +455,10 @@ export type Ipcore = {
           address: "D2urY658MyDWtrTqgSdNpt6GNZE7TuFiSGYNcgzxZFgf";
         },
         {
+          name: "ipCounter";
+          writable: true;
+        },
+        {
           name: "ipAsset";
           writable: true;
           pda: {
@@ -433,8 +472,9 @@ export type Ipcore = {
                 path: "entity";
               },
               {
-                kind: "arg";
-                path: "ipId";
+                kind: "account";
+                path: "ip_counter.next_ip_index";
+                account: "ipCounter";
               },
             ];
           };
@@ -457,10 +497,6 @@ export type Ipcore = {
         },
       ];
       args: [
-        {
-          name: "ipId";
-          type: "u64";
-        },
         {
           name: "registrationFeeLamports";
           type: "u64";
@@ -596,6 +632,10 @@ export type Ipcore = {
       discriminator: [157, 216, 58, 229, 111, 101, 192, 187];
     },
     {
+      name: "ipCounter";
+      discriminator: [154, 39, 148, 24, 230, 111, 125, 183];
+    },
+    {
       name: "ipRegistry";
       discriminator: [128, 96, 137, 212, 42, 77, 209, 85];
     },
@@ -679,12 +719,6 @@ export type Ipcore = {
         kind: "struct";
         fields: [
           {
-            name: "entityId";
-            type: {
-              array: ["u8", 32];
-            };
-          },
-          {
             name: "status";
             type: "u8";
           },
@@ -709,6 +743,10 @@ export type Ipcore = {
           {
             name: "updatedAt";
             type: "i64";
+          },
+          {
+            name: "entityIndex";
+            type: "u64";
           },
         ];
       };
@@ -744,12 +782,28 @@ export type Ipcore = {
             type: "i64";
           },
           {
-            name: "ipId";
-            type: "u64";
-          },
-          {
             name: "creator";
             type: "pubkey";
+          },
+          {
+            name: "ipIndex";
+            type: "u64";
+          },
+        ];
+      };
+    },
+    {
+      name: "ipCounter";
+      type: {
+        kind: "struct";
+        fields: [
+          {
+            name: "entity";
+            type: "pubkey";
+          },
+          {
+            name: "nextIpIndex";
+            type: "u64";
           },
         ];
       };

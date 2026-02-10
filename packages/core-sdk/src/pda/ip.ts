@@ -4,13 +4,13 @@ import * as anchor from "@coral-xyz/anchor";
 
 export function deriveIPAssetPda(
   entity: PublicKey,
-  ipId: anchor.BN,
+  ipIndex: anchor.BN,
 ): [PublicKey, number] {
   return PublicKey.findProgramAddressSync(
     [
       Buffer.from(SEEDS.IP_ASSET),
       entity.toBuffer(),
-      ipId.toArrayLike(Buffer, "le", 8),
+      ipIndex.toArrayLike(Buffer, "le", 8),
     ],
     IPCORE_PROGRAM_ID,
   );

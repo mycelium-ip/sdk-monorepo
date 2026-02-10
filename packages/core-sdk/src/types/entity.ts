@@ -54,24 +54,58 @@ export type Entity = {
       args: [];
     },
     {
-      name: "initEntityTreasury";
-      discriminator: [66, 233, 24, 140, 15, 239, 108, 43];
+      name: "initEntityCounter";
+      discriminator: [192, 181, 149, 83, 121, 120, 190, 113];
       accounts: [
         {
-          name: "entity";
+          name: "entityCounter";
           writable: true;
           pda: {
             seeds: [
               {
                 kind: "const";
-                value: [101, 110, 116, 105, 116, 121];
+                value: [
+                  101,
+                  110,
+                  116,
+                  105,
+                  116,
+                  121,
+                  95,
+                  99,
+                  111,
+                  117,
+                  110,
+                  116,
+                  101,
+                  114,
+                ];
               },
               {
-                kind: "arg";
-                path: "entityId";
+                kind: "account";
+                path: "payer";
               },
             ];
           };
+        },
+        {
+          name: "payer";
+          writable: true;
+          signer: true;
+        },
+        {
+          name: "systemProgram";
+          address: "11111111111111111111111111111111";
+        },
+      ];
+      args: [];
+    },
+    {
+      name: "initEntityTreasury";
+      discriminator: [66, 233, 24, 140, 15, 239, 108, 43];
+      accounts: [
+        {
+          name: "entity";
         },
         {
           name: "treasury";
@@ -115,19 +149,16 @@ export type Entity = {
           address: "11111111111111111111111111111111";
         },
       ];
-      args: [
-        {
-          name: "entityId";
-          type: {
-            array: ["u8", 32];
-          };
-        },
-      ];
+      args: [];
     },
     {
       name: "registerEntity";
       discriminator: [166, 52, 122, 244, 214, 116, 215, 255];
       accounts: [
+        {
+          name: "entityCounter";
+          writable: true;
+        },
         {
           name: "entity";
           writable: true;
@@ -138,8 +169,13 @@ export type Entity = {
                 value: [101, 110, 116, 105, 116, 121];
               },
               {
-                kind: "arg";
-                path: "entityId";
+                kind: "account";
+                path: "payer";
+              },
+              {
+                kind: "account";
+                path: "entity_counter.next_entity_index";
+                account: "entityCounter";
               },
             ];
           };
@@ -155,12 +191,6 @@ export type Entity = {
         },
       ];
       args: [
-        {
-          name: "entityId";
-          type: {
-            array: ["u8", 32];
-          };
-        },
         {
           name: "controllers";
           type: {
@@ -200,6 +230,10 @@ export type Entity = {
     {
       name: "entityAccount";
       discriminator: [46, 132, 149, 104, 229, 39, 46, 87];
+    },
+    {
+      name: "entityCounter";
+      discriminator: [101, 1, 28, 203, 184, 98, 155, 3];
     },
     {
       name: "entityTreasury";
@@ -250,12 +284,6 @@ export type Entity = {
         kind: "struct";
         fields: [
           {
-            name: "entityId";
-            type: {
-              array: ["u8", 32];
-            };
-          },
-          {
             name: "status";
             type: "u8";
           },
@@ -280,6 +308,26 @@ export type Entity = {
           {
             name: "updatedAt";
             type: "i64";
+          },
+          {
+            name: "entityIndex";
+            type: "u64";
+          },
+        ];
+      };
+    },
+    {
+      name: "entityCounter";
+      type: {
+        kind: "struct";
+        fields: [
+          {
+            name: "authority";
+            type: "pubkey";
+          },
+          {
+            name: "nextEntityIndex";
+            type: "u64";
           },
         ];
       };
