@@ -8,23 +8,27 @@ import {
   buildRegisterSchemaIx,
 } from "../../instructions";
 import type { Ipcore } from "../../types/ipcore";
-import { Metadata } from "../../types";
+import { Entity, Metadata } from "../../types";
 import {
+  deriveEntityCounterPda,
   deriveEntityPda,
+  deriveIPAssetPda,
+  deriveIpCounterPda,
   deriveRegistryConfigPda,
   deriveRegistryConfigTreasuryPda,
   deriveSchemaPda,
 } from "../../pda";
 import * as anchor from "@coral-xyz/anchor";
+import { buildInitEntityCounterInstruction } from "../../instructions/entity/initEntityCounter";
+import { buildInitIpCounterInstruction } from "../../instructions/ipcore/initIpCounter";
 
 export async function createRegisterIpAssetTransaction(params: {
   program: Program<Ipcore>;
   metadataProgram: Program<Metadata>;
-  entity: Uint8Array;
+  entityProgram: Program<Entity>;
   payer: PublicKey;
   authority: PublicKey;
 
-  ipId: number;
   registrationFee: number;
 
   metadataUri: string;
@@ -34,17 +38,44 @@ export async function createRegisterIpAssetTransaction(params: {
   const {
     program,
     metadataProgram,
-    entity,
+    entityProgram,
     payer,
     metadataUri,
     authority,
-    ipId,
     registrationFee,
     controllers,
   } = params;
-  const [entityPda] = deriveEntityPda(entity);
+
+  let currentIpCounterIndex = new anchor.BN(0);
+
+  const [entityCounterPda] = deriveEntityCounterPda(payer);
+  const currentEntityCounter =
+    await entityProgram.account.entityCounter.fetchNullable(entityCounterPda);
+
+  const [entityPda] = deriveEntityPda(
+    payer,
+    currentEntityCounter?.nextEntityIndex?.subn(1) || new anchor.BN(0),
+  );
+
+  const [ipCounterPda] = deriveIpCounterPda(entityPda);
+
   const [registryConfigPda] = deriveRegistryConfigPda();
   const [registryConfigTreasuryPda] = deriveRegistryConfigTreasuryPda();
+
+  const currentIpCounter =
+    await program.account.ipCounter.fetchNullable(ipCounterPda);
+
+  if (currentIpCounter) {
+    currentIpCounterIndex = currentIpCounter.nextIpIndex;
+  }
+
+  const ipCounterInstruction = await buildInitIpCounterInstruction({
+    program,
+    entityPda,
+    payer,
+  });
+
+  const [ipAssetPda] = deriveIPAssetPda(entityPda, currentIpCounterIndex);
 
   const registryConfigIx = await buildInitializeRegistryConfigIx({
     program: program,
@@ -69,18 +100,15 @@ export async function createRegisterIpAssetTransaction(params: {
   // ─────────────────────────────────────────────
   // 1. Build the instruction
   // ─────────────────────────────────────────────
-  const { instruction: ipAssetInstruction, ipAssetPda } =
-    await buildRegisterRootIpInstruction(program, {
-      entity: entityPda,
-      payer,
-      registryConfig: registryConfigPda,
-      registryConfigTreasury: registryConfigTreasuryPda,
-      ipId: new anchor.BN(ipId),
-      registrationFeeLamports: new anchor.BN(
-        registrationFee * LAMPORTS_PER_SOL,
-      ),
-      controllers,
-    });
+  const ipAssetInstruction = await buildRegisterRootIpInstruction(program, {
+    entity: entityPda,
+    payer,
+    registryConfig: registryConfigPda,
+    registryConfigTreasury: registryConfigTreasuryPda,
+    registrationFeeLamports: new anchor.BN(registrationFee * LAMPORTS_PER_SOL),
+    controllers,
+    ipCounterPda,
+  });
 
   const schemaCategory = "1";
   const schemaVersion = new anchor.BN(1);
@@ -120,6 +148,10 @@ export async function createRegisterIpAssetTransaction(params: {
 
   if (!currentRegistryConfigTreasury) {
     transaction.add(registryConfigTreasuryIx);
+  }
+
+  if (!currentIpCounter) {
+    transaction.add(ipCounterInstruction);
   }
 
   transaction.add(ipAssetInstruction);

@@ -1,11 +1,9 @@
 import type { BN, Program } from "@coral-xyz/anchor";
 import type { PublicKey, TransactionInstruction } from "@solana/web3.js";
-import { deriveIPAssetPda } from "../../pda";
 import type { Ipcore } from "../../types/ipcore";
 
 export type RegisterRootIpIx = {
   instruction: TransactionInstruction;
-  ipAssetPda: PublicKey;
 };
 
 export async function buildRegisterRootIpInstruction(
@@ -19,11 +17,10 @@ export async function buildRegisterRootIpInstruction(
 
     ipCounterPda: PublicKey;
     registrationFeeLamports: BN;
-    ipIndex: BN;
 
     controllers: PublicKey[];
   },
-): Promise<RegisterRootIpIx> {
+): Promise<TransactionInstruction> {
   const {
     entity,
     payer,
@@ -31,14 +28,8 @@ export async function buildRegisterRootIpInstruction(
     registryConfigTreasury,
     ipCounterPda,
     registrationFeeLamports,
-    ipIndex,
     controllers,
   } = params;
-
-  // ─────────────────────────────────────────────
-  // 1. Derive IPAsset PDA
-  // ─────────────────────────────────────────────
-  const [ipAssetPda] = deriveIPAssetPda(entity, ipIndex);
 
   // ─────────────────────────────────────────────
   // 2. Build instruction
@@ -61,8 +52,5 @@ export async function buildRegisterRootIpInstruction(
     )
     .instruction();
 
-  return {
-    instruction,
-    ipAssetPda,
-  };
+  return instruction;
 }
