@@ -1,5 +1,5 @@
 {
-  "address": "AoAR4JEbt9TjedschW3J3ZQozmX9Tt2u99p3cMyNKqFb",
+  "address": "E4gHpkjEMPh5GBDKKCqpnTMawfrZNqTGDZtjU6ZjM1YL",
   "metadata": {
     "name": "metadata",
     "version": "0.1.0",
@@ -53,7 +53,7 @@
         },
         {
           "name": "entity_program",
-          "address": "DjtKmZLt9TjrsH8vhGZoZ2XEEZUqEP3PmwEREUiNXGwD"
+          "address": "8eUDT3ELUStHNWmYmtCVwhGW9HdxTSW47N2AuBuJRMmh"
         }
       ],
       "args": [
@@ -110,7 +110,7 @@
         },
         {
           "name": "entity_program",
-          "address": "DjtKmZLt9TjrsH8vhGZoZ2XEEZUqEP3PmwEREUiNXGwD"
+          "address": "8eUDT3ELUStHNWmYmtCVwhGW9HdxTSW47N2AuBuJRMmh"
         },
         {
           "name": "system_program",
@@ -145,7 +145,7 @@
         },
         {
           "name": "entity_program",
-          "address": "DjtKmZLt9TjrsH8vhGZoZ2XEEZUqEP3PmwEREUiNXGwD"
+          "address": "8eUDT3ELUStHNWmYmtCVwhGW9HdxTSW47N2AuBuJRMmh"
         }
       ],
       "args": []
@@ -170,7 +170,7 @@
         },
         {
           "name": "entity_program",
-          "address": "DjtKmZLt9TjrsH8vhGZoZ2XEEZUqEP3PmwEREUiNXGwD"
+          "address": "8eUDT3ELUStHNWmYmtCVwhGW9HdxTSW47N2AuBuJRMmh"
         }
       ],
       "args": []
@@ -277,7 +277,7 @@
         },
         {
           "name": "entity_program",
-          "address": "DjtKmZLt9TjrsH8vhGZoZ2XEEZUqEP3PmwEREUiNXGwD"
+          "address": "8eUDT3ELUStHNWmYmtCVwhGW9HdxTSW47N2AuBuJRMmh"
         }
       ],
       "args": [
@@ -345,7 +345,7 @@
         },
         {
           "name": "entity_program",
-          "address": "DjtKmZLt9TjrsH8vhGZoZ2XEEZUqEP3PmwEREUiNXGwD"
+          "address": "8eUDT3ELUStHNWmYmtCVwhGW9HdxTSW47N2AuBuJRMmh"
         }
       ],
       "args": [

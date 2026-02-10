@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/entity.json`.
  */
 export type Entity = {
-  address: "DjtKmZLt9TjrsH8vhGZoZ2XEEZUqEP3PmwEREUiNXGwD";
+  address: "8eUDT3ELUStHNWmYmtCVwhGW9HdxTSW47N2AuBuJRMmh";
   metadata: {
     name: "entity";
     version: "0.1.0";

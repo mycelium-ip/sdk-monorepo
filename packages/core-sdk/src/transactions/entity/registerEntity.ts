@@ -3,7 +3,6 @@ import * as anchor from "@coral-xyz/anchor";
 import {
   buildCreateEntityMetadataIx,
   buildRegisterEntityInstruction,
-  buildRegisterSchemaIx,
 } from "../../instructions";
 import type { Entity } from "../../types/entity";
 import { Metadata } from "../../types";
@@ -58,20 +57,17 @@ export async function createEntityTransaction({
   const [entityPda] = deriveEntityPda(payer, entityIndex);
   const schemaCategory = "1";
   const schemaVersion = new anchor.BN(1);
-  const schemaUri = "https://example.com";
 
   const [schemaPda] = deriveSchemaPda(schemaCategory, schemaVersion);
 
   const currentSchema =
     await metadataProgram.account.schemaRegistry.fetchNullable(schemaPda);
 
-  const schemaInstruction = await buildRegisterSchemaIx({
-    program: metadataProgram,
-    category: schemaCategory,
-    version: schemaVersion,
-    creator: payer,
-    schemaUri: schemaUri,
-  });
+  if (!currentSchema) {
+    throw new Error(
+      `Schema not registered: category=${schemaCategory}, version=${schemaVersion.toString()}`,
+    );
+  }
 
   const metadataInstruction = await buildCreateEntityMetadataIx({
     program: metadataProgram,
@@ -87,10 +83,6 @@ export async function createEntityTransaction({
   const transaction = new anchor.web3.Transaction();
 
   transaction.add(instruction);
-
-  if (!currentSchema) {
-    transaction.add(schemaInstruction);
-  }
 
   transaction.add(metadataInstruction);
   return { transaction };
