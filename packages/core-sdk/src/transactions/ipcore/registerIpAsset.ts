@@ -24,9 +24,9 @@ import { buildInitIpCounterInstruction } from "../../instructions/ipcore/initIpC
 export async function createRegisterIpAssetTransaction(params: {
   program: Program<Ipcore>;
   metadataProgram: Program<Metadata>;
-  entityProgram: Program<Entity>;
   payer: PublicKey;
   authority: PublicKey;
+  entityIndex: number;
 
   registrationFee: number;
 
@@ -37,26 +37,20 @@ export async function createRegisterIpAssetTransaction(params: {
   const {
     program,
     metadataProgram,
-    entityProgram,
     payer,
     metadataUri,
     authority,
     registrationFee,
     controllers,
+    entityIndex,
   } = params;
-
   let currentIpCounterIndex = new anchor.BN(0);
 
-  const [entityCounterPda] = deriveEntityCounterPda(payer);
-  const currentEntityCounter =
-    await entityProgram.account.entityCounter.fetchNullable(entityCounterPda);
+  const entityIndexBN = new anchor.BN(entityIndex);
 
-  const [entityPda] = deriveEntityPda(
-    payer,
-    currentEntityCounter?.nextEntityIndex?.subn(1) || new anchor.BN(0),
-  );
+  const [entityPda] = deriveEntityPda(payer, entityIndexBN);
 
-  const [ipCounterPda] = deriveIpCounterPda(entityPda);
+  const [ipCounterPda] = deriveIpCounterPda();
 
   const [registryConfigPda] = deriveRegistryConfigPda();
   const [registryConfigTreasuryPda] = deriveRegistryConfigTreasuryPda();
@@ -67,12 +61,6 @@ export async function createRegisterIpAssetTransaction(params: {
   if (currentIpCounter) {
     currentIpCounterIndex = currentIpCounter.nextIpIndex;
   }
-
-  const ipCounterInstruction = await buildInitIpCounterInstruction({
-    program,
-    entityPda,
-    payer,
-  });
 
   const [ipAssetPda] = deriveIPAssetPda(entityPda, currentIpCounterIndex);
 
@@ -146,10 +134,6 @@ export async function createRegisterIpAssetTransaction(params: {
 
   if (!currentRegistryConfigTreasury) {
     transaction.add(registryConfigTreasuryIx);
-  }
-
-  if (!currentIpCounter) {
-    transaction.add(ipCounterInstruction);
   }
 
   transaction.add(ipAssetInstruction);

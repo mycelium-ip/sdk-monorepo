@@ -16,9 +16,9 @@ export function deriveIPAssetPda(
   );
 }
 
-export function deriveIpCounterPda(entity: PublicKey): [PublicKey, number] {
+export function deriveIpCounterPda(): [PublicKey, number] {
   return PublicKey.findProgramAddressSync(
-    [Buffer.from(SEEDS.IP_COUNTER), entity.toBuffer()],
+    [Buffer.from(SEEDS.IP_COUNTER)],
     IPCORE_PROGRAM_ID,
   );
 }

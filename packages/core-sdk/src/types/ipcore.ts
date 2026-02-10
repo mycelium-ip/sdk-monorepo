@@ -228,9 +228,6 @@ export type Ipcore = {
       discriminator: [188, 104, 248, 176, 75, 130, 32, 73];
       accounts: [
         {
-          name: "entity";
-        },
-        {
           name: "ipCounter";
           writable: true;
           pda: {
@@ -238,10 +235,6 @@ export type Ipcore = {
               {
                 kind: "const";
                 value: [105, 112, 95, 99, 111, 117, 110, 116, 101, 114];
-              },
-              {
-                kind: "account";
-                path: "entity";
               },
             ];
           };
@@ -462,10 +455,6 @@ export type Ipcore = {
               {
                 kind: "const";
                 value: [105, 112, 95, 99, 111, 117, 110, 116, 101, 114];
-              },
-              {
-                kind: "account";
-                path: "entity";
               },
             ];
           };
@@ -810,7 +799,7 @@ export type Ipcore = {
         kind: "struct";
         fields: [
           {
-            name: "entity";
+            name: "authority";
             type: "pubkey";
           },
           {

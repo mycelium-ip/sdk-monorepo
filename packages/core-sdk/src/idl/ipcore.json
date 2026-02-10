@@ -209,9 +209,6 @@
       "discriminator": [188, 104, 248, 176, 75, 130, 32, 73],
       "accounts": [
         {
-          "name": "entity"
-        },
-        {
           "name": "ip_counter",
           "writable": true,
           "pda": {
@@ -219,10 +216,6 @@
               {
                 "kind": "const",
                 "value": [105, 112, 95, 99, 111, 117, 110, 116, 101, 114]
-              },
-              {
-                "kind": "account",
-                "path": "entity"
               }
             ]
           }
@@ -396,10 +389,6 @@
               {
                 "kind": "const",
                 "value": [105, 112, 95, 99, 111, 117, 110, 116, 101, 114]
-              },
-              {
-                "kind": "account",
-                "path": "entity"
               }
             ]
           }
@@ -718,7 +707,7 @@
         "kind": "struct",
         "fields": [
           {
-            "name": "entity",
+            "name": "authority",
             "type": "pubkey"
           },
           {

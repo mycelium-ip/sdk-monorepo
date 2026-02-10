@@ -9,3 +9,4 @@ export * from "./initModuleConfig";
 export * from "./registerIpAsset";
 export * from "./resolveParent";
 export * from "./updateRegistryConfig";
+export * from "./initIpCounter";

@@ -4,7 +4,6 @@ import { Ipcore } from "../../types";
 
 export type BuildInitIpCounterInstructionParams = {
   program: Program<Ipcore>;
-  entityPda: anchor.web3.PublicKey;
 
   // Fee payer
   payer: anchor.web3.PublicKey;
@@ -12,7 +11,6 @@ export type BuildInitIpCounterInstructionParams = {
 
 export function buildInitIpCounterInstruction({
   program,
-  entityPda,
   payer,
 }: BuildInitIpCounterInstructionParams): Promise<anchor.web3.TransactionInstruction> {
   // ─────────────────────────────────────────────
@@ -22,7 +20,6 @@ export function buildInitIpCounterInstruction({
     .initIpCounter()
     .accounts({
       payer,
-      entity: entityPda,
     })
     .instruction();
 

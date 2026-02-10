@@ -38,7 +38,7 @@ export async function createEntityTransaction({
 }> {
   let entityIndex = new anchor.BN(0);
 
-  const [entityCounterPda] = deriveEntityCounterPda(payer);
+  const [entityCounterPda] = deriveEntityCounterPda();
 
   const currentCounter =
     await program.account.entityCounter.fetchNullable(entityCounterPda);
