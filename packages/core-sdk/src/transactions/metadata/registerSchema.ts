@@ -6,19 +6,17 @@ import { BN } from "@coral-xyz/anchor";
 
 export async function createRegisterSchemaTransaction(params: {
   program: Program<Metadata>;
-  category: string;
   schemaUri: string;
   version: BN;
   creator: PublicKey;
 }): Promise<{ transaction: Transaction }> {
-  const { program, category, schemaUri, version, creator } = params;
+  const { program, schemaUri, version, creator } = params;
 
   // ─────────────────────────────────────────────
   // 1. Build the instruction
   // ─────────────────────────────────────────────
   const instruction = await buildRegisterSchemaIx({
     program,
-    category,
     schemaUri,
     version,
     creator,

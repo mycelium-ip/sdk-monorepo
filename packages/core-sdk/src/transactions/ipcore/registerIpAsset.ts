@@ -85,16 +85,15 @@ export async function createRegisterIpAssetTransaction(params: {
     controllers,
   });
 
-  const schemaCategory = "1";
   const schemaVersion = new anchor.BN(1);
-  const [schemaPda] = deriveSchemaPda(schemaCategory, schemaVersion);
+  const [schemaPda] = deriveSchemaPda(schemaVersion);
 
   const currentSchema =
     await metadataProgram.account.schemaRegistry.fetchNullable(schemaPda);
 
   if (!currentSchema) {
     throw new Error(
-      `Schema not registered: category=${schemaCategory}, version=${schemaVersion.toString()}`,
+      `Schema not registered: version=${schemaVersion.toString()}`,
     );
   }
 

@@ -7,15 +7,14 @@ import type { Metadata } from "../../types/metadata";
  */
 export async function buildRegisterSchemaIx(params: {
   program: Program<Metadata>;
-  category: string;
   schemaUri: string;
   version: anchor.BN;
   creator: anchor.web3.PublicKey;
 }): Promise<anchor.web3.TransactionInstruction> {
-  const { program, category, schemaUri, version, creator } = params;
+  const { program, schemaUri, version, creator } = params;
 
   return program.methods
-    .registerSchema(category, schemaUri, version)
+    .registerSchema(version, schemaUri)
     .accounts({
       creator,
     })

@@ -190,10 +190,6 @@
               },
               {
                 "kind": "arg",
-                "path": "category"
-              },
-              {
-                "kind": "arg",
                 "path": "version"
               }
             ]
@@ -211,16 +207,12 @@
       ],
       "args": [
         {
-          "name": "category",
-          "type": "string"
+          "name": "version",
+          "type": "u64"
         },
         {
           "name": "schema_uri",
           "type": "string"
-        },
-        {
-          "name": "version",
-          "type": "u64"
         }
       ]
     },
@@ -575,11 +567,6 @@
               "The version of this schema (allows for iteration via new PDAs)"
             ],
             "type": "u64"
-          },
-          {
-            "name": "category",
-            "docs": ["Length 32 allows for descriptive slugs"],
-            "type": "string"
           },
           {
             "name": "schema_uri",

@@ -209,10 +209,6 @@ export type Metadata = {
               },
               {
                 kind: "arg";
-                path: "category";
-              },
-              {
-                kind: "arg";
                 path: "version";
               },
             ];
@@ -230,16 +226,12 @@ export type Metadata = {
       ];
       args: [
         {
-          name: "category";
-          type: "string";
+          name: "version";
+          type: "u64";
         },
         {
           name: "schemaUri";
           type: "string";
-        },
-        {
-          name: "version";
-          type: "u64";
         },
       ];
     },
@@ -607,11 +599,6 @@ export type Metadata = {
               "The version of this schema (allows for iteration via new PDAs)",
             ];
             type: "u64";
-          },
-          {
-            name: "category";
-            docs: ["Length 32 allows for descriptive slugs"];
-            type: "string";
           },
           {
             name: "schemaUri";

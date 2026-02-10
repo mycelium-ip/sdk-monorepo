@@ -33,12 +33,10 @@ export async function initAdminInstructions({
   transaction: anchor.web3.Transaction;
 }> {
   const [registryConfigPda] = deriveRegistryConfigPda();
-  const schemaCategory = "1";
   const schemaVersion = new anchor.BN(1);
 
   const schemaInstruction = await buildRegisterSchemaIx({
     program: metadataProgram,
-    category: schemaCategory,
     version: schemaVersion,
     creator: payer,
     schemaUri: schemaUri,
