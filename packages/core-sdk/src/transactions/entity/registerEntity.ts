@@ -12,7 +12,7 @@ import { deriveEntityPda, deriveSchemaPda } from "../../pda";
 export type CreateEntityTransactionParams = {
   program: Program<Entity>;
   metadataProgram: Program<Metadata>;
-  entityId: Uint8Array;
+  owner: anchor.web3.PublicKey;
   controllers: anchor.web3.PublicKey[];
   threshold: number;
   metadataUri: string;
@@ -26,7 +26,7 @@ export type CreateEntityTransactionParams = {
 export async function createEntityTransaction({
   program,
   metadataProgram,
-  entityId,
+  owner,
   controllers,
   threshold,
   metadataUri,
@@ -34,16 +34,17 @@ export async function createEntityTransaction({
 }: CreateEntityTransactionParams): Promise<{
   transaction: anchor.web3.Transaction;
 }> {
+  const entityCounterPda: anchor.web3.PublicKey = new anchor.web3.PublicKey("");
   // Build the instruction using our reusable helper
   const instruction = await buildRegisterEntityInstruction({
     program,
-    entityId,
+    entityCounterPda,
     controllers,
     threshold,
     payer,
   });
 
-  const [entityPda] = deriveEntityPda(entityId);
+  const [entityPda] = deriveEntityPda(owner);
 
   const schemaCategory = "1";
   const schemaVersion = new anchor.BN(1);

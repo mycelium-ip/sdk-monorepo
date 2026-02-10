@@ -5,7 +5,8 @@ import type { Entity } from "../../types/entity";
 
 export type UpdateControllersTransactionParams = {
   program: Program<Entity>;
-  entityId: Uint8Array;
+  owner: anchor.web3.PublicKey;
+  entityIndex: anchor.BN;
   newControllers: anchor.web3.PublicKey[];
   newThreshold: number;
   controllers: anchor.web3.PublicKey[];
@@ -17,7 +18,8 @@ export type UpdateControllersTransactionParams = {
  */
 export async function updateControllersTransaction({
   program,
-  entityId,
+  owner,
+  entityIndex,
   newControllers,
   newThreshold,
   controllers,
@@ -28,7 +30,8 @@ export async function updateControllersTransaction({
   // Build the instruction
   const { instruction, entityPda } = buildUpdateControllersInstruction({
     program,
-    entityId,
+    owner,
+    entityIndex,
     newControllers,
     newThreshold,
     controllers,

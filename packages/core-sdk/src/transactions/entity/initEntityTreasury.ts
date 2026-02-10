@@ -5,7 +5,7 @@ import type { Entity } from "../../types/entity";
 
 export type InitEntityTreasuryTransactionParams = {
   program: Program<Entity>;
-  entityId: Uint8Array;
+  entityPda: anchor.web3.PublicKey;
   payer: anchor.web3.PublicKey;
   controllers: anchor.web3.PublicKey[];
 };
@@ -16,7 +16,7 @@ export type InitEntityTreasuryTransactionParams = {
  */
 export async function initEntityTreasuryTransaction({
   program,
-  entityId,
+  entityPda,
   payer,
   controllers,
 }: InitEntityTreasuryTransactionParams): Promise<{
@@ -25,7 +25,7 @@ export async function initEntityTreasuryTransaction({
   // Build the instruction
   const { instruction } = buildInitEntityTreasuryInstruction({
     program,
-    entityId,
+    entityPda,
     payer,
     controllers,
   });
