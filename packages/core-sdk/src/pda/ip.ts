@@ -16,6 +16,13 @@ export function deriveIPAssetPda(
   );
 }
 
+export function deriveIpCounterPda(owner: PublicKey): [PublicKey, number] {
+  return PublicKey.findProgramAddressSync(
+    [Buffer.from(SEEDS.IP_COUNTER), owner.toBuffer()],
+    IPCORE_PROGRAM_ID,
+  );
+}
+
 export function deriveIPRegistryPda(): [PublicKey, number] {
   return PublicKey.findProgramAddressSync(
     [Buffer.from(SEEDS.IP_REGISTRY)],

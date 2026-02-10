@@ -16,6 +16,13 @@ export function deriveEntityPda(
   );
 }
 
+export function deriveEntityCounterPda(owner: PublicKey): [PublicKey, number] {
+  return PublicKey.findProgramAddressSync(
+    [Buffer.from(SEEDS.ENTITY_COUNTER), owner.toBuffer()],
+    ENTITY_PROGRAM_ID,
+  );
+}
+
 export function deriveEntityTreasuryPda(
   entity: PublicKey,
 ): [PublicKey, number] {

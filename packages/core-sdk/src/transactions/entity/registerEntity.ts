@@ -7,12 +7,16 @@ import {
 } from "../../instructions";
 import type { Entity } from "../../types/entity";
 import { Metadata } from "../../types";
-import { deriveEntityPda, deriveSchemaPda } from "../../pda";
+import {
+  deriveEntityCounterPda,
+  deriveEntityPda,
+  deriveSchemaPda,
+} from "../../pda";
+import { buildInitEntityCounterInstruction } from "../../instructions/entity/initEntityCounter";
 
 export type CreateEntityTransactionParams = {
   program: Program<Entity>;
   metadataProgram: Program<Metadata>;
-  owner: anchor.web3.PublicKey;
   controllers: anchor.web3.PublicKey[];
   threshold: number;
   metadataUri: string;
@@ -26,7 +30,6 @@ export type CreateEntityTransactionParams = {
 export async function createEntityTransaction({
   program,
   metadataProgram,
-  owner,
   controllers,
   threshold,
   metadataUri,
@@ -34,7 +37,22 @@ export async function createEntityTransaction({
 }: CreateEntityTransactionParams): Promise<{
   transaction: anchor.web3.Transaction;
 }> {
-  const entityCounterPda: anchor.web3.PublicKey = new anchor.web3.PublicKey("");
+  let entityIndex = new anchor.BN(0);
+
+  const [entityCounterPda] = deriveEntityCounterPda(payer);
+
+  const currentCounter =
+    await program.account.entityCounter.fetchNullable(entityCounterPda);
+
+  const counterInstruction = await buildInitEntityCounterInstruction({
+    program,
+    payer,
+  });
+
+  if (currentCounter) {
+    entityIndex = currentCounter.nextEntityIndex;
+  }
+
   // Build the instruction using our reusable helper
   const instruction = await buildRegisterEntityInstruction({
     program,
@@ -44,7 +62,7 @@ export async function createEntityTransaction({
     payer,
   });
 
-  const [entityPda] = deriveEntityPda(owner);
+  const [entityPda] = deriveEntityPda(payer, entityIndex);
 
   const schemaCategory = "1";
   const schemaVersion = new anchor.BN(1);
@@ -74,7 +92,13 @@ export async function createEntityTransaction({
   });
 
   // Create a transaction and add the instruction
-  const transaction = new anchor.web3.Transaction().add(instruction);
+  const transaction = new anchor.web3.Transaction();
+
+  if (!currentCounter) {
+    transaction.add(counterInstruction);
+  }
+
+  transaction.add(instruction);
 
   if (!currentSchema) {
     transaction.add(schemaInstruction);
