@@ -106,7 +106,6 @@ export async function createRegisterIpAssetTransaction(params: {
     registryConfigTreasury: registryConfigTreasuryPda,
     registrationFeeLamports: new anchor.BN(registrationFee * LAMPORTS_PER_SOL),
     controllers,
-    ipCounterPda,
   });
 
   const schemaCategory = "1";

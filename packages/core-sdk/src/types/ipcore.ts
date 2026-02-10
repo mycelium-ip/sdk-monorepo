@@ -26,7 +26,7 @@ export type Ipcore = {
         },
         {
           name: "entityProgram";
-          address: "D2urY658MyDWtrTqgSdNpt6GNZE7TuFiSGYNcgzxZFgf";
+          address: "DjtKmZLt9TjrsH8vhGZoZ2XEEZUqEP3PmwEREUiNXGwD";
         },
       ];
       args: [];
@@ -172,7 +172,7 @@ export type Ipcore = {
         },
         {
           name: "entityProgram";
-          address: "D2urY658MyDWtrTqgSdNpt6GNZE7TuFiSGYNcgzxZFgf";
+          address: "DjtKmZLt9TjrsH8vhGZoZ2XEEZUqEP3PmwEREUiNXGwD";
         },
         {
           name: "ipAsset";
@@ -218,7 +218,7 @@ export type Ipcore = {
         },
         {
           name: "entityProgram";
-          address: "D2urY658MyDWtrTqgSdNpt6GNZE7TuFiSGYNcgzxZFgf";
+          address: "DjtKmZLt9TjrsH8vhGZoZ2XEEZUqEP3PmwEREUiNXGwD";
         },
       ];
       args: [];
@@ -452,11 +452,23 @@ export type Ipcore = {
         },
         {
           name: "entityProgram";
-          address: "D2urY658MyDWtrTqgSdNpt6GNZE7TuFiSGYNcgzxZFgf";
+          address: "DjtKmZLt9TjrsH8vhGZoZ2XEEZUqEP3PmwEREUiNXGwD";
         },
         {
           name: "ipCounter";
           writable: true;
+          pda: {
+            seeds: [
+              {
+                kind: "const";
+                value: [105, 112, 95, 99, 111, 117, 110, 116, 101, 114];
+              },
+              {
+                kind: "account";
+                path: "entity";
+              },
+            ];
+          };
         },
         {
           name: "ipAsset";

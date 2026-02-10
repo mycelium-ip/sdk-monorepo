@@ -6,7 +6,6 @@ export type BuildRegisterEntityInstructionParams = {
   program: Program<Entity>;
 
   // Intent
-  entityCounterPda: anchor.web3.PublicKey;
   controllers: anchor.web3.PublicKey[];
   threshold: number;
 
@@ -16,7 +15,6 @@ export type BuildRegisterEntityInstructionParams = {
 
 export function buildRegisterEntityInstruction({
   program,
-  entityCounterPda,
   controllers,
   threshold,
   payer,
@@ -28,7 +26,6 @@ export function buildRegisterEntityInstruction({
     .registerEntity(controllers, threshold)
     .accounts({
       payer,
-      entityCounter: entityCounterPda,
     })
     .instruction();
 

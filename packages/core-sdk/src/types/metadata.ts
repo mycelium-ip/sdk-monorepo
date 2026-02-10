@@ -72,7 +72,7 @@ export type Metadata = {
         },
         {
           name: "entityProgram";
-          address: "D2urY658MyDWtrTqgSdNpt6GNZE7TuFiSGYNcgzxZFgf";
+          address: "DjtKmZLt9TjrsH8vhGZoZ2XEEZUqEP3PmwEREUiNXGwD";
         },
       ];
       args: [
@@ -129,7 +129,7 @@ export type Metadata = {
         },
         {
           name: "entityProgram";
-          address: "D2urY658MyDWtrTqgSdNpt6GNZE7TuFiSGYNcgzxZFgf";
+          address: "DjtKmZLt9TjrsH8vhGZoZ2XEEZUqEP3PmwEREUiNXGwD";
         },
         {
           name: "systemProgram";
@@ -164,7 +164,7 @@ export type Metadata = {
         },
         {
           name: "entityProgram";
-          address: "D2urY658MyDWtrTqgSdNpt6GNZE7TuFiSGYNcgzxZFgf";
+          address: "DjtKmZLt9TjrsH8vhGZoZ2XEEZUqEP3PmwEREUiNXGwD";
         },
       ];
       args: [];
@@ -189,7 +189,7 @@ export type Metadata = {
         },
         {
           name: "entityProgram";
-          address: "D2urY658MyDWtrTqgSdNpt6GNZE7TuFiSGYNcgzxZFgf";
+          address: "DjtKmZLt9TjrsH8vhGZoZ2XEEZUqEP3PmwEREUiNXGwD";
         },
       ];
       args: [];
@@ -309,7 +309,7 @@ export type Metadata = {
         },
         {
           name: "entityProgram";
-          address: "D2urY658MyDWtrTqgSdNpt6GNZE7TuFiSGYNcgzxZFgf";
+          address: "DjtKmZLt9TjrsH8vhGZoZ2XEEZUqEP3PmwEREUiNXGwD";
         },
       ];
       args: [
@@ -377,7 +377,7 @@ export type Metadata = {
         },
         {
           name: "entityProgram";
-          address: "D2urY658MyDWtrTqgSdNpt6GNZE7TuFiSGYNcgzxZFgf";
+          address: "DjtKmZLt9TjrsH8vhGZoZ2XEEZUqEP3PmwEREUiNXGwD";
         },
       ];
       args: [

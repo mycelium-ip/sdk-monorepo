@@ -158,6 +158,33 @@ export type Entity = {
         {
           name: "entityCounter";
           writable: true;
+          pda: {
+            seeds: [
+              {
+                kind: "const";
+                value: [
+                  101,
+                  110,
+                  116,
+                  105,
+                  116,
+                  121,
+                  95,
+                  99,
+                  111,
+                  117,
+                  110,
+                  116,
+                  101,
+                  114,
+                ];
+              },
+              {
+                kind: "account";
+                path: "payer";
+              },
+            ];
+          };
         },
         {
           name: "entity";

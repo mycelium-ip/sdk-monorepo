@@ -12,7 +12,6 @@ import {
   deriveEntityPda,
   deriveSchemaPda,
 } from "../../pda";
-import { buildInitEntityCounterInstruction } from "../../instructions/entity/initEntityCounter";
 
 export type CreateEntityTransactionParams = {
   program: Program<Entity>;
@@ -44,11 +43,6 @@ export async function createEntityTransaction({
   const currentCounter =
     await program.account.entityCounter.fetchNullable(entityCounterPda);
 
-  const counterInstruction = await buildInitEntityCounterInstruction({
-    program,
-    payer,
-  });
-
   if (currentCounter) {
     entityIndex = currentCounter.nextEntityIndex;
   }
@@ -56,14 +50,12 @@ export async function createEntityTransaction({
   // Build the instruction using our reusable helper
   const instruction = await buildRegisterEntityInstruction({
     program,
-    entityCounterPda,
     controllers,
     threshold,
     payer,
   });
 
   const [entityPda] = deriveEntityPda(payer, entityIndex);
-
   const schemaCategory = "1";
   const schemaVersion = new anchor.BN(1);
   const schemaUri = "https://example.com";
@@ -93,10 +85,6 @@ export async function createEntityTransaction({
 
   // Create a transaction and add the instruction
   const transaction = new anchor.web3.Transaction();
-
-  if (!currentCounter) {
-    transaction.add(counterInstruction);
-  }
 
   transaction.add(instruction);
 

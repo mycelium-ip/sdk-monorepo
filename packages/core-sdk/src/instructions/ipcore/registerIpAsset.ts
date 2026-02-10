@@ -15,7 +15,6 @@ export async function buildRegisterRootIpInstruction(
     registryConfig: PublicKey;
     registryConfigTreasury: PublicKey;
 
-    ipCounterPda: PublicKey;
     registrationFeeLamports: BN;
 
     controllers: PublicKey[];
@@ -26,7 +25,6 @@ export async function buildRegisterRootIpInstruction(
     payer,
     registryConfig,
     registryConfigTreasury,
-    ipCounterPda,
     registrationFeeLamports,
     controllers,
   } = params;
@@ -41,7 +39,6 @@ export async function buildRegisterRootIpInstruction(
       payer,
       registryConfig,
       registryConfigTreasury,
-      ipCounter: ipCounterPda,
     })
     .remainingAccounts(
       controllers.map((pk) => ({
