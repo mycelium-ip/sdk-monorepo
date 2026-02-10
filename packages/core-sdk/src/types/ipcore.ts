@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/ipcore.json`.
  */
 export type Ipcore = {
-  address: "Hb2iKqx65KkjahvC6yMLaMQua3m2LbqjofVUxAjKKQ5p";
+  address: "CN9EEaKTK9p8pDzyioiL6LwStL8R9SXc9WiHzgDEDjmo";
   metadata: {
     name: "ipcore";
     version: "0.1.0";

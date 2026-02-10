@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/metadata.json`.
  */
 export type Metadata = {
-  address: "AqG1Lky5RLQbASx1mJ4nxg3v6g6SEDk7EZykSf2SzCdG";
+  address: "AoAR4JEbt9TjedschW3J3ZQozmX9Tt2u99p3cMyNKqFb";
   metadata: {
     name: "metadata";
     version: "0.1.0";

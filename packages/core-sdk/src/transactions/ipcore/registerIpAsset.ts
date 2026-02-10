@@ -19,7 +19,6 @@ import {
   deriveSchemaPda,
 } from "../../pda";
 import * as anchor from "@coral-xyz/anchor";
-import { buildInitEntityCounterInstruction } from "../../instructions/entity/initEntityCounter";
 import { buildInitIpCounterInstruction } from "../../instructions/ipcore/initIpCounter";
 
 export async function createRegisterIpAssetTransaction(params: {
