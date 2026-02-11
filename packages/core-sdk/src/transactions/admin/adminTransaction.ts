@@ -17,7 +17,6 @@ export type AdminTransactionParams = {
   metadataProgram: Program<Metadata>;
   ipcoreProgram: Program<Ipcore>;
   payer: PublicKey;
-  authority: PublicKey;
   registrationFee: number;
 };
 
@@ -27,7 +26,6 @@ export async function initAdminInstructions({
   metadataProgram,
   ipcoreProgram,
   payer,
-  authority,
   registrationFee,
 }: AdminTransactionParams): Promise<{
   transaction: anchor.web3.Transaction;
@@ -44,7 +42,7 @@ export async function initAdminInstructions({
 
   const registryConfigIx = await buildInitializeRegistryConfigIx({
     program: ipcoreProgram,
-    authority: authority,
+    authority: payer,
     feeLamports: new anchor.BN(registrationFee * LAMPORTS_PER_SOL),
   });
 
@@ -52,7 +50,7 @@ export async function initAdminInstructions({
     await buildInitializeRegistryConfigTreasuryIx({
       program: ipcoreProgram,
       registryConfig: registryConfigPda,
-      authority: authority,
+      authority: payer,
     });
 
   const entityCounterIx = await buildInitEntityCounterInstruction({
