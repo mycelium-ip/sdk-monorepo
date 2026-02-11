@@ -5,6 +5,7 @@ import {
   buildInitEntityCounterInstruction,
   buildInitializeRegistryConfigIx,
   buildInitializeRegistryConfigTreasuryIx,
+  buildInitIpRegistryInstruction,
   buildRegisterSchemaIx,
 } from "../../instructions";
 import { Entity, Ipcore, Metadata } from "../../types";
@@ -63,12 +64,16 @@ export async function initAdminInstructions({
     payer,
   });
 
+  const { instruction: ipRegistryInstruction } =
+    await buildInitIpRegistryInstruction(ipcoreProgram, payer);
+
   const transaction = new anchor.web3.Transaction()
     .add(schemaInstruction)
     .add(registryConfigIx)
     .add(registryConfigTreasuryIx)
     .add(entityCounterIx)
-    .add(ipCounterIx);
+    .add(ipCounterIx)
+    .add(ipRegistryInstruction);
 
   return { transaction };
 }
