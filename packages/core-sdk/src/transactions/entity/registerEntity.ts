@@ -55,7 +55,7 @@ export async function createEntityTransaction({
   });
 
   const [entityPda] = deriveEntityPda(payer, entityIndex);
-  const schemaId = "entity.metadata";
+  const schemaId = "metadata.registry";
   const schemaVersion = "1.0.0";
 
   const [schemaPda] = deriveSchemaPda(schemaId, schemaVersion);
