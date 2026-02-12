@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/metadata.json`.
  */
 export type Metadata = {
-  address: "E4gHpkjEMPh5GBDKKCqpnTMawfrZNqTGDZtjU6ZjM1YL";
+  address: "6xD65DpTNQ3ariJqFSibYy8b9v9YGDCxE8R42FJRizw5";
   metadata: {
     name: "metadata";
     version: "0.1.0";
@@ -72,7 +72,7 @@ export type Metadata = {
         },
         {
           name: "entityProgram";
-          address: "8eUDT3ELUStHNWmYmtCVwhGW9HdxTSW47N2AuBuJRMmh";
+          address: "Dt4dPj3Ufc3j4bUUWeYWYERTcHUietZ1H4YvYoXL8ssm";
         },
       ];
       args: [
@@ -129,7 +129,7 @@ export type Metadata = {
         },
         {
           name: "entityProgram";
-          address: "8eUDT3ELUStHNWmYmtCVwhGW9HdxTSW47N2AuBuJRMmh";
+          address: "Dt4dPj3Ufc3j4bUUWeYWYERTcHUietZ1H4YvYoXL8ssm";
         },
         {
           name: "systemProgram";
@@ -164,7 +164,7 @@ export type Metadata = {
         },
         {
           name: "entityProgram";
-          address: "8eUDT3ELUStHNWmYmtCVwhGW9HdxTSW47N2AuBuJRMmh";
+          address: "Dt4dPj3Ufc3j4bUUWeYWYERTcHUietZ1H4YvYoXL8ssm";
         },
       ];
       args: [];
@@ -189,7 +189,7 @@ export type Metadata = {
         },
         {
           name: "entityProgram";
-          address: "8eUDT3ELUStHNWmYmtCVwhGW9HdxTSW47N2AuBuJRMmh";
+          address: "Dt4dPj3Ufc3j4bUUWeYWYERTcHUietZ1H4YvYoXL8ssm";
         },
       ];
       args: [];
@@ -206,6 +206,10 @@ export type Metadata = {
               {
                 kind: "const";
                 value: [115, 99, 104, 101, 109, 97];
+              },
+              {
+                kind: "arg";
+                path: "schemaId";
               },
               {
                 kind: "arg";
@@ -226,12 +230,28 @@ export type Metadata = {
       ];
       args: [
         {
+          name: "schemaId";
+          type: {
+            array: ["u8", 32];
+          };
+        },
+        {
           name: "version";
-          type: "u64";
+          type: {
+            array: ["u8", 16];
+          };
+        },
+        {
+          name: "schemaHash";
+          type: {
+            array: ["u8", 32];
+          };
         },
         {
           name: "schemaUri";
-          type: "string";
+          type: {
+            array: ["u8", 96];
+          };
         },
       ];
     },
@@ -301,7 +321,7 @@ export type Metadata = {
         },
         {
           name: "entityProgram";
-          address: "8eUDT3ELUStHNWmYmtCVwhGW9HdxTSW47N2AuBuJRMmh";
+          address: "Dt4dPj3Ufc3j4bUUWeYWYERTcHUietZ1H4YvYoXL8ssm";
         },
       ];
       args: [
@@ -369,7 +389,7 @@ export type Metadata = {
         },
         {
           name: "entityProgram";
-          address: "8eUDT3ELUStHNWmYmtCVwhGW9HdxTSW47N2AuBuJRMmh";
+          address: "Dt4dPj3Ufc3j4bUUWeYWYERTcHUietZ1H4YvYoXL8ssm";
         },
       ];
       args: [
@@ -493,7 +513,7 @@ export type Metadata = {
             type: "pubkey";
           },
           {
-            name: "version";
+            name: "revision";
             type: "u64";
           },
           {
@@ -569,7 +589,7 @@ export type Metadata = {
             type: "pubkey";
           },
           {
-            name: "version";
+            name: "revision";
             type: "u64";
           },
           {
@@ -594,27 +614,36 @@ export type Metadata = {
         kind: "struct";
         fields: [
           {
+            name: "schemaId";
+            type: {
+              array: ["u8", 32];
+            };
+          },
+          {
             name: "version";
-            docs: [
-              "The version of this schema (allows for iteration via new PDAs)",
-            ];
-            type: "u64";
+            type: {
+              array: ["u8", 16];
+            };
+          },
+          {
+            name: "schemaHash";
+            type: {
+              array: ["u8", 32];
+            };
           },
           {
             name: "schemaUri";
-            docs: [
-              "The URI (IPFS/Arweave) pointing to the JSON Schema definition",
-            ];
-            type: "string";
+            type: {
+              array: ["u8", 96];
+            };
+          },
+          {
+            name: "createdAt";
+            type: "i64";
           },
           {
             name: "creator";
-            docs: ["The address that registered this schema"];
             type: "pubkey";
-          },
-          {
-            name: "bump";
-            type: "u8";
           },
         ];
       };

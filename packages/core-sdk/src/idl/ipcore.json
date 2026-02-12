@@ -1,5 +1,5 @@
 {
-  "address": "4WwoH26KkwA8DsdLxAEMKMX5EX5uYGMQXizZwgpd6hKL",
+  "address": "3XvmcUrgmDbbCRirtNPSDRpTBwxATF3aHXXpVopmbG7M",
   "metadata": {
     "name": "ipcore",
     "version": "0.1.0",
@@ -20,7 +20,7 @@
         },
         {
           "name": "entity_program",
-          "address": "8eUDT3ELUStHNWmYmtCVwhGW9HdxTSW47N2AuBuJRMmh"
+          "address": "Dt4dPj3Ufc3j4bUUWeYWYERTcHUietZ1H4YvYoXL8ssm"
         }
       ],
       "args": []
@@ -153,7 +153,7 @@
         },
         {
           "name": "entity_program",
-          "address": "8eUDT3ELUStHNWmYmtCVwhGW9HdxTSW47N2AuBuJRMmh"
+          "address": "Dt4dPj3Ufc3j4bUUWeYWYERTcHUietZ1H4YvYoXL8ssm"
         },
         {
           "name": "ip_asset",
@@ -199,7 +199,7 @@
         },
         {
           "name": "entity_program",
-          "address": "8eUDT3ELUStHNWmYmtCVwhGW9HdxTSW47N2AuBuJRMmh"
+          "address": "Dt4dPj3Ufc3j4bUUWeYWYERTcHUietZ1H4YvYoXL8ssm"
         }
       ],
       "args": []
@@ -379,7 +379,7 @@
         },
         {
           "name": "entity_program",
-          "address": "8eUDT3ELUStHNWmYmtCVwhGW9HdxTSW47N2AuBuJRMmh"
+          "address": "Dt4dPj3Ufc3j4bUUWeYWYERTcHUietZ1H4YvYoXL8ssm"
         },
         {
           "name": "ip_counter",

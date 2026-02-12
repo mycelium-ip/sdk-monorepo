@@ -19,10 +19,16 @@ export type AdminTransactionParams = {
   ipcoreProgram: Program<Ipcore>;
   payer: PublicKey;
   registrationFee: number;
+  schemaVersion: string;
+  schemaJson: string;
+  schemaId: string;
 };
 
 export async function initAdminInstructions({
   schemaUri,
+  schemaId,
+  schemaJson,
+  schemaVersion,
   entityProgram,
   metadataProgram,
   ipcoreProgram,
@@ -32,13 +38,14 @@ export async function initAdminInstructions({
   transaction: anchor.web3.Transaction;
 }> {
   const [registryConfigPda] = deriveRegistryConfigPda();
-  const schemaVersion = new anchor.BN(1);
 
   const schemaInstruction = await buildRegisterSchemaIx({
     program: metadataProgram,
     version: schemaVersion,
     creator: payer,
     schemaUri: schemaUri,
+    schemaJson,
+    schemaId,
   });
 
   const registryConfigIx = await buildInitializeRegistryConfigIx({

@@ -85,8 +85,10 @@ export async function createRegisterIpAssetTransaction(params: {
     controllers,
   });
 
-  const schemaVersion = new anchor.BN(1);
-  const [schemaPda] = deriveSchemaPda(schemaVersion);
+  const schemaId = "ip.metadata";
+  const schemaVersion = "1.0.0";
+
+  const [schemaPda] = deriveSchemaPda(schemaId, schemaVersion);
 
   const currentSchema =
     await metadataProgram.account.schemaRegistry.fetchNullable(schemaPda);
