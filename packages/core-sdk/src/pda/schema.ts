@@ -1,10 +1,11 @@
-import { METADATA_PROGRAM_ID, SEEDS } from "../constants";
-import * as anchor from "@coral-xyz/anchor";
 import {
-  encodePaddedAscii,
   MAX_SCHEMA_ID_LEN,
   MAX_VERSION_LEN,
-} from "../instructions";
+  METADATA_PROGRAM_ID,
+  SEEDS,
+} from "../constants";
+import * as anchor from "@coral-xyz/anchor";
+import { encodePaddedAscii } from "../helper";
 
 export const deriveSchemaPda = (
   schemaId: string,
