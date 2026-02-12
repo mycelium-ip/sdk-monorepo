@@ -1,6 +1,8 @@
 import type * as anchor from "@coral-xyz/anchor";
 import type { BN, Program } from "@coral-xyz/anchor";
 import type { Metadata } from "../../types/metadata";
+import { encodePaddedAscii } from "../../helper";
+import { MAX_SCHEMA_URI_LEN } from "../../constants";
 
 /**
  * Build the instruction for creating entity metadata
@@ -23,9 +25,9 @@ export async function buildCreateEntityMetadataIx(params: {
     payer,
     controllers,
   } = params;
-
+  const entityUriResult = encodePaddedAscii(metadataUri, MAX_SCHEMA_URI_LEN);
   return program.methods
-    .createEntityMetadata(version, metadataUri)
+    .createEntityMetadata(version, [...entityUriResult])
     .accounts({
       entity: entityPda,
       schema: schemaPda,

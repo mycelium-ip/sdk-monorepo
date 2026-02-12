@@ -82,7 +82,9 @@ export type Metadata = {
         },
         {
           name: "metadataUri";
-          type: "string";
+          type: {
+            array: ["u8", 96];
+          };
         },
       ];
     },
@@ -143,7 +145,9 @@ export type Metadata = {
         },
         {
           name: "metadataUri";
-          type: "string";
+          type: {
+            array: ["u8", 96];
+          };
         },
       ];
     },
@@ -331,7 +335,9 @@ export type Metadata = {
         },
         {
           name: "metadataUri";
-          type: "string";
+          type: {
+            array: ["u8", 96];
+          };
         },
       ];
     },
@@ -399,7 +405,9 @@ export type Metadata = {
         },
         {
           name: "metadataUri";
-          type: "string";
+          type: {
+            array: ["u8", 96];
+          };
         },
       ];
     },
@@ -518,7 +526,9 @@ export type Metadata = {
           },
           {
             name: "uri";
-            type: "string";
+            type: {
+              array: ["u8", 96];
+            };
           },
           {
             name: "createdAt";
@@ -594,7 +604,9 @@ export type Metadata = {
           },
           {
             name: "uri";
-            type: "string";
+            type: {
+              array: ["u8", 96];
+            };
           },
           {
             name: "createdAt";

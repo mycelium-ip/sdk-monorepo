@@ -1,6 +1,8 @@
 import type * as anchor from "@coral-xyz/anchor";
 import type { BN, Program } from "@coral-xyz/anchor";
 import type { Metadata } from "../../types/metadata";
+import { encodePaddedAscii } from "../../helper";
+import { MAX_SCHEMA_URI_LEN } from "../../constants";
 
 /**
  * Build the instruction for updating entity metadata
@@ -28,9 +30,9 @@ export async function buildUpdateEntityMetadataIx(params: {
     version,
     metadataUri,
   } = params;
-
+  const entityUriResult = encodePaddedAscii(metadataUri, MAX_SCHEMA_URI_LEN);
   return program.methods
-    .updateEntityMetadata(version, metadataUri)
+    .updateEntityMetadata(version, [...entityUriResult])
     .accounts({
       entity: entityPda,
       previousMetadata: previousMetadataPda,

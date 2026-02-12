@@ -1,6 +1,8 @@
 import type * as anchor from "@coral-xyz/anchor";
 import type { BN, Program } from "@coral-xyz/anchor";
 import type { Metadata } from "../../types/metadata";
+import { encodePaddedAscii } from "../../helper";
+import { MAX_SCHEMA_URI_LEN } from "../../constants";
 
 /**
  * Build the instruction for creating IP metadata
@@ -25,9 +27,9 @@ export async function buildCreateIpMetadataIx(params: {
     payer,
     controllers,
   } = params;
-
+  const ipUriResult = encodePaddedAscii(metadataUri, MAX_SCHEMA_URI_LEN);
   return program.methods
-    .createIpMetadata(version, metadataUri)
+    .createIpMetadata(version, [...ipUriResult])
     .accounts({
       ipAsset: ipAssetPda,
       schema: schemaPda,

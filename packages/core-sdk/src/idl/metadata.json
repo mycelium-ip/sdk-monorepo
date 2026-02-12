@@ -63,7 +63,9 @@
         },
         {
           "name": "metadata_uri",
-          "type": "string"
+          "type": {
+            "array": ["u8", 96]
+          }
         }
       ]
     },
@@ -124,7 +126,9 @@
         },
         {
           "name": "metadata_uri",
-          "type": "string"
+          "type": {
+            "array": ["u8", 96]
+          }
         }
       ]
     },
@@ -299,7 +303,9 @@
         },
         {
           "name": "metadata_uri",
-          "type": "string"
+          "type": {
+            "array": ["u8", 96]
+          }
         }
       ]
     },
@@ -367,7 +373,9 @@
         },
         {
           "name": "metadata_uri",
-          "type": "string"
+          "type": {
+            "array": ["u8", 96]
+          }
         }
       ]
     }
@@ -486,7 +494,9 @@
           },
           {
             "name": "uri",
-            "type": "string"
+            "type": {
+              "array": ["u8", 96]
+            }
           },
           {
             "name": "created_at",
@@ -562,7 +572,9 @@
           },
           {
             "name": "uri",
-            "type": "string"
+            "type": {
+              "array": ["u8", 96]
+            }
           },
           {
             "name": "created_at",
