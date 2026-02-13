@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/metadata.json`.
  */
 export type Metadata = {
-  address: "6xD65DpTNQ3ariJqFSibYy8b9v9YGDCxE8R42FJRizw5";
+  address: "Dam4c7gXa7sFVVsVY21agNjmNneJ3DmFZPWRDAZ1fJ3r";
   metadata: {
     name: "metadata";
     version: "0.1.0";
@@ -72,7 +72,7 @@ export type Metadata = {
         },
         {
           name: "entityProgram";
-          address: "Dt4dPj3Ufc3j4bUUWeYWYERTcHUietZ1H4YvYoXL8ssm";
+          address: "8DpEe29Fw6gBHzEo3pKJL4YffJWgvq2N61ShXWhLjt1k";
         },
       ];
       args: [
@@ -131,7 +131,7 @@ export type Metadata = {
         },
         {
           name: "entityProgram";
-          address: "Dt4dPj3Ufc3j4bUUWeYWYERTcHUietZ1H4YvYoXL8ssm";
+          address: "8DpEe29Fw6gBHzEo3pKJL4YffJWgvq2N61ShXWhLjt1k";
         },
         {
           name: "systemProgram";
@@ -168,7 +168,7 @@ export type Metadata = {
         },
         {
           name: "entityProgram";
-          address: "Dt4dPj3Ufc3j4bUUWeYWYERTcHUietZ1H4YvYoXL8ssm";
+          address: "8DpEe29Fw6gBHzEo3pKJL4YffJWgvq2N61ShXWhLjt1k";
         },
       ];
       args: [];
@@ -193,7 +193,7 @@ export type Metadata = {
         },
         {
           name: "entityProgram";
-          address: "Dt4dPj3Ufc3j4bUUWeYWYERTcHUietZ1H4YvYoXL8ssm";
+          address: "8DpEe29Fw6gBHzEo3pKJL4YffJWgvq2N61ShXWhLjt1k";
         },
       ];
       args: [];
@@ -325,7 +325,7 @@ export type Metadata = {
         },
         {
           name: "entityProgram";
-          address: "Dt4dPj3Ufc3j4bUUWeYWYERTcHUietZ1H4YvYoXL8ssm";
+          address: "8DpEe29Fw6gBHzEo3pKJL4YffJWgvq2N61ShXWhLjt1k";
         },
       ];
       args: [
@@ -395,7 +395,7 @@ export type Metadata = {
         },
         {
           name: "entityProgram";
-          address: "Dt4dPj3Ufc3j4bUUWeYWYERTcHUietZ1H4YvYoXL8ssm";
+          address: "8DpEe29Fw6gBHzEo3pKJL4YffJWgvq2N61ShXWhLjt1k";
         },
       ];
       args: [

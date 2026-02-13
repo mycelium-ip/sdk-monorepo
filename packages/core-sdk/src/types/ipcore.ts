@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/ipcore.json`.
  */
 export type Ipcore = {
-  address: "3XvmcUrgmDbbCRirtNPSDRpTBwxATF3aHXXpVopmbG7M";
+  address: "3T4kr8emv7X8Cn3L5h9S2PssZrzssugdp8wyD7AdQsco";
   metadata: {
     name: "ipcore";
     version: "0.1.0";
@@ -26,7 +26,7 @@ export type Ipcore = {
         },
         {
           name: "entityProgram";
-          address: "Dt4dPj3Ufc3j4bUUWeYWYERTcHUietZ1H4YvYoXL8ssm";
+          address: "8DpEe29Fw6gBHzEo3pKJL4YffJWgvq2N61ShXWhLjt1k";
         },
       ];
       args: [];
@@ -172,7 +172,7 @@ export type Ipcore = {
         },
         {
           name: "entityProgram";
-          address: "Dt4dPj3Ufc3j4bUUWeYWYERTcHUietZ1H4YvYoXL8ssm";
+          address: "8DpEe29Fw6gBHzEo3pKJL4YffJWgvq2N61ShXWhLjt1k";
         },
         {
           name: "ipAsset";
@@ -218,7 +218,7 @@ export type Ipcore = {
         },
         {
           name: "entityProgram";
-          address: "Dt4dPj3Ufc3j4bUUWeYWYERTcHUietZ1H4YvYoXL8ssm";
+          address: "8DpEe29Fw6gBHzEo3pKJL4YffJWgvq2N61ShXWhLjt1k";
         },
       ];
       args: [];
@@ -445,7 +445,7 @@ export type Ipcore = {
         },
         {
           name: "entityProgram";
-          address: "Dt4dPj3Ufc3j4bUUWeYWYERTcHUietZ1H4YvYoXL8ssm";
+          address: "8DpEe29Fw6gBHzEo3pKJL4YffJWgvq2N61ShXWhLjt1k";
         },
         {
           name: "ipCounter";

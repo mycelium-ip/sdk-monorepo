@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/entity.json`.
  */
 export type Entity = {
-  address: "Dt4dPj3Ufc3j4bUUWeYWYERTcHUietZ1H4YvYoXL8ssm";
+  address: "8DpEe29Fw6gBHzEo3pKJL4YffJWgvq2N61ShXWhLjt1k";
   metadata: {
     name: "entity";
     version: "0.1.0";
@@ -259,6 +259,12 @@ export type Entity = {
       discriminator: [158, 97, 79, 97, 49, 235, 122, 123];
     },
   ];
+  events: [
+    {
+      name: "entityRegistered";
+      discriminator: [207, 100, 27, 194, 243, 88, 104, 198];
+    },
+  ];
   errors: [
     {
       code: 6000;
@@ -347,6 +353,26 @@ export type Entity = {
           {
             name: "nextEntityIndex";
             type: "u64";
+          },
+        ];
+      };
+    },
+    {
+      name: "entityRegistered";
+      type: {
+        kind: "struct";
+        fields: [
+          {
+            name: "entity";
+            type: "pubkey";
+          },
+          {
+            name: "entityIndex";
+            type: "u64";
+          },
+          {
+            name: "creator";
+            type: "pubkey";
           },
         ];
       };

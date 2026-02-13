@@ -1,5 +1,5 @@
 {
-  "address": "Dt4dPj3Ufc3j4bUUWeYWYERTcHUietZ1H4YvYoXL8ssm",
+  "address": "8DpEe29Fw6gBHzEo3pKJL4YffJWgvq2N61ShXWhLjt1k",
   "metadata": {
     "name": "entity",
     "version": "0.1.0",
@@ -216,6 +216,12 @@
       "discriminator": [158, 97, 79, 97, 49, 235, 122, 123]
     }
   ],
+  "events": [
+    {
+      "name": "EntityRegistered",
+      "discriminator": [207, 100, 27, 194, 243, 88, 104, 198]
+    }
+  ],
   "errors": [
     {
       "code": 6000,
@@ -304,6 +310,26 @@
           {
             "name": "next_entity_index",
             "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "EntityRegistered",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "entity",
+            "type": "pubkey"
+          },
+          {
+            "name": "entity_index",
+            "type": "u64"
+          },
+          {
+            "name": "creator",
+            "type": "pubkey"
           }
         ]
       }
