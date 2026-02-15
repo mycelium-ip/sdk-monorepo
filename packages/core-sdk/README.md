@@ -30,7 +30,9 @@ const ipcoreProgram = /* Program<Ipcore> */ undefined as any;
 
 // Common inputs (replace with your keys)
 const payer = /* PublicKey */ undefined as any;
-const controllers = [/* PublicKey[] */];
+const controllers = [
+  /* PublicKey[] */
+];
 ```
 
 ### Register an Entity
@@ -59,8 +61,8 @@ const { transaction: ipTx, ipAssetPda } =
     program: ipcoreProgram,
     metadataProgram,
     payer,
-    entityIndex: 0,            // your entity index
-    registrationFee: 0.1,      // in SOL (converted inside)
+    entityIndex: 0, // your entity index
+    registrationFee: 0.1, // in SOL (converted inside)
     metadataUri: "ipfs://...", // your URI
     controllers,
   });
@@ -127,11 +129,7 @@ const { transaction: updateEntityMetaTx } =
     program: metadataProgram,
     entityPda: entityPda as PublicKey,
     previousMetadataPda: previousMetadataPda as PublicKey,
-    newMetadataPda: newMetadataPda as PublicKey,
-    schemaPda: schemaPda as PublicKey,
-    authority: authority as PublicKey,
     payer,
-    version: new BN(2),
     metadataUri: "ipfs://...",
     controllers,
   });
@@ -170,7 +168,7 @@ const { transaction: updateIpMetaTx } =
 
 - Returns unsigned transactions without fee payer or blockhash. Set those in your app before signing and sending.
 - Core SDK does not create Connection, AnchorProvider, or Program. You must supply Program instances if your chosen transaction builder expects them.
-- No on-chain data is fetched by the SDK itself. Some existing transaction builders may check account state via program.account.*; construct those programs and providers externally if you use those helpers.
+- No on-chain data is fetched by the SDK itself. Some existing transaction builders may check account state via program.account.\*; construct those programs and providers externally if you use those helpers.
 
 ## Next Steps
 

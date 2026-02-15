@@ -310,11 +310,6 @@ export type Metadata = {
           name: "schema";
         },
         {
-          name: "authority";
-          docs: ["Must be entity controller"];
-          signer: true;
-        },
-        {
           name: "payer";
           writable: true;
           signer: true;
@@ -380,11 +375,6 @@ export type Metadata = {
           name: "schema";
         },
         {
-          name: "authority";
-          docs: ["Must be controller of the entity"];
-          signer: true;
-        },
-        {
           name: "payer";
           writable: true;
           signer: true;
@@ -432,6 +422,16 @@ export type Metadata = {
     {
       name: "schemaRegistry";
       discriminator: [67, 184, 244, 100, 7, 70, 92, 51];
+    },
+  ];
+  events: [
+    {
+      name: "entityUpdated";
+      discriminator: [204, 203, 74, 248, 131, 123, 207, 239];
+    },
+    {
+      name: "ipAssetUpdated";
+      discriminator: [112, 63, 245, 130, 105, 101, 104, 95];
     },
   ];
   errors: [
@@ -543,6 +543,26 @@ export type Metadata = {
       };
     },
     {
+      name: "entityUpdated";
+      type: {
+        kind: "struct";
+        fields: [
+          {
+            name: "entity";
+            type: "pubkey";
+          },
+          {
+            name: "revision";
+            type: "u64";
+          },
+          {
+            name: "authority";
+            type: "pubkey";
+          },
+        ];
+      };
+    },
+    {
       name: "ipAsset";
       type: {
         kind: "struct";
@@ -579,6 +599,26 @@ export type Metadata = {
           {
             name: "ipIndex";
             type: "u64";
+          },
+        ];
+      };
+    },
+    {
+      name: "ipAssetUpdated";
+      type: {
+        kind: "struct";
+        fields: [
+          {
+            name: "ipAsset";
+            type: "pubkey";
+          },
+          {
+            name: "revision";
+            type: "u64";
+          },
+          {
+            name: "authority";
+            type: "pubkey";
           },
         ];
       };

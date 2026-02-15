@@ -11,12 +11,10 @@ export async function buildUpdateEntityMetadataIx(params: {
   program: Program<Metadata>;
   entityPda: anchor.web3.PublicKey;
   previousMetadataPda: anchor.web3.PublicKey;
-  newMetadataPda: anchor.web3.PublicKey;
   schemaPda: anchor.web3.PublicKey;
-  authority: anchor.web3.PublicKey;
   payer: anchor.web3.PublicKey;
   controllers: anchor.web3.PublicKey[];
-  version: BN;
+  revision: BN;
   metadataUri: string;
 }): Promise<anchor.web3.TransactionInstruction> {
   const {
@@ -24,20 +22,18 @@ export async function buildUpdateEntityMetadataIx(params: {
     entityPda,
     previousMetadataPda,
     schemaPda,
-    authority,
     payer,
     controllers,
-    version,
+    revision,
     metadataUri,
   } = params;
   const entityUriResult = encodePaddedAscii(metadataUri, MAX_SCHEMA_URI_LEN);
   return program.methods
-    .updateEntityMetadata(version, [...entityUriResult])
+    .updateEntityMetadata(revision, [...entityUriResult])
     .accounts({
       entity: entityPda,
       previousMetadata: previousMetadataPda,
       schema: schemaPda,
-      authority,
       payer,
     })
     .remainingAccounts(

@@ -81,11 +81,7 @@ export class MetadataNamespace {
     program: Program<Metadata>;
     entityPda: PublicKey;
     previousMetadataPda: PublicKey;
-    newMetadataPda: PublicKey;
-    schemaPda: PublicKey;
-    authority: PublicKey;
     payer: PublicKey;
-    version: BN;
     metadataUri: string;
     controllers: PublicKey[];
   }): Promise<{ transaction: Transaction }> {

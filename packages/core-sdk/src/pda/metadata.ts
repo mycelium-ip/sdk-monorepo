@@ -1,21 +1,17 @@
 import { PublicKey } from "@solana/web3.js";
 import { METADATA_PROGRAM_ID, SEEDS } from "../constants";
-
-function normalizeVersion(version: string): Buffer {
-  const v = version.trim().toLowerCase();
-  if (!v) throw new Error("Metadata version cannot be empty");
-  return Buffer.from(v);
-}
+import * as anchor from "@coral-xyz/anchor";
 
 export function deriveEntityMetadataPda(
   entity: PublicKey,
-  version: string,
+  version: number,
 ): [PublicKey, number] {
+  const versionBN = new anchor.BN(version);
   return PublicKey.findProgramAddressSync(
     [
       Buffer.from(SEEDS.ENTITY_METADATA),
       entity.toBuffer(),
-      normalizeVersion(version),
+      versionBN.toArrayLike(Buffer, "le", 8),
     ],
     METADATA_PROGRAM_ID,
   );
@@ -23,13 +19,14 @@ export function deriveEntityMetadataPda(
 
 export function deriveIPMetadataPda(
   ipAsset: PublicKey,
-  version: string,
+  version: number,
 ): [PublicKey, number] {
+  const versionBN = new anchor.BN(version);
   return PublicKey.findProgramAddressSync(
     [
       Buffer.from(SEEDS.IP_METADATA),
       ipAsset.toBuffer(),
-      normalizeVersion(version),
+      versionBN.toArrayLike(Buffer, "le", 8),
     ],
     METADATA_PROGRAM_ID,
   );

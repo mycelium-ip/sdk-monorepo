@@ -10,7 +10,6 @@ export async function createUpdateIpMetadataTransaction(params: {
   previousMetadataPda: PublicKey;
   newMetadataPda: PublicKey;
   schemaPda: PublicKey;
-  authority: PublicKey;
   payer: PublicKey;
   version: BN;
   metadataUri: string;
@@ -22,7 +21,6 @@ export async function createUpdateIpMetadataTransaction(params: {
     entityPda,
     previousMetadataPda,
     schemaPda,
-    authority,
     payer,
     version,
     metadataUri,
@@ -38,7 +36,6 @@ export async function createUpdateIpMetadataTransaction(params: {
     entityPda,
     previousMetadataPda,
     schemaPda,
-    authority,
     payer,
     version,
     metadataUri,
