@@ -565,6 +565,12 @@
       "discriminator": [253, 7, 14, 233, 255, 71, 109, 47]
     }
   ],
+  "events": [
+    {
+      "name": "IPRegistered",
+      "discriminator": [83, 229, 161, 150, 13, 135, 162, 211]
+    }
+  ],
   "errors": [
     {
       "code": 6000,
@@ -713,6 +719,30 @@
           {
             "name": "next_ip_index",
             "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "IPRegistered",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "entity",
+            "type": "pubkey"
+          },
+          {
+            "name": "ip_asset",
+            "type": "pubkey"
+          },
+          {
+            "name": "ip_index",
+            "type": "u64"
+          },
+          {
+            "name": "creator",
+            "type": "pubkey"
           }
         ]
       }

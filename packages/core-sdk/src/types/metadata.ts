@@ -569,6 +569,10 @@ export type Metadata = {
             name: "authority";
             type: "pubkey";
           },
+          {
+            name: "metadata";
+            type: "pubkey";
+          },
         ];
       };
     },
@@ -628,6 +632,10 @@ export type Metadata = {
           },
           {
             name: "authority";
+            type: "pubkey";
+          },
+          {
+            name: "metadata";
             type: "pubkey";
           },
         ];

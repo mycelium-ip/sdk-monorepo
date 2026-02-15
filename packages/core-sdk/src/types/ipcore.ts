@@ -657,6 +657,12 @@ export type Ipcore = {
       discriminator: [253, 7, 14, 233, 255, 71, 109, 47];
     },
   ];
+  events: [
+    {
+      name: "ipRegistered";
+      discriminator: [83, 229, 161, 150, 13, 135, 162, 211];
+    },
+  ];
   errors: [
     {
       code: 6000;
@@ -805,6 +811,30 @@ export type Ipcore = {
           {
             name: "nextIpIndex";
             type: "u64";
+          },
+        ];
+      };
+    },
+    {
+      name: "ipRegistered";
+      type: {
+        kind: "struct";
+        fields: [
+          {
+            name: "entity";
+            type: "pubkey";
+          },
+          {
+            name: "ipAsset";
+            type: "pubkey";
+          },
+          {
+            name: "ipIndex";
+            type: "u64";
+          },
+          {
+            name: "creator";
+            type: "pubkey";
           },
         ];
       };

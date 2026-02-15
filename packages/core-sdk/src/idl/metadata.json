@@ -536,6 +536,10 @@
           {
             "name": "authority",
             "type": "pubkey"
+          },
+          {
+            "name": "metadata",
+            "type": "pubkey"
           }
         ]
       }
@@ -596,6 +600,10 @@
           },
           {
             "name": "authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "metadata",
             "type": "pubkey"
           }
         ]
