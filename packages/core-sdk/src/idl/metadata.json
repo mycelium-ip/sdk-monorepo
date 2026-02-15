@@ -432,6 +432,16 @@
       "code": 6005,
       "name": "InvalidVersion",
       "msg": "Invalid version"
+    },
+    {
+      "code": 6006,
+      "name": "InvalidEntity",
+      "msg": "Invalid entity"
+    },
+    {
+      "code": 6007,
+      "name": "InvalidIP",
+      "msg": "Invalid IP"
     }
   ],
   "types": [

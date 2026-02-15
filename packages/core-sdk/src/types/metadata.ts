@@ -465,6 +465,16 @@ export type Metadata = {
       name: "invalidVersion";
       msg: "Invalid version";
     },
+    {
+      code: 6006;
+      name: "invalidEntity";
+      msg: "Invalid entity";
+    },
+    {
+      code: 6007;
+      name: "invalidIp";
+      msg: "Invalid IP";
+    },
   ];
   types: [
     {
