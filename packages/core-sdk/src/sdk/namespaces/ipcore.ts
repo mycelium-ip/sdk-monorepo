@@ -98,7 +98,7 @@ export class IpcoreNamespace {
     program: Program<Ipcore>;
     metadataProgram: Program<import("../../types").Metadata>;
     payer: PublicKey;
-    entityIndex: number;
+    entityPda: PublicKey;
     registrationFee: number;
     metadataUri: string;
     controllers: PublicKey[];

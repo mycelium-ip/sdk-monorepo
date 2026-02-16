@@ -7,7 +7,6 @@ import {
 import type { Ipcore } from "../../types/ipcore";
 import { Metadata } from "../../types";
 import {
-  deriveEntityPda,
   deriveIPAssetPda,
   deriveIpCounterPda,
   deriveRegistryConfigPda,
@@ -20,7 +19,7 @@ export async function createRegisterIpAssetTransaction(params: {
   program: Program<Ipcore>;
   metadataProgram: Program<Metadata>;
   payer: PublicKey;
-  entityIndex: number;
+  entityPda: PublicKey;
 
   registrationFee: number;
 
@@ -35,13 +34,9 @@ export async function createRegisterIpAssetTransaction(params: {
     metadataUri,
     registrationFee,
     controllers,
-    entityIndex,
+    entityPda,
   } = params;
   let currentIpCounterIndex = new anchor.BN(0);
-
-  const entityIndexBN = new anchor.BN(entityIndex);
-
-  const [entityPda] = deriveEntityPda(payer, entityIndexBN);
 
   const [ipCounterPda] = deriveIpCounterPda();
 
