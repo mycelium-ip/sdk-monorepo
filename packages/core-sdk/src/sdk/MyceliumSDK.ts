@@ -1,4 +1,4 @@
-import type { MyceliumSDKConfig } from "./MyceliumSDK.tstypes";
+import type { MyceliumSDKConfig } from "./MyceliumSDK.types";
 import { PROGRAM_IDS, type ProgramIds } from "../programs/programIds";
 import { EntityNamespace } from "./namespaces/entity";
 import { MetadataNamespace } from "./namespaces/metadata";

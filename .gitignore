@@ -47,3 +47,8 @@ coverage/
 .vscode/
 .idea/
 *.iml
+
+# --------------------
+# Tarballs
+# --------------------
+*.tgz
