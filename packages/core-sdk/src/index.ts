@@ -7,5 +7,5 @@ export * from "./idl";
 export * from "./constants";
 export * from "./pda";
 export * from "./sdk/MyceliumSDK";
-export * from "./sdk/MyceliumSDK.tstypes";
+export type * from "./sdk/MyceliumSDK.types";
 export * from "./programs/programIds";

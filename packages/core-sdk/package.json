@@ -1,14 +1,18 @@
 {
-  "name": "@mycelium/core-sdk",
-  "version": "0.1.0-alpha.1",
+  "name": "@mycelium-ip/core-sdk",
+  "version": "0.1.0-alpha.2",
   "private": false,
   "type": "module",
   "description": "Typescript Core SDK for Mycelium IP protocol in Solana",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "README.md"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
