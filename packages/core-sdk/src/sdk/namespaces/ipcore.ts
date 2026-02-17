@@ -16,6 +16,7 @@ import {
   createResolveParentTransaction,
   createUpdateRegistryConfigTransaction,
   initIpCounterTransaction,
+  createChangeEntityTransaction,
 } from "../../transactions/ipcore";
 
 export class IpcoreNamespace {
@@ -132,5 +133,15 @@ export class IpcoreNamespace {
     payer: PublicKey;
   }): Promise<{ transaction: Transaction }> {
     return initIpCounterTransaction(params);
+  }
+
+  async generateChangeEntityTransaction(params: {
+    program: Program<Ipcore>;
+    previousEntity: PublicKey;
+    newEntity: PublicKey;
+    ipAsset: PublicKey;
+    controllers: PublicKey[];
+  }): Promise<{ transaction: Transaction }> {
+    return createChangeEntityTransaction(params);
   }
 }

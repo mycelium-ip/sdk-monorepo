@@ -72,6 +72,27 @@
       "args": []
     },
     {
+      "name": "change_entity",
+      "discriminator": [151, 240, 229, 233, 220, 20, 103, 243],
+      "accounts": [
+        {
+          "name": "new_entity"
+        },
+        {
+          "name": "previous_entity"
+        },
+        {
+          "name": "ip_asset",
+          "writable": true
+        },
+        {
+          "name": "entity_program",
+          "address": "8DpEe29Fw6gBHzEo3pKJL4YffJWgvq2N61ShXWhLjt1k"
+        }
+      ],
+      "args": []
+    },
+    {
       "name": "create_derivative_link",
       "discriminator": [145, 37, 194, 127, 5, 135, 125, 122],
       "accounts": [
@@ -404,7 +425,7 @@
               },
               {
                 "kind": "account",
-                "path": "entity"
+                "path": "payer"
               },
               {
                 "kind": "account",
@@ -567,6 +588,10 @@
   ],
   "events": [
     {
+      "name": "EntityChanged",
+      "discriminator": [146, 0, 146, 23, 4, 76, 156, 159]
+    },
+    {
       "name": "IPRegistered",
       "discriminator": [83, 229, 161, 150, 13, 135, 162, 211]
     }
@@ -601,6 +626,16 @@
       "code": 6005,
       "name": "IPActive",
       "msg": "IP is active"
+    },
+    {
+      "code": 6006,
+      "name": "EntityPubkeySame",
+      "msg": "Entity pubkey is the same"
+    },
+    {
+      "code": 6007,
+      "name": "EntityPubkeyDifferent",
+      "msg": "Entity pubkey is different"
     }
   ],
   "types": [
@@ -662,6 +697,26 @@
           {
             "name": "entity_index",
             "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "EntityChanged",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "previous_entity",
+            "type": "pubkey"
+          },
+          {
+            "name": "ip_asset",
+            "type": "pubkey"
+          },
+          {
+            "name": "new_entity",
+            "type": "pubkey"
           }
         ]
       }

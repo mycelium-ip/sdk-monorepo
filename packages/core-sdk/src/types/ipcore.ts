@@ -78,6 +78,27 @@ export type Ipcore = {
       args: [];
     },
     {
+      name: "changeEntity";
+      discriminator: [151, 240, 229, 233, 220, 20, 103, 243];
+      accounts: [
+        {
+          name: "newEntity";
+        },
+        {
+          name: "previousEntity";
+        },
+        {
+          name: "ipAsset";
+          writable: true;
+        },
+        {
+          name: "entityProgram";
+          address: "8DpEe29Fw6gBHzEo3pKJL4YffJWgvq2N61ShXWhLjt1k";
+        },
+      ];
+      args: [];
+    },
+    {
       name: "createDerivativeLink";
       discriminator: [145, 37, 194, 127, 5, 135, 125, 122];
       accounts: [
@@ -470,7 +491,7 @@ export type Ipcore = {
               },
               {
                 kind: "account";
-                path: "entity";
+                path: "payer";
               },
               {
                 kind: "account";
@@ -659,6 +680,10 @@ export type Ipcore = {
   ];
   events: [
     {
+      name: "entityChanged";
+      discriminator: [146, 0, 146, 23, 4, 76, 156, 159];
+    },
+    {
       name: "ipRegistered";
       discriminator: [83, 229, 161, 150, 13, 135, 162, 211];
     },
@@ -693,6 +718,16 @@ export type Ipcore = {
       code: 6005;
       name: "ipActive";
       msg: "IP is active";
+    },
+    {
+      code: 6006;
+      name: "entityPubkeySame";
+      msg: "Entity pubkey is the same";
+    },
+    {
+      code: 6007;
+      name: "entityPubkeyDifferent";
+      msg: "Entity pubkey is different";
     },
   ];
   types: [
@@ -754,6 +789,26 @@ export type Ipcore = {
           {
             name: "entityIndex";
             type: "u64";
+          },
+        ];
+      };
+    },
+    {
+      name: "entityChanged";
+      type: {
+        kind: "struct";
+        fields: [
+          {
+            name: "previousEntity";
+            type: "pubkey";
+          },
+          {
+            name: "ipAsset";
+            type: "pubkey";
+          },
+          {
+            name: "newEntity";
+            type: "pubkey";
           },
         ];
       };

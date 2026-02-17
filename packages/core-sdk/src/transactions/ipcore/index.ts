@@ -10,3 +10,4 @@ export * from "./registerIpAsset";
 export * from "./resolveParent";
 export * from "./updateRegistryConfig";
 export * from "./initIpCounter";
+export * from "./changeEntity";
