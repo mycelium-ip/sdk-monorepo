@@ -505,6 +505,10 @@ export type Metadata = {
             type: "pubkey";
           },
           {
+            name: "owner";
+            type: "pubkey";
+          },
+          {
             name: "updatedAt";
             type: "i64";
           },
@@ -543,6 +547,10 @@ export type Metadata = {
           {
             name: "createdAt";
             docs: ["Creation timestamp"];
+            type: "i64";
+          },
+          {
+            name: "updatedAt";
             type: "i64";
           },
           {
@@ -591,16 +599,8 @@ export type Metadata = {
             type: "u8";
           },
           {
-            name: "expectedParentCount";
-            type: "u8";
-          },
-          {
-            name: "resolvedParentCount";
-            type: "u8";
-          },
-          {
-            name: "derivativeState";
-            type: "u8";
+            name: "updatedAt";
+            type: "i64";
           },
           {
             name: "createdAt";
@@ -608,6 +608,10 @@ export type Metadata = {
           },
           {
             name: "creator";
+            type: "pubkey";
+          },
+          {
+            name: "owner";
             type: "pubkey";
           },
           {
@@ -672,6 +676,10 @@ export type Metadata = {
             type: "i64";
           },
           {
+            name: "updatedAt";
+            type: "i64";
+          },
+          {
             name: "locked";
             type: "bool";
           },
@@ -709,6 +717,10 @@ export type Metadata = {
           },
           {
             name: "createdAt";
+            type: "i64";
+          },
+          {
+            name: "updatedAt";
             type: "i64";
           },
           {

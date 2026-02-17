@@ -331,6 +331,10 @@ export type Entity = {
             type: "pubkey";
           },
           {
+            name: "owner";
+            type: "pubkey";
+          },
+          {
             name: "updatedAt";
             type: "i64";
           },

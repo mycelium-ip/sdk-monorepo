@@ -288,6 +288,10 @@
             "type": "pubkey"
           },
           {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
             "name": "updated_at",
             "type": "i64"
           },

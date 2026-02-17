@@ -473,6 +473,10 @@
             "type": "pubkey"
           },
           {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
             "name": "updated_at",
             "type": "i64"
           },
@@ -511,6 +515,10 @@
           {
             "name": "created_at",
             "docs": ["Creation timestamp"],
+            "type": "i64"
+          },
+          {
+            "name": "updated_at",
             "type": "i64"
           },
           {
@@ -559,16 +567,8 @@
             "type": "u8"
           },
           {
-            "name": "expected_parent_count",
-            "type": "u8"
-          },
-          {
-            "name": "resolved_parent_count",
-            "type": "u8"
-          },
-          {
-            "name": "derivative_state",
-            "type": "u8"
+            "name": "updated_at",
+            "type": "i64"
           },
           {
             "name": "created_at",
@@ -576,6 +576,10 @@
           },
           {
             "name": "creator",
+            "type": "pubkey"
+          },
+          {
+            "name": "owner",
             "type": "pubkey"
           },
           {
@@ -640,6 +644,10 @@
             "type": "i64"
           },
           {
+            "name": "updated_at",
+            "type": "i64"
+          },
+          {
             "name": "locked",
             "type": "bool"
           }
@@ -677,6 +685,10 @@
           },
           {
             "name": "created_at",
+            "type": "i64"
+          },
+          {
+            "name": "updated_at",
             "type": "i64"
           },
           {

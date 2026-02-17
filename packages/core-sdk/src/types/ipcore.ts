@@ -534,7 +534,6 @@ export type Ipcore = {
         },
         {
           name: "derivativeIp";
-          writable: true;
         },
         {
           name: "parentEntityAuthority";
@@ -783,6 +782,10 @@ export type Ipcore = {
             type: "pubkey";
           },
           {
+            name: "owner";
+            type: "pubkey";
+          },
+          {
             name: "updatedAt";
             type: "i64";
           },
@@ -828,16 +831,8 @@ export type Ipcore = {
             type: "u8";
           },
           {
-            name: "expectedParentCount";
-            type: "u8";
-          },
-          {
-            name: "resolvedParentCount";
-            type: "u8";
-          },
-          {
-            name: "derivativeState";
-            type: "u8";
+            name: "updatedAt";
+            type: "i64";
           },
           {
             name: "createdAt";
@@ -845,6 +840,10 @@ export type Ipcore = {
           },
           {
             name: "creator";
+            type: "pubkey";
+          },
+          {
+            name: "owner";
             type: "pubkey";
           },
           {
