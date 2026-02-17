@@ -14,7 +14,7 @@ export async function buildUpdateIpMetadataIx(params: {
   previousMetadataPda: anchor.web3.PublicKey;
   schemaPda: anchor.web3.PublicKey;
   payer: anchor.web3.PublicKey;
-  version: BN;
+  revision: BN;
   controllers: anchor.web3.PublicKey[];
   metadataUri: string;
 }): Promise<anchor.web3.TransactionInstruction> {
@@ -25,13 +25,13 @@ export async function buildUpdateIpMetadataIx(params: {
     previousMetadataPda,
     schemaPda,
     payer,
-    version,
+    revision,
     controllers,
     metadataUri,
   } = params;
   const ipUriResult = encodePaddedAscii(metadataUri, MAX_SCHEMA_URI_LEN);
   return program.methods
-    .updateIpMetadata(version, [...ipUriResult])
+    .updateIpMetadata(revision, [...ipUriResult])
     .accounts({
       ipAsset: ipAssetPda,
       entity: entityPda,
