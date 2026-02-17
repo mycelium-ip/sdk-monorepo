@@ -50,7 +50,7 @@ export async function createRegisterIpAssetTransaction(params: {
     currentIpCounterIndex = currentIpCounter.nextIpIndex;
   }
 
-  const [ipAssetPda] = deriveIPAssetPda(entityPda, currentIpCounterIndex);
+  const [ipAssetPda] = deriveIPAssetPda(payer, currentIpCounterIndex);
 
   const currentRegistryConfig =
     await program.account.registryConfig.fetchNullable(registryConfigPda);
