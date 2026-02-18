@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/entity.json`.
  */
 export type Entity = {
-  address: "8DpEe29Fw6gBHzEo3pKJL4YffJWgvq2N61ShXWhLjt1k";
+  address: "HdnQGSc8gYNDWdzGK5esrShESZwWi8LvSXxAkgqvByD1";
   metadata: {
     name: "entity";
     version: "0.1.0";
@@ -268,38 +268,8 @@ export type Entity = {
   errors: [
     {
       code: 6000;
-      name: "unauthorizedController";
-      msg: "Signer is not a controller of this entity";
-    },
-    {
-      code: 6001;
-      name: "invalidControllerThreshold";
-      msg: "Invalid controller threshold";
-    },
-    {
-      code: 6002;
-      name: "emptyControllerSet";
-      msg: "Controller list cannot be empty";
-    },
-    {
-      code: 6003;
-      name: "duplicateControllers";
-      msg: "Duplicate controllers are not allowed";
-    },
-    {
-      code: 6004;
-      name: "entityFrozen";
-      msg: "Entity is frozen";
-    },
-    {
-      code: 6005;
-      name: "entityActive";
-      msg: "Entity is active";
-    },
-    {
-      code: 6006;
-      name: "notEnoughControllerSigners";
-      msg: "Not enough controller signers";
+      name: "overflow";
+      msg: "Arithmetic overflow";
     },
   ];
   types: [

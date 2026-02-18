@@ -1,5 +1,5 @@
 {
-  "address": "8DpEe29Fw6gBHzEo3pKJL4YffJWgvq2N61ShXWhLjt1k",
+  "address": "HdnQGSc8gYNDWdzGK5esrShESZwWi8LvSXxAkgqvByD1",
   "metadata": {
     "name": "entity",
     "version": "0.1.0",
@@ -225,38 +225,8 @@
   "errors": [
     {
       "code": 6000,
-      "name": "UnauthorizedController",
-      "msg": "Signer is not a controller of this entity"
-    },
-    {
-      "code": 6001,
-      "name": "InvalidControllerThreshold",
-      "msg": "Invalid controller threshold"
-    },
-    {
-      "code": 6002,
-      "name": "EmptyControllerSet",
-      "msg": "Controller list cannot be empty"
-    },
-    {
-      "code": 6003,
-      "name": "DuplicateControllers",
-      "msg": "Duplicate controllers are not allowed"
-    },
-    {
-      "code": 6004,
-      "name": "EntityFrozen",
-      "msg": "Entity is frozen"
-    },
-    {
-      "code": 6005,
-      "name": "EntityActive",
-      "msg": "Entity is active"
-    },
-    {
-      "code": 6006,
-      "name": "NotEnoughControllerSigners",
-      "msg": "Not enough controller signers"
+      "name": "Overflow",
+      "msg": "Arithmetic overflow"
     }
   ],
   "types": [
