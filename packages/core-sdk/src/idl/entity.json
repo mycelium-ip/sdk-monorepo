@@ -225,8 +225,38 @@
   "errors": [
     {
       "code": 6000,
-      "name": "Overflow",
-      "msg": "Arithmetic overflow"
+      "name": "UnauthorizedController",
+      "msg": "Signer is not a controller of this entity"
+    },
+    {
+      "code": 6001,
+      "name": "InvalidControllerThreshold",
+      "msg": "Invalid controller threshold"
+    },
+    {
+      "code": 6002,
+      "name": "EmptyControllerSet",
+      "msg": "Controller list cannot be empty"
+    },
+    {
+      "code": 6003,
+      "name": "DuplicateControllers",
+      "msg": "Duplicate controllers are not allowed"
+    },
+    {
+      "code": 6004,
+      "name": "EntityFrozen",
+      "msg": "Entity is frozen"
+    },
+    {
+      "code": 6005,
+      "name": "EntityActive",
+      "msg": "Entity is active"
+    },
+    {
+      "code": 6006,
+      "name": "NotEnoughControllerSigners",
+      "msg": "Not enough controller signers"
     }
   ],
   "types": [
@@ -255,10 +285,6 @@
           },
           {
             "name": "creator",
-            "type": "pubkey"
-          },
-          {
-            "name": "owner",
             "type": "pubkey"
           },
           {

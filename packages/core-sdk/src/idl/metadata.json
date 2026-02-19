@@ -473,10 +473,6 @@
             "type": "pubkey"
           },
           {
-            "name": "owner",
-            "type": "pubkey"
-          },
-          {
             "name": "updated_at",
             "type": "i64"
           },
@@ -576,10 +572,6 @@
           },
           {
             "name": "creator",
-            "type": "pubkey"
-          },
-          {
-            "name": "owner",
             "type": "pubkey"
           },
           {

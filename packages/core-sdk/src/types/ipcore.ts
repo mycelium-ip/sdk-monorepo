@@ -782,10 +782,6 @@ export type Ipcore = {
             type: "pubkey";
           },
           {
-            name: "owner";
-            type: "pubkey";
-          },
-          {
             name: "updatedAt";
             type: "i64";
           },
@@ -840,10 +836,6 @@ export type Ipcore = {
           },
           {
             name: "creator";
-            type: "pubkey";
-          },
-          {
-            name: "owner";
             type: "pubkey";
           },
           {

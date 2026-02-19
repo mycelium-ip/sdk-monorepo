@@ -505,10 +505,6 @@ export type Metadata = {
             type: "pubkey";
           },
           {
-            name: "owner";
-            type: "pubkey";
-          },
-          {
             name: "updatedAt";
             type: "i64";
           },
@@ -608,10 +604,6 @@ export type Metadata = {
           },
           {
             name: "creator";
-            type: "pubkey";
-          },
-          {
-            name: "owner";
             type: "pubkey";
           },
           {
