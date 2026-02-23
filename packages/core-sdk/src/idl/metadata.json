@@ -29,14 +29,15 @@
               },
               {
                 "kind": "arg",
-                "path": "version"
+                "path": "revision"
               }
             ]
           }
         },
         {
           "name": "entity",
-          "docs": ["Owning entity"]
+          "docs": ["Owning entity"],
+          "writable": true
         },
         {
           "name": "schema",
@@ -58,11 +59,11 @@
       ],
       "args": [
         {
-          "name": "version",
+          "name": "revision",
           "type": "u64"
         },
         {
-          "name": "metadata_uri",
+          "name": "metadata_cid",
           "type": {
             "array": ["u8", 96]
           }
@@ -88,14 +89,15 @@
               },
               {
                 "kind": "arg",
-                "path": "version"
+                "path": "revision"
               }
             ]
           }
         },
         {
           "name": "ip_asset",
-          "docs": ["IP being annotated"]
+          "docs": ["IP being annotated"],
+          "writable": true
         },
         {
           "name": "entity",
@@ -115,17 +117,21 @@
           "address": "HdnQGSc8gYNDWdzGK5esrShESZwWi8LvSXxAkgqvByD1"
         },
         {
+          "name": "ip_core_program",
+          "address": "GQkjkFSyMA2f1TouaHDW2aYWnrA4YUVgEhHFZZQyJDj7"
+        },
+        {
           "name": "system_program",
           "address": "11111111111111111111111111111111"
         }
       ],
       "args": [
         {
-          "name": "version",
+          "name": "revision",
           "type": "u64"
         },
         {
-          "name": "metadata_uri",
+          "name": "metadata_cid",
           "type": {
             "array": ["u8", 96]
           }
@@ -233,7 +239,7 @@
           }
         },
         {
-          "name": "schema_uri",
+          "name": "schema_cid",
           "type": {
             "array": ["u8", 96]
           }
@@ -245,11 +251,13 @@
       "discriminator": [152, 231, 134, 248, 170, 240, 38, 115],
       "accounts": [
         {
-          "name": "entity"
+          "name": "entity",
+          "writable": true
         },
         {
           "name": "previous_metadata",
-          "docs": ["Previous metadata version (optional for v1)"]
+          "docs": ["Previous metadata version (optional for v1)"],
+          "writable": true
         },
         {
           "name": "new_metadata",
@@ -269,7 +277,7 @@
               },
               {
                 "kind": "arg",
-                "path": "version"
+                "path": "revision"
               }
             ]
           }
@@ -293,11 +301,11 @@
       ],
       "args": [
         {
-          "name": "version",
+          "name": "revision",
           "type": "u64"
         },
         {
-          "name": "metadata_uri",
+          "name": "metadata_cid",
           "type": {
             "array": ["u8", 96]
           }
@@ -317,7 +325,8 @@
           "docs": ["Entity owning the IP"]
         },
         {
-          "name": "previous_metadata"
+          "name": "previous_metadata",
+          "writable": true
         },
         {
           "name": "new_metadata",
@@ -334,7 +343,7 @@
               },
               {
                 "kind": "arg",
-                "path": "version"
+                "path": "revision"
               }
             ]
           }
@@ -354,15 +363,19 @@
         {
           "name": "entity_program",
           "address": "HdnQGSc8gYNDWdzGK5esrShESZwWi8LvSXxAkgqvByD1"
+        },
+        {
+          "name": "ip_core_program",
+          "address": "GQkjkFSyMA2f1TouaHDW2aYWnrA4YUVgEhHFZZQyJDj7"
         }
       ],
       "args": [
         {
-          "name": "version",
+          "name": "revision",
           "type": "u64"
         },
         {
-          "name": "metadata_uri",
+          "name": "metadata_cid",
           "type": {
             "array": ["u8", 96]
           }
@@ -442,6 +455,11 @@
       "code": 6007,
       "name": "InvalidIP",
       "msg": "Invalid IP"
+    },
+    {
+      "code": 6008,
+      "name": "StaleMetadataVersion",
+      "msg": "Not the latest revision"
     }
   ],
   "types": [
@@ -479,6 +497,10 @@
           {
             "name": "entity_index",
             "type": "u64"
+          },
+          {
+            "name": "latest_revision",
+            "type": "u64"
           }
         ]
       }
@@ -503,7 +525,7 @@
             "type": "u64"
           },
           {
-            "name": "uri",
+            "name": "cid",
             "type": {
               "array": ["u8", 96]
             }
@@ -577,6 +599,10 @@
           {
             "name": "ip_index",
             "type": "u64"
+          },
+          {
+            "name": "latest_revision",
+            "type": "u64"
           }
         ]
       }
@@ -625,7 +651,7 @@
             "type": "u64"
           },
           {
-            "name": "uri",
+            "name": "cid",
             "type": {
               "array": ["u8", 96]
             }
@@ -670,7 +696,7 @@
             }
           },
           {
-            "name": "schema_uri",
+            "name": "schema_cid",
             "type": {
               "array": ["u8", 96]
             }

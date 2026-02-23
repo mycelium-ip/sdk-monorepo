@@ -594,6 +594,26 @@ export type Ipcore = {
       ];
     },
     {
+      name: "updateIpAssetRevision";
+      discriminator: [88, 217, 26, 163, 127, 101, 7, 68];
+      accounts: [
+        {
+          name: "ipAsset";
+          writable: true;
+        },
+        {
+          name: "authority";
+          signer: true;
+        },
+      ];
+      args: [
+        {
+          name: "newRevision";
+          type: "u64";
+        },
+      ];
+    },
+    {
       name: "updateRegistryConfig";
       discriminator: [205, 108, 204, 178, 107, 143, 150, 21];
       accounts: [
@@ -789,6 +809,10 @@ export type Ipcore = {
             name: "entityIndex";
             type: "u64";
           },
+          {
+            name: "latestRevision";
+            type: "u64";
+          },
         ];
       };
     },
@@ -840,6 +864,10 @@ export type Ipcore = {
           },
           {
             name: "ipIndex";
+            type: "u64";
+          },
+          {
+            name: "latestRevision";
             type: "u64";
           },
         ];

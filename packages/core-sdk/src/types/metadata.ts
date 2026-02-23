@@ -48,7 +48,7 @@ export type Metadata = {
               },
               {
                 kind: "arg";
-                path: "version";
+                path: "revision";
               },
             ];
           };
@@ -56,6 +56,7 @@ export type Metadata = {
         {
           name: "entity";
           docs: ["Owning entity"];
+          writable: true;
         },
         {
           name: "schema";
@@ -77,11 +78,11 @@ export type Metadata = {
       ];
       args: [
         {
-          name: "version";
+          name: "revision";
           type: "u64";
         },
         {
-          name: "metadataUri";
+          name: "metadataCid";
           type: {
             array: ["u8", 96];
           };
@@ -107,7 +108,7 @@ export type Metadata = {
               },
               {
                 kind: "arg";
-                path: "version";
+                path: "revision";
               },
             ];
           };
@@ -115,6 +116,7 @@ export type Metadata = {
         {
           name: "ipAsset";
           docs: ["IP being annotated"];
+          writable: true;
         },
         {
           name: "entity";
@@ -134,17 +136,21 @@ export type Metadata = {
           address: "HdnQGSc8gYNDWdzGK5esrShESZwWi8LvSXxAkgqvByD1";
         },
         {
+          name: "ipCoreProgram";
+          address: "GQkjkFSyMA2f1TouaHDW2aYWnrA4YUVgEhHFZZQyJDj7";
+        },
+        {
           name: "systemProgram";
           address: "11111111111111111111111111111111";
         },
       ];
       args: [
         {
-          name: "version";
+          name: "revision";
           type: "u64";
         },
         {
-          name: "metadataUri";
+          name: "metadataCid";
           type: {
             array: ["u8", 96];
           };
@@ -252,7 +258,7 @@ export type Metadata = {
           };
         },
         {
-          name: "schemaUri";
+          name: "schemaCid";
           type: {
             array: ["u8", 96];
           };
@@ -265,10 +271,12 @@ export type Metadata = {
       accounts: [
         {
           name: "entity";
+          writable: true;
         },
         {
           name: "previousMetadata";
           docs: ["Previous metadata version (optional for v1)"];
+          writable: true;
         },
         {
           name: "newMetadata";
@@ -301,7 +309,7 @@ export type Metadata = {
               },
               {
                 kind: "arg";
-                path: "version";
+                path: "revision";
               },
             ];
           };
@@ -325,11 +333,11 @@ export type Metadata = {
       ];
       args: [
         {
-          name: "version";
+          name: "revision";
           type: "u64";
         },
         {
-          name: "metadataUri";
+          name: "metadataCid";
           type: {
             array: ["u8", 96];
           };
@@ -350,6 +358,7 @@ export type Metadata = {
         },
         {
           name: "previousMetadata";
+          writable: true;
         },
         {
           name: "newMetadata";
@@ -366,7 +375,7 @@ export type Metadata = {
               },
               {
                 kind: "arg";
-                path: "version";
+                path: "revision";
               },
             ];
           };
@@ -387,14 +396,18 @@ export type Metadata = {
           name: "entityProgram";
           address: "HdnQGSc8gYNDWdzGK5esrShESZwWi8LvSXxAkgqvByD1";
         },
+        {
+          name: "ipCoreProgram";
+          address: "GQkjkFSyMA2f1TouaHDW2aYWnrA4YUVgEhHFZZQyJDj7";
+        },
       ];
       args: [
         {
-          name: "version";
+          name: "revision";
           type: "u64";
         },
         {
-          name: "metadataUri";
+          name: "metadataCid";
           type: {
             array: ["u8", 96];
           };
@@ -475,6 +488,11 @@ export type Metadata = {
       name: "invalidIp";
       msg: "Invalid IP";
     },
+    {
+      code: 6008;
+      name: "staleMetadataVersion";
+      msg: "Not the latest revision";
+    },
   ];
   types: [
     {
@@ -512,6 +530,10 @@ export type Metadata = {
             name: "entityIndex";
             type: "u64";
           },
+          {
+            name: "latestRevision";
+            type: "u64";
+          },
         ];
       };
     },
@@ -535,7 +557,7 @@ export type Metadata = {
             type: "u64";
           },
           {
-            name: "uri";
+            name: "cid";
             type: {
               array: ["u8", 96];
             };
@@ -610,6 +632,10 @@ export type Metadata = {
             name: "ipIndex";
             type: "u64";
           },
+          {
+            name: "latestRevision";
+            type: "u64";
+          },
         ];
       };
     },
@@ -657,7 +683,7 @@ export type Metadata = {
             type: "u64";
           },
           {
-            name: "uri";
+            name: "cid";
             type: {
               array: ["u8", 96];
             };
@@ -702,7 +728,7 @@ export type Metadata = {
             };
           },
           {
-            name: "schemaUri";
+            name: "schemaCid";
             type: {
               array: ["u8", 96];
             };

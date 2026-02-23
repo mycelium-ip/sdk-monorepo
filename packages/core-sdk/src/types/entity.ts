@@ -244,6 +244,26 @@ export type Entity = {
         },
       ];
     },
+    {
+      name: "updateEntityRevision";
+      discriminator: [240, 144, 38, 246, 39, 252, 192, 234];
+      accounts: [
+        {
+          name: "entity";
+          writable: true;
+        },
+        {
+          name: "authority";
+          signer: true;
+        },
+      ];
+      args: [
+        {
+          name: "newRevision";
+          type: "u64";
+        },
+      ];
+    },
   ];
   accounts: [
     {
@@ -336,6 +356,10 @@ export type Entity = {
           },
           {
             name: "entityIndex";
+            type: "u64";
+          },
+          {
+            name: "latestRevision";
             type: "u64";
           },
         ];
