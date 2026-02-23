@@ -1,5 +1,5 @@
 {
-  "address": "GQkjkFSyMA2f1TouaHDW2aYWnrA4YUVgEhHFZZQyJDj7",
+  "address": "Aeawo85a2Ve6wXqP5CT94HTqZQzp5KGdDfHwQQsPDVHw",
   "metadata": {
     "name": "ipcore",
     "version": "0.1.0",
@@ -20,7 +20,7 @@
         },
         {
           "name": "entity_program",
-          "address": "HdnQGSc8gYNDWdzGK5esrShESZwWi8LvSXxAkgqvByD1"
+          "address": "3JE1DWSwkaVdiGpjsYCHx32PorBvxAdmnaSseR1rDKyf"
         }
       ],
       "args": []
@@ -87,7 +87,7 @@
         },
         {
           "name": "entity_program",
-          "address": "HdnQGSc8gYNDWdzGK5esrShESZwWi8LvSXxAkgqvByD1"
+          "address": "3JE1DWSwkaVdiGpjsYCHx32PorBvxAdmnaSseR1rDKyf"
         }
       ],
       "args": []
@@ -145,6 +145,12 @@
         {
           "name": "child_ip_id",
           "type": "u64"
+        },
+        {
+          "name": "license",
+          "type": {
+            "option": "pubkey"
+          }
         }
       ]
     },
@@ -174,7 +180,7 @@
         },
         {
           "name": "entity_program",
-          "address": "HdnQGSc8gYNDWdzGK5esrShESZwWi8LvSXxAkgqvByD1"
+          "address": "3JE1DWSwkaVdiGpjsYCHx32PorBvxAdmnaSseR1rDKyf"
         },
         {
           "name": "ip_asset",
@@ -220,7 +226,7 @@
         },
         {
           "name": "entity_program",
-          "address": "HdnQGSc8gYNDWdzGK5esrShESZwWi8LvSXxAkgqvByD1"
+          "address": "3JE1DWSwkaVdiGpjsYCHx32PorBvxAdmnaSseR1rDKyf"
         }
       ],
       "args": []
@@ -400,7 +406,7 @@
         },
         {
           "name": "entity_program",
-          "address": "HdnQGSc8gYNDWdzGK5esrShESZwWi8LvSXxAkgqvByD1"
+          "address": "3JE1DWSwkaVdiGpjsYCHx32PorBvxAdmnaSseR1rDKyf"
         },
         {
           "name": "ip_counter",
@@ -678,6 +684,12 @@
           {
             "name": "status",
             "type": "u8"
+          },
+          {
+            "name": "license",
+            "type": {
+              "option": "pubkey"
+            }
           }
         ]
       }

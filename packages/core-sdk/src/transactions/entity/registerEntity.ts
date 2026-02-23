@@ -11,6 +11,7 @@ import {
   deriveEntityPda,
   deriveSchemaPda,
 } from "../../pda";
+import { ENTITY_SCHEMA_ID, VERSION_1 } from "../../constants";
 
 export type CreateEntityTransactionParams = {
   program: Program<Entity>;
@@ -55,8 +56,8 @@ export async function createEntityTransaction({
   });
 
   const [entityPda] = deriveEntityPda(payer, entityIndex);
-  const schemaId = "metadata.registry";
-  const schemaVersion = "1.0.0";
+  const schemaId = ENTITY_SCHEMA_ID;
+  const schemaVersion = VERSION_1;
 
   const [schemaPda] = deriveSchemaPda(schemaId, schemaVersion);
 

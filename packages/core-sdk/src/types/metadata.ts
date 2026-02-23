@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/metadata.json`.
  */
 export type Metadata = {
-  address: "7SYhTAkGioKjLkwS5pNfC7rBAu8aAZ3gt4eVhCKDwpr1";
+  address: "49mSc51fCbV79bRNyopBfMNgyt79Jxyk86QXSrmuTp9D";
   metadata: {
     name: "metadata";
     version: "0.1.0";
@@ -73,7 +73,7 @@ export type Metadata = {
         },
         {
           name: "entityProgram";
-          address: "HdnQGSc8gYNDWdzGK5esrShESZwWi8LvSXxAkgqvByD1";
+          address: "3JE1DWSwkaVdiGpjsYCHx32PorBvxAdmnaSseR1rDKyf";
         },
       ];
       args: [
@@ -133,11 +133,11 @@ export type Metadata = {
         },
         {
           name: "entityProgram";
-          address: "HdnQGSc8gYNDWdzGK5esrShESZwWi8LvSXxAkgqvByD1";
+          address: "3JE1DWSwkaVdiGpjsYCHx32PorBvxAdmnaSseR1rDKyf";
         },
         {
           name: "ipCoreProgram";
-          address: "GQkjkFSyMA2f1TouaHDW2aYWnrA4YUVgEhHFZZQyJDj7";
+          address: "Aeawo85a2Ve6wXqP5CT94HTqZQzp5KGdDfHwQQsPDVHw";
         },
         {
           name: "systemProgram";
@@ -174,7 +174,7 @@ export type Metadata = {
         },
         {
           name: "entityProgram";
-          address: "HdnQGSc8gYNDWdzGK5esrShESZwWi8LvSXxAkgqvByD1";
+          address: "3JE1DWSwkaVdiGpjsYCHx32PorBvxAdmnaSseR1rDKyf";
         },
       ];
       args: [];
@@ -199,7 +199,7 @@ export type Metadata = {
         },
         {
           name: "entityProgram";
-          address: "HdnQGSc8gYNDWdzGK5esrShESZwWi8LvSXxAkgqvByD1";
+          address: "3JE1DWSwkaVdiGpjsYCHx32PorBvxAdmnaSseR1rDKyf";
         },
       ];
       args: [];
@@ -328,7 +328,7 @@ export type Metadata = {
         },
         {
           name: "entityProgram";
-          address: "HdnQGSc8gYNDWdzGK5esrShESZwWi8LvSXxAkgqvByD1";
+          address: "3JE1DWSwkaVdiGpjsYCHx32PorBvxAdmnaSseR1rDKyf";
         },
       ];
       args: [
@@ -394,11 +394,11 @@ export type Metadata = {
         },
         {
           name: "entityProgram";
-          address: "HdnQGSc8gYNDWdzGK5esrShESZwWi8LvSXxAkgqvByD1";
+          address: "3JE1DWSwkaVdiGpjsYCHx32PorBvxAdmnaSseR1rDKyf";
         },
         {
           name: "ipCoreProgram";
-          address: "GQkjkFSyMA2f1TouaHDW2aYWnrA4YUVgEhHFZZQyJDj7";
+          address: "Aeawo85a2Ve6wXqP5CT94HTqZQzp5KGdDfHwQQsPDVHw";
         },
       ];
       args: [

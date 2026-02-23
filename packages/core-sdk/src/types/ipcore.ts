@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/ipcore.json`.
  */
 export type Ipcore = {
-  address: "GQkjkFSyMA2f1TouaHDW2aYWnrA4YUVgEhHFZZQyJDj7";
+  address: "Aeawo85a2Ve6wXqP5CT94HTqZQzp5KGdDfHwQQsPDVHw";
   metadata: {
     name: "ipcore";
     version: "0.1.0";
@@ -26,7 +26,7 @@ export type Ipcore = {
         },
         {
           name: "entityProgram";
-          address: "HdnQGSc8gYNDWdzGK5esrShESZwWi8LvSXxAkgqvByD1";
+          address: "3JE1DWSwkaVdiGpjsYCHx32PorBvxAdmnaSseR1rDKyf";
         },
       ];
       args: [];
@@ -93,7 +93,7 @@ export type Ipcore = {
         },
         {
           name: "entityProgram";
-          address: "HdnQGSc8gYNDWdzGK5esrShESZwWi8LvSXxAkgqvByD1";
+          address: "3JE1DWSwkaVdiGpjsYCHx32PorBvxAdmnaSseR1rDKyf";
         },
       ];
       args: [];
@@ -165,6 +165,12 @@ export type Ipcore = {
           name: "childIpId";
           type: "u64";
         },
+        {
+          name: "license";
+          type: {
+            option: "pubkey";
+          };
+        },
       ];
     },
     {
@@ -193,7 +199,7 @@ export type Ipcore = {
         },
         {
           name: "entityProgram";
-          address: "HdnQGSc8gYNDWdzGK5esrShESZwWi8LvSXxAkgqvByD1";
+          address: "3JE1DWSwkaVdiGpjsYCHx32PorBvxAdmnaSseR1rDKyf";
         },
         {
           name: "ipAsset";
@@ -239,7 +245,7 @@ export type Ipcore = {
         },
         {
           name: "entityProgram";
-          address: "HdnQGSc8gYNDWdzGK5esrShESZwWi8LvSXxAkgqvByD1";
+          address: "3JE1DWSwkaVdiGpjsYCHx32PorBvxAdmnaSseR1rDKyf";
         },
       ];
       args: [];
@@ -466,7 +472,7 @@ export type Ipcore = {
         },
         {
           name: "entityProgram";
-          address: "HdnQGSc8gYNDWdzGK5esrShESZwWi8LvSXxAkgqvByD1";
+          address: "3JE1DWSwkaVdiGpjsYCHx32PorBvxAdmnaSseR1rDKyf";
         },
         {
           name: "ipCounter";
@@ -770,6 +776,12 @@ export type Ipcore = {
           {
             name: "status";
             type: "u8";
+          },
+          {
+            name: "license";
+            type: {
+              option: "pubkey";
+            };
           },
         ];
       };

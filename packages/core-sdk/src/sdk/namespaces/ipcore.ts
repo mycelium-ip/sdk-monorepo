@@ -48,6 +48,7 @@ export class IpcoreNamespace {
     childIpId: BN;
     authority: PublicKey;
     entityPda: PublicKey;
+    license: PublicKey;
   }): Promise<{ transaction: Transaction; derivativeLinkPda: PublicKey }> {
     return createDerivativeLinkTransaction(params);
   }

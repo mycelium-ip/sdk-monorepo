@@ -11,9 +11,11 @@ import {
 import { Entity, Ipcore, Metadata } from "../../types";
 import { LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import { buildInitIpCounterInstruction } from "../../instructions/ipcore/initIpCounter";
+import { entityMetadataExampleJson, ipMetadataExampleJson } from "../../helper";
+import { ENTITY_SCHEMA_ID, IP_SCHEMA_ID, VERSION_1 } from "../../constants";
 
 export type AdminTransactionParams = {
-  schemaUri: string;
+  schemaCid: string;
   entityProgram: Program<Entity>;
   metadataProgram: Program<Metadata>;
   ipcoreProgram: Program<Ipcore>;
@@ -25,7 +27,7 @@ export type AdminTransactionParams = {
 };
 
 export async function initAdminInstructions({
-  schemaUri,
+  schemaCid,
   schemaId,
   schemaJson,
   schemaVersion,
@@ -39,13 +41,22 @@ export async function initAdminInstructions({
 }> {
   const [registryConfigPda] = deriveRegistryConfigPda();
 
-  const schemaInstruction = await buildRegisterSchemaIx({
+  const entitySchemaInstruction = await buildRegisterSchemaIx({
     program: metadataProgram,
-    version: schemaVersion,
+    version: VERSION_1,
     creator: payer,
-    schemaUri: schemaUri,
-    schemaJson,
-    schemaId,
+    schemaCid: "bafkreigxtyoylnz6wmq2c46iik4xpzvu7ltfy2b7yqmcihugx3x2dbbtze",
+    schemaJson: JSON.stringify(entityMetadataExampleJson),
+    schemaId: ENTITY_SCHEMA_ID,
+  });
+
+  const ipSchemaInstruction = await buildRegisterSchemaIx({
+    program: metadataProgram,
+    version: VERSION_1,
+    creator: payer,
+    schemaCid: "bafkreieinhdchmhtiegaegvkikl6dawk6b43y2dkpif65v23gronw4lsp4",
+    schemaJson: JSON.stringify(ipMetadataExampleJson),
+    schemaId: IP_SCHEMA_ID,
   });
 
   const registryConfigIx = await buildInitializeRegistryConfigIx({
@@ -75,7 +86,8 @@ export async function initAdminInstructions({
     await buildInitIpRegistryInstruction(ipcoreProgram, payer);
 
   const transaction = new anchor.web3.Transaction()
-    .add(schemaInstruction)
+    .add(entitySchemaInstruction)
+    .add(ipSchemaInstruction)
     .add(registryConfigIx)
     .add(registryConfigTreasuryIx)
     .add(entityCounterIx)

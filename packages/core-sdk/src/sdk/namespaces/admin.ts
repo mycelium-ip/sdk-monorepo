@@ -14,7 +14,7 @@ export class AdminNamespace {
   }
 
   async generateInitAdminTransaction(params: {
-    schemaUri: string;
+    schemaCid: string;
     entityProgram: Program<Entity>;
     metadataProgram: Program<Metadata>;
     ipcoreProgram: Program<Ipcore>;

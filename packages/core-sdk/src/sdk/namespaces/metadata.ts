@@ -68,7 +68,7 @@ export class MetadataNamespace {
 
   async generateRegisterSchemaTransaction(params: {
     program: Program<Metadata>;
-    schemaUri: string;
+    schemaCid: string;
     version: string;
     schemaJson: string;
     schemaId: string;

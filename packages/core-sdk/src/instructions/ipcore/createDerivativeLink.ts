@@ -15,9 +15,10 @@ export async function buildCreateDerivativeLinkInstruction(
     childIpId: BN;
     authority: PublicKey;
     entityPda: PublicKey;
+    license: PublicKey | null;
   },
 ): Promise<CreateDerivativeLinkIx> {
-  const { parentIpId, childIpId, authority, entityPda } = params;
+  const { parentIpId, childIpId, authority, entityPda, license } = params;
 
   const [childIpPda] = deriveIPAssetPda(entityPda, childIpId);
 
@@ -29,7 +30,7 @@ export async function buildCreateDerivativeLinkInstruction(
   // 2. Build instruction (no send, no sign)
   // ─────────────────────────────────────────────
   const instruction = await program.methods
-    .createDerivativeLink(parentIpId, childIpId)
+    .createDerivativeLink(parentIpId, childIpId, license)
     .accounts({
       authority,
       parentIpAsset: parentIpPda,

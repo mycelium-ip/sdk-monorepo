@@ -13,24 +13,24 @@ import { encodePaddedAscii, sha256 } from "../../helper";
  */
 export async function buildRegisterSchemaIx(params: {
   program: Program<Metadata>;
-  schemaUri: string;
+  schemaCid: string;
   version: string;
   schemaJson: string;
   schemaId: string;
   creator: anchor.web3.PublicKey;
 }): Promise<anchor.web3.TransactionInstruction> {
-  const { program, schemaUri, version, schemaJson, schemaId, creator } = params;
+  const { program, schemaCid, version, schemaJson, schemaId, creator } = params;
   const schemaHashResult = sha256(schemaJson);
   const schemaIdResult = encodePaddedAscii(schemaId, MAX_SCHEMA_ID_LEN);
   const versionResult = encodePaddedAscii(version, MAX_VERSION_LEN);
-  const schemaUriResult = encodePaddedAscii(schemaUri, MAX_SCHEMA_URI_LEN);
+  const schemaCidResult = encodePaddedAscii(schemaCid, MAX_SCHEMA_URI_LEN);
 
   return program.methods
     .registerSchema(
       [...schemaIdResult],
       [...versionResult],
       [...schemaHashResult],
-      [...schemaUriResult],
+      [...schemaCidResult],
     )
     .accounts({
       creator,

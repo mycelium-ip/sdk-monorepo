@@ -14,6 +14,7 @@ import {
   deriveSchemaPda,
 } from "../../pda";
 import * as anchor from "@coral-xyz/anchor";
+import { IP_SCHEMA_ID, VERSION_1 } from "../../constants";
 
 export async function createRegisterIpAssetTransaction(params: {
   program: Program<Ipcore>;
@@ -80,8 +81,8 @@ export async function createRegisterIpAssetTransaction(params: {
     controllers,
   });
 
-  const schemaId = "metadata.registry";
-  const schemaVersion = "1.0.0";
+  const schemaId = IP_SCHEMA_ID;
+  const schemaVersion = VERSION_1;
 
   const [schemaPda] = deriveSchemaPda(schemaId, schemaVersion);
 

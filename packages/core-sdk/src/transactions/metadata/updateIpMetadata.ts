@@ -3,6 +3,7 @@ import { type PublicKey, Transaction } from "@solana/web3.js";
 import { buildUpdateIpMetadataIx } from "../../instructions";
 import type { Metadata } from "../../types/metadata";
 import { deriveSchemaPda } from "../../pda";
+import { IP_SCHEMA_ID, VERSION_1 } from "../../constants";
 
 export async function createUpdateIpMetadataTransaction(params: {
   program: Program<Metadata>;
@@ -23,8 +24,8 @@ export async function createUpdateIpMetadataTransaction(params: {
     controllers,
   } = params;
 
-  const schemaId = "metadata.registry";
-  const schemaVersion = "1.0.0";
+  const schemaId = IP_SCHEMA_ID;
+  const schemaVersion = VERSION_1;
 
   const [schemaPda] = deriveSchemaPda(schemaId, schemaVersion);
   const previousMetadata =
