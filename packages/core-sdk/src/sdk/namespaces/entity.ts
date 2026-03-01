@@ -23,7 +23,7 @@ export class EntityNamespace {
     metadataProgram: Program<Metadata>;
     controllers: anchor.web3.PublicKey[];
     threshold: number;
-    metadataUri: string;
+    metadataCid: string;
     payer: anchor.web3.PublicKey;
   }): Promise<{ transaction: anchor.web3.Transaction }> {
     return createEntityTransaction(params);

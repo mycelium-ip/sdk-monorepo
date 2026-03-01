@@ -102,7 +102,7 @@ export class IpcoreNamespace {
     payer: PublicKey;
     entityPda: PublicKey;
     registrationFee: number;
-    metadataUri: string;
+    metadataCid: string;
     controllers: PublicKey[];
   }): Promise<{ transaction: Transaction; ipAssetPda: PublicKey }> {
     return createRegisterIpAssetTransaction(params);

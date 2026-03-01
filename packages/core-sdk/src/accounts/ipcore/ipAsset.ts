@@ -10,7 +10,7 @@ export type IpAsset = {
   entity: anchor.web3.PublicKey; // Entity that owns this IP
   parent: anchor.web3.PublicKey | null; // Parent IP (for derivatives), null if root
   category: number; // Category of IP
-  metadataUri: string; // Metadata URI (JSON)
+  metadataCid: string; // Metadata URI (JSON)
   provenance: string | null; // Provenance info
   status: number; // Status (e.g., active)
   createdAt: anchor.BN; // Creation timestamp
@@ -30,7 +30,7 @@ export function decodeIpAsset(
     entity: accountData.entity,
     parent: accountData.parent,
     category: accountData.category,
-    metadataUri: accountData.metadataUri,
+    metadataCid: accountData.metadataCid,
     provenance: accountData.provenance,
     status: accountData.status,
     createdAt: accountData.createdAt,

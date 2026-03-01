@@ -22,7 +22,7 @@ export async function createRegisterIpAssetTransaction(params: {
   payer: PublicKey;
   entityPda: PublicKey;
 
-  metadataUri: string;
+  metadataCid: string;
 
   controllers: PublicKey[];
 }): Promise<{ transaction: Transaction; ipAssetPda: PublicKey }> {
@@ -30,7 +30,7 @@ export async function createRegisterIpAssetTransaction(params: {
     program,
     metadataProgram,
     payer,
-    metadataUri,
+    metadataCid,
     controllers,
     entityPda,
   } = params;
@@ -98,7 +98,7 @@ export async function createRegisterIpAssetTransaction(params: {
     entityPda: entityPda,
     schemaPda: schemaPda,
     version: new anchor.BN(1),
-    metadataUri,
+    metadataCid,
     payer,
     controllers,
   });

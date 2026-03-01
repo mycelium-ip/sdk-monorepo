@@ -2,7 +2,7 @@ import type * as anchor from "@coral-xyz/anchor";
 import type { BN, Program } from "@coral-xyz/anchor";
 import type { Metadata } from "../../types/metadata";
 import { encodePaddedAscii } from "../../helper";
-import { MAX_SCHEMA_URI_LEN } from "../../constants";
+import { MAX_SCHEMA_CID_LEN } from "../../constants";
 
 /**
  * Build the instruction for updating entity metadata
@@ -15,7 +15,7 @@ export async function buildUpdateEntityMetadataIx(params: {
   payer: anchor.web3.PublicKey;
   controllers: anchor.web3.PublicKey[];
   revision: BN;
-  metadataUri: string;
+  metadataCid: string;
 }): Promise<anchor.web3.TransactionInstruction> {
   const {
     program,
@@ -25,11 +25,11 @@ export async function buildUpdateEntityMetadataIx(params: {
     payer,
     controllers,
     revision,
-    metadataUri,
+    metadataCid,
   } = params;
-  const entityUriResult = encodePaddedAscii(metadataUri, MAX_SCHEMA_URI_LEN);
+  const entityCidResult = encodePaddedAscii(metadataCid, MAX_SCHEMA_CID_LEN);
   return program.methods
-    .updateEntityMetadata(revision, [...entityUriResult])
+    .updateEntityMetadata(revision, [...entityCidResult])
     .accounts({
       entity: entityPda,
       previousMetadata: previousMetadataPda,

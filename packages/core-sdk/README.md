@@ -45,7 +45,7 @@ const { transaction } = await sdk.entity.generateRegisterTransaction({
   metadataProgram,
   controllers,
   threshold: 1,
-  metadataUri: "ipfs://...", // your URI
+  metadataCid: "ipfs://...", // your URI
   payer,
 });
 // transaction has NO fee payer, NO blockhash, and is UNSIGNED
@@ -63,7 +63,7 @@ const { transaction: ipTx, ipAssetPda } =
     payer,
     entityIndex: 0, // your entity index
     registrationFee: 0.1, // in SOL (converted inside)
-    metadataUri: "ipfs://...", // your URI
+    metadataCid: "ipfs://...", // your URI
     controllers,
   });
 ```
@@ -83,7 +83,7 @@ const { transaction: createEntityMetaTx } =
     entityPda: entityPda as PublicKey,
     schemaPda: schemaPda as PublicKey,
     version: new BN(1),
-    metadataUri: "ipfs://...",
+    metadataCid: "ipfs://...",
     payer,
     controllers,
   });
@@ -106,7 +106,7 @@ const { transaction: createIpMetaTx } =
     entityPda: entityPda as PublicKey,
     schemaPda: schemaPda as PublicKey,
     version: new BN(1),
-    metadataUri: "ipfs://...",
+    metadataCid: "ipfs://...",
     payer,
     controllers,
   });
@@ -130,7 +130,7 @@ const { transaction: updateEntityMetaTx } =
     entityPda: entityPda as PublicKey,
     previousMetadataPda: previousMetadataPda as PublicKey,
     payer,
-    metadataUri: "ipfs://...",
+    metadataCid: "ipfs://...",
     controllers,
   });
 ```
@@ -159,7 +159,7 @@ const { transaction: updateIpMetaTx } =
     authority: authority as PublicKey,
     payer,
     version: new BN(2),
-    metadataUri: "ipfs://...",
+    metadataCid: "ipfs://...",
     controllers,
   });
 ```

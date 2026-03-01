@@ -18,7 +18,7 @@ export type CreateEntityTransactionParams = {
   metadataProgram: Program<Metadata>;
   controllers: anchor.web3.PublicKey[];
   threshold: number;
-  metadataUri: string;
+  metadataCid: string;
   payer: anchor.web3.PublicKey;
 };
 
@@ -31,7 +31,7 @@ export async function createEntityTransaction({
   metadataProgram,
   controllers,
   threshold,
-  metadataUri,
+  metadataCid,
   payer,
 }: CreateEntityTransactionParams): Promise<{
   transaction: anchor.web3.Transaction;
@@ -75,7 +75,7 @@ export async function createEntityTransaction({
     entityPda: entityPda,
     schemaPda: schemaPda,
     version: new anchor.BN(1),
-    metadataUri,
+    metadataCid,
     payer,
     controllers,
   });

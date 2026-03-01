@@ -2,7 +2,7 @@ import type * as anchor from "@coral-xyz/anchor";
 import type { BN, Program } from "@coral-xyz/anchor";
 import type { Metadata } from "../../types/metadata";
 import { encodePaddedAscii } from "../../helper";
-import { MAX_SCHEMA_URI_LEN } from "../../constants";
+import { MAX_SCHEMA_CID_LEN } from "../../constants";
 
 /**
  * Build the instruction for creating IP metadata
@@ -13,7 +13,7 @@ export async function buildCreateIpMetadataIx(params: {
   schemaPda: anchor.web3.PublicKey;
   entityPda: anchor.web3.PublicKey;
   version: BN;
-  metadataUri: string;
+  metadataCid: string;
   payer: anchor.web3.PublicKey;
   controllers: anchor.web3.PublicKey[];
 }): Promise<anchor.web3.TransactionInstruction> {
@@ -23,13 +23,13 @@ export async function buildCreateIpMetadataIx(params: {
     schemaPda,
     entityPda,
     version,
-    metadataUri,
+    metadataCid,
     payer,
     controllers,
   } = params;
-  const ipUriResult = encodePaddedAscii(metadataUri, MAX_SCHEMA_URI_LEN);
+  const ipCidResult = encodePaddedAscii(metadataCid, MAX_SCHEMA_CID_LEN);
   return program.methods
-    .createIpMetadata(version, [...ipUriResult])
+    .createIpMetadata(version, [...ipCidResult])
     .accounts({
       ipAsset: ipAssetPda,
       schema: schemaPda,

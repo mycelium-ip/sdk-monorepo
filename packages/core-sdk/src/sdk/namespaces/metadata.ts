@@ -25,7 +25,7 @@ export class MetadataNamespace {
     entityPda: PublicKey;
     schemaPda: PublicKey;
     version: BN;
-    metadataUri: string;
+    metadataCid: string;
     payer: PublicKey;
     controllers: PublicKey[];
   }): Promise<{ transaction: Transaction }> {
@@ -38,7 +38,7 @@ export class MetadataNamespace {
     schemaPda: PublicKey;
     entityPda: PublicKey;
     version: BN;
-    metadataUri: string;
+    metadataCid: string;
     payer: PublicKey;
     controllers: PublicKey[];
   }): Promise<{ transaction: Transaction }> {
@@ -82,7 +82,7 @@ export class MetadataNamespace {
     entityPda: PublicKey;
     previousMetadataPda: PublicKey;
     payer: PublicKey;
-    metadataUri: string;
+    metadataCid: string;
     controllers: PublicKey[];
   }): Promise<{ transaction: Transaction }> {
     return createUpdateEntityMetadataTransaction(params);
@@ -94,7 +94,7 @@ export class MetadataNamespace {
     entityPda: PublicKey;
     previousMetadataPda: PublicKey;
     payer: PublicKey;
-    metadataUri: string;
+    metadataCid: string;
     controllers: PublicKey[];
   }): Promise<{ transaction: Transaction }> {
     return createUpdateIpMetadataTransaction(params);

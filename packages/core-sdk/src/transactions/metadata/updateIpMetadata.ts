@@ -11,7 +11,7 @@ export async function createUpdateIpMetadataTransaction(params: {
   entityPda: PublicKey;
   previousMetadataPda: PublicKey;
   payer: PublicKey;
-  metadataUri: string;
+  metadataCid: string;
   controllers: PublicKey[];
 }): Promise<{ transaction: Transaction }> {
   const {
@@ -20,7 +20,7 @@ export async function createUpdateIpMetadataTransaction(params: {
     entityPda,
     previousMetadataPda,
     payer,
-    metadataUri,
+    metadataCid,
     controllers,
   } = params;
 
@@ -48,7 +48,7 @@ export async function createUpdateIpMetadataTransaction(params: {
     schemaPda,
     payer,
     revision: previousVersion.addn(1),
-    metadataUri,
+    metadataCid,
     controllers,
   });
 

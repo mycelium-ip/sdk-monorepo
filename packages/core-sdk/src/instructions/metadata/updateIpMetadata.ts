@@ -1,7 +1,7 @@
 import type * as anchor from "@coral-xyz/anchor";
 import type { BN, Program } from "@coral-xyz/anchor";
 import type { Metadata } from "../../types/metadata";
-import { MAX_SCHEMA_URI_LEN } from "../../constants";
+import { MAX_SCHEMA_CID_LEN } from "../../constants";
 import { encodePaddedAscii } from "../../helper";
 
 /**
@@ -16,7 +16,7 @@ export async function buildUpdateIpMetadataIx(params: {
   payer: anchor.web3.PublicKey;
   revision: BN;
   controllers: anchor.web3.PublicKey[];
-  metadataUri: string;
+  metadataCid: string;
 }): Promise<anchor.web3.TransactionInstruction> {
   const {
     program,
@@ -27,11 +27,11 @@ export async function buildUpdateIpMetadataIx(params: {
     payer,
     revision,
     controllers,
-    metadataUri,
+    metadataCid,
   } = params;
-  const ipUriResult = encodePaddedAscii(metadataUri, MAX_SCHEMA_URI_LEN);
+  const ipCidResult = encodePaddedAscii(metadataCid, MAX_SCHEMA_CID_LEN);
   return program.methods
-    .updateIpMetadata(revision, [...ipUriResult])
+    .updateIpMetadata(revision, [...ipCidResult])
     .accounts({
       ipAsset: ipAssetPda,
       entity: entityPda,
