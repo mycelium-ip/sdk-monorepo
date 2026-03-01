@@ -101,7 +101,6 @@ export class IpcoreNamespace {
     metadataProgram: Program<import("../../types").Metadata>;
     payer: PublicKey;
     entityPda: PublicKey;
-    registrationFee: number;
     metadataCid: string;
     controllers: PublicKey[];
   }): Promise<{ transaction: Transaction; ipAssetPda: PublicKey }> {
