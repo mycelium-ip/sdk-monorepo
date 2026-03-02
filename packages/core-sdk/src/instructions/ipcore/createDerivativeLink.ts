@@ -1,6 +1,6 @@
 import type { BN, Program } from "@coral-xyz/anchor";
 import type { PublicKey, TransactionInstruction } from "@solana/web3.js";
-import { deriveDerivativeLinkPda, deriveIPAssetPda } from "../../pda";
+import { deriveDerivativeLinkPda } from "../../pda";
 import type { Ipcore } from "../../types/ipcore";
 
 export type CreateDerivativeLinkIx = {
@@ -11,30 +11,28 @@ export type CreateDerivativeLinkIx = {
 export async function buildCreateDerivativeLinkInstruction(
   program: Program<Ipcore>,
   params: {
-    parentIpId: BN;
-    childIpId: BN;
+    parentIpPda: PublicKey;
+    derivativeIpPda: PublicKey;
     authority: PublicKey;
-    entityPda: PublicKey;
     license: PublicKey | null;
   },
 ): Promise<CreateDerivativeLinkIx> {
-  const { parentIpId, childIpId, authority, entityPda, license } = params;
+  const { parentIpPda, derivativeIpPda, authority, license } = params;
 
-  const [childIpPda] = deriveIPAssetPda(entityPda, childIpId);
-
-  const [parentIpPda] = deriveIPAssetPda(entityPda, parentIpId);
-
-  const [derivativeLinkPda] = deriveDerivativeLinkPda(parentIpId, childIpId);
+  const [derivativeLinkPda] = deriveDerivativeLinkPda(
+    parentIpPda,
+    derivativeIpPda,
+  );
 
   // ─────────────────────────────────────────────
   // 2. Build instruction (no send, no sign)
   // ─────────────────────────────────────────────
   const instruction = await program.methods
-    .createDerivativeLink(parentIpId, childIpId, license)
+    .createDerivativeLink(license)
     .accounts({
       authority,
       parentIpAsset: parentIpPda,
-      childIpAsset: childIpPda,
+      childIpAsset: derivativeIpPda,
     })
     .instruction();
 

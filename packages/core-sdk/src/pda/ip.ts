@@ -31,17 +31,15 @@ export function deriveIPRegistryPda(): [PublicKey, number] {
 }
 
 export function deriveDerivativeLinkPda(
-  parentIpId: bigint,
-  childIpId: bigint,
+  parentIpPda: PublicKey,
+  childIpPda: PublicKey,
 ): [PublicKey, number] {
-  const parentBuf = Buffer.alloc(8);
-  const childBuf = Buffer.alloc(8);
-
-  parentBuf.writeBigUInt64LE(parentIpId);
-  childBuf.writeBigUInt64LE(childIpId);
-
   return PublicKey.findProgramAddressSync(
-    [Buffer.from(SEEDS.DERIVATIVE_LINK), parentBuf, childBuf],
+    [
+      Buffer.from(SEEDS.DERIVATIVE_LINK),
+      parentIpPda.toBuffer(),
+      childIpPda.toBuffer(),
+    ],
     IPCORE_PROGRAM_ID,
   );
 }

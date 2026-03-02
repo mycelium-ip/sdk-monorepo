@@ -6,11 +6,10 @@ import type { Ipcore } from "../../types/ipcore";
 
 export type CreateDerivativeLinkTransactionParams = {
   program: Program<Ipcore>;
-  parentIpId: BN;
-  childIpId: BN;
+  parentIpPda: anchor.web3.PublicKey;
+  derivativeIpPda: anchor.web3.PublicKey;
   authority: anchor.web3.PublicKey;
-  entityPda: anchor.web3.PublicKey;
-  license: anchor.web3.PublicKey;
+  license: anchor.web3.PublicKey | null;
 };
 
 /**
@@ -19,10 +18,9 @@ export type CreateDerivativeLinkTransactionParams = {
  */
 export async function createDerivativeLinkTransaction({
   program,
-  parentIpId,
-  childIpId,
+  parentIpPda,
+  derivativeIpPda,
   authority,
-  entityPda,
   license,
 }: CreateDerivativeLinkTransactionParams): Promise<{
   transaction: Transaction;
@@ -31,10 +29,9 @@ export async function createDerivativeLinkTransaction({
   // Build the instruction
   const { instruction, derivativeLinkPda } =
     await buildCreateDerivativeLinkInstruction(program, {
-      parentIpId,
-      childIpId,
+      parentIpPda,
+      derivativeIpPda,
       authority,
-      entityPda,
       license,
     });
 

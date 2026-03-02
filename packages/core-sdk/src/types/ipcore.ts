@@ -128,12 +128,12 @@ export type Ipcore = {
                 ];
               },
               {
-                kind: "arg";
-                path: "parentIpId";
+                kind: "account";
+                path: "parentIpAsset";
               },
               {
-                kind: "arg";
-                path: "childIpId";
+                kind: "account";
+                path: "childIpAsset";
               },
             ];
           };
@@ -157,14 +157,6 @@ export type Ipcore = {
         },
       ];
       args: [
-        {
-          name: "parentIpId";
-          type: "u64";
-        },
-        {
-          name: "childIpId";
-          type: "u64";
-        },
         {
           name: "license";
           type: {

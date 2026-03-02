@@ -109,12 +109,12 @@
                 ]
               },
               {
-                "kind": "arg",
-                "path": "parent_ip_id"
+                "kind": "account",
+                "path": "parent_ip_asset"
               },
               {
-                "kind": "arg",
-                "path": "child_ip_id"
+                "kind": "account",
+                "path": "child_ip_asset"
               }
             ]
           }
@@ -138,14 +138,6 @@
         }
       ],
       "args": [
-        {
-          "name": "parent_ip_id",
-          "type": "u64"
-        },
-        {
-          "name": "child_ip_id",
-          "type": "u64"
-        },
         {
           "name": "license",
           "type": {

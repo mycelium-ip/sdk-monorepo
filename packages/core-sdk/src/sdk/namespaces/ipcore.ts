@@ -44,11 +44,10 @@ export class IpcoreNamespace {
 
   async generateCreateDerivativeLinkTransaction(params: {
     program: Program<Ipcore>;
-    parentIpId: BN;
-    childIpId: BN;
+    parentIpPda: PublicKey;
+    derivativeIpPda: PublicKey;
     authority: PublicKey;
-    entityPda: PublicKey;
-    license: PublicKey;
+    license: PublicKey | null;
   }): Promise<{ transaction: Transaction; derivativeLinkPda: PublicKey }> {
     return createDerivativeLinkTransaction(params);
   }
