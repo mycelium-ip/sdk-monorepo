@@ -1,5 +1,5 @@
 import type * as anchor from "@coral-xyz/anchor";
-import type { BN, Program } from "@coral-xyz/anchor";
+import type { Program } from "@coral-xyz/anchor";
 import { Transaction } from "@solana/web3.js";
 import { buildCreateDerivativeLinkInstruction } from "../../instructions";
 import type { Ipcore } from "../../types/ipcore";

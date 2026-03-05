@@ -1,4 +1,4 @@
-import type { BN, Program } from "@coral-xyz/anchor";
+import type { Program } from "@coral-xyz/anchor";
 import type { PublicKey, TransactionInstruction } from "@solana/web3.js";
 import { deriveDerivativeLinkPda } from "../../pda";
 import type { Ipcore } from "../../types/ipcore";

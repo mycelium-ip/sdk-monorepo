@@ -1,8 +1,8 @@
 import type { Program } from "@coral-xyz/anchor";
-import { type PublicKey, Transaction } from "@solana/web3.js";
+import type { PublicKey, Transaction } from "@solana/web3.js";
 import type { ProgramIds } from "../../programs/programIds";
 import type { Ipcore } from "../../types/ipcore";
-import { BN } from "@coral-xyz/anchor";
+import type { BN } from "@coral-xyz/anchor";
 import {
   addDerivativeLinkTransaction,
   addIpAssetTransaction,
