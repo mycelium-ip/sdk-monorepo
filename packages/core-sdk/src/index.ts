@@ -1,11 +1,8 @@
-// This file defines the entire public SDK surface.
-// Do not export internal modules directly.
+export { MyceliumClient } from "./client/MyceliumClient";
 
-export * from "./transactions";
+export * from "./constants/programs";
 export * from "./types";
-export * from "./idl";
-export * from "./constants";
+export * from "./utils/conversions";
+export * from "./utils/provider";
+export * from "./utils/transactions";
 export * from "./pda";
-export * from "./sdk/MyceliumSDK";
-export type * from "./sdk/MyceliumSDK.types";
-export * from "./programs/programIds";

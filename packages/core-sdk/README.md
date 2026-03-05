@@ -1,176 +1,321 @@
-# Mycelium Core SDK (Stateless Transaction Factory)
+# @mycelium-ip/core-sdk
 
-This is the core, stateless SDK for building deterministic Solana transactions for the Mycelium protocol. It generates instructions and transactions offline. It does not create RPC connections, providers, wallets, or send anything.
+TypeScript SDK for interacting with Mycelium IP protocol programs on Solana.
 
-- Stateless and offline-capable
-- Chain-aware program ID resolution
-- Thin SDK wrapper around existing transaction builders
+The SDK wraps:
+
+- Anchor provider/program setup
+- PDA derivation
+- account resolution for common flows
+- instruction creation and transaction submission helpers
+
+## What this package exposes
+
+```ts
+import {
+  MyceliumClient,
+  IP_CORE_PROGRAM_ID,
+  LICENSE_PROGRAM_ID,
+  createProvider,
+  sendInstruction,
+  deriveEntityPda,
+} from "@mycelium-ip/core-sdk";
+```
+
+Main exports include:
+
+- `MyceliumClient`
+- program constants (`IP_CORE_PROGRAM_ID`, `LICENSE_PROGRAM_ID`, `PDA_SEEDS`)
+- PDA helpers (`deriveEntityPda`, `deriveIpPda`, `deriveMetadataSchemaPda`, etc.)
+- utility helpers (`createProvider`, `sendInstruction`, conversion helpers)
+- all SDK types (params/interfaces)
+
+---
 
 ## Installation
 
 ```bash
-pnpm add @mycelium/core-sdk
+pnpm add @mycelium-ip/core-sdk
 ```
 
-## Quickstart
+Or:
 
-Initialize the SDK for a chain, then use namespaces to generate unsigned transactions.
-
-```ts
-import { MyceliumSDK } from "@mycelium/core-sdk";
-
-// 1) Initialize the SDK (no network, no wallet required)
-const sdk = new MyceliumSDK({ chain: "devnet" });
-
-// 2) Prepare your Anchor Programs elsewhere (not handled by core-sdk)
-// These are placeholders — you should construct them in your app.
-const entityProgram = /* Program<Entity> */ undefined as any;
-const metadataProgram = /* Program<Metadata> */ undefined as any;
-const ipcoreProgram = /* Program<Ipcore> */ undefined as any;
-
-// Common inputs (replace with your keys)
-const payer = /* PublicKey */ undefined as any;
-const controllers = [
-  /* PublicKey[] */
-];
+```bash
+npm install @mycelium-ip/core-sdk
+# or
+yarn add @mycelium-ip/core-sdk
 ```
 
-### Register an Entity
+The SDK depends on:
 
-Creates an unsigned transaction with a registerEntity instruction and a createEntityMetadata instruction (metadata v1) when applicable.
+- `@coral-xyz/anchor`
+- `@solana/web3.js`
+
+---
+
+## Requirements
+
+You need:
+
+1. A `Connection` to a Solana cluster
+2. A wallet object compatible with the SDK wallet interface:
+   - `publicKey`
+   - `signTransaction(tx)`
+   - `signAllTransactions(txs)`
+   - optional `signMessage(message)`
+
+### Wallet interface shape
 
 ```ts
-const { transaction } = await sdk.entity.generateRegisterTransaction({
-  program: entityProgram,
-  metadataProgram,
-  controllers,
-  threshold: 1,
-  metadataCid: "ipfs://...", // your URI
-  payer,
+import type {
+  Transaction,
+  VersionedTransaction,
+  PublicKey,
+} from "@solana/web3.js";
+
+export interface WalletAdapterLike {
+  publicKey: PublicKey | null;
+  signTransaction<T extends Transaction | VersionedTransaction>(
+    transaction: T,
+  ): Promise<T>;
+  signAllTransactions<T extends Transaction | VersionedTransaction>(
+    transactions: T[],
+  ): Promise<T[]>;
+  signMessage?(message: Uint8Array): Promise<Uint8Array>;
+}
+```
+
+> `wallet.publicKey` must be present when creating `MyceliumClient`.
+
+---
+
+## Initialize the SDK
+
+### Browser / Next.js (wallet-adapter style)
+
+```ts
+import { Connection } from "@solana/web3.js";
+import { MyceliumClient } from "@mycelium-ip/core-sdk";
+
+const connection = new Connection("https://api.devnet.solana.com", "confirmed");
+
+// Example: wallet from @solana/wallet-adapter-react or similar
+const sdk = new MyceliumClient({
+  connection,
+  wallet,
+  // Optional: forwarded to AnchorProvider confirm options
+  confirmOptions: { commitment: "confirmed" },
 });
-// transaction has NO fee payer, NO blockhash, and is UNSIGNED
 ```
 
-### Register a Root IP Asset
-
-Creates an unsigned transaction with a registerRootIp instruction and createIpMetadata v1.
+### Node.js (custom signer-backed wallet)
 
 ```ts
-const { transaction: ipTx, ipAssetPda } =
-  await sdk.ipcore.generateRegisterIpAssetTransaction({
-    program: ipcoreProgram,
-    metadataProgram,
-    payer,
-    entityIndex: 0, // your entity index
-    registrationFee: 0.1, // in SOL (converted inside)
-    metadataCid: "ipfs://...", // your URI
-    controllers,
-  });
+import {
+  Connection,
+  Keypair,
+  Transaction,
+  VersionedTransaction,
+} from "@solana/web3.js";
+import { MyceliumClient, type WalletAdapterLike } from "@mycelium-ip/core-sdk";
+
+const payer = Keypair.generate();
+const connection = new Connection("https://api.devnet.solana.com", "confirmed");
+
+const wallet: WalletAdapterLike = {
+  publicKey: payer.publicKey,
+  async signTransaction<T extends Transaction | VersionedTransaction>(tx: T) {
+    if (tx instanceof VersionedTransaction) {
+      tx.sign([payer]);
+      return tx;
+    }
+
+    tx.partialSign(payer);
+    return tx;
+  },
+  async signAllTransactions<T extends Transaction | VersionedTransaction>(
+    txs: T[],
+  ) {
+    return Promise.all(txs.map((tx) => wallet.signTransaction(tx)));
+  },
+};
+
+const sdk = new MyceliumClient({ connection, wallet });
 ```
 
-### Create Entity Metadata (v1)
+---
+
+## Usage patterns
+
+Each module supports two styles:
+
+1. **Instruction builder** (`*Ix`) returns `TransactionInstruction`
+2. **Transaction sender** (without `Ix`) builds + sends and returns signature (`string`)
+
+### Pattern A: Build instruction only (`createIx`)
 
 ```ts
-import { BN } from "@coral-xyz/anchor";
 import { PublicKey } from "@solana/web3.js";
 
-const entityPda = /* PublicKey */ undefined as any;
-const schemaPda = /* PublicKey */ undefined as any;
+const createEntityIx = await sdk.ipCore.entity.createIx({
+  handle: "marvel",
+  additionalControllers: [],
+  signatureThreshold: 1,
+  // creator optional (defaults to wallet.publicKey)
+});
 
-const { transaction: createEntityMetaTx } =
-  await sdk.metadata.generateCreateEntityMetadataTransaction({
-    program: metadataProgram,
-    entityPda: entityPda as PublicKey,
-    schemaPda: schemaPda as PublicKey,
-    version: new BN(1),
-    metadataCid: "ipfs://...",
-    payer,
-    controllers,
-  });
+const createIpIx = await sdk.ipCore.ip.createIx({
+  registrantEntity: new PublicKey("..."),
+  contentHash: "content-hash-v1",
+  treasuryTokenAccount: new PublicKey("..."),
+  payerTokenAccount: new PublicKey("..."),
+  // payer optional (defaults to wallet.publicKey)
+});
+
+// You can compose instructions into your own transaction pipeline.
 ```
 
-### Create IP Metadata (v1)
+### Pattern B: Send transaction directly (`create`, `update`, `revoke`, ...)
 
 ```ts
-import { BN } from "@coral-xyz/anchor";
-import { PublicKey } from "@solana/web3.js";
+const entityTx = await sdk.ipCore.entity.create({
+  handle: "marvel",
+});
 
-const ipAssetPda = /* PublicKey */ undefined as any;
-const entityPda = /* PublicKey */ undefined as any;
-const schemaPda = /* PublicKey */ undefined as any;
+const ipTx = await sdk.ipCore.ip.create({
+  registrantEntity,
+  contentHash: "content-hash-v1",
+  treasuryTokenAccount,
+  payerTokenAccount,
+});
 
-const { transaction: createIpMetaTx } =
-  await sdk.metadata.generateCreateIpMetadataTransaction({
-    program: metadataProgram,
-    ipAssetPda: ipAssetPda as PublicKey,
-    entityPda: entityPda as PublicKey,
-    schemaPda: schemaPda as PublicKey,
-    version: new BN(1),
-    metadataCid: "ipfs://...",
-    payer,
-    controllers,
-  });
+const transferTx = await sdk.ipCore.ip.transfer({
+  ip,
+  currentOwnerEntity,
+  newOwnerEntity,
+});
+
+console.log({ entityTx, ipTx, transferTx });
 ```
 
-### Update Entity Metadata
+---
+
+## Module map
+
+### IP Core program
+
+- `sdk.ipCore.entity`
+  - `createIx`, `create`
+  - `updateControllersIx`, `updateControllers`
+- `sdk.ipCore.ip`
+  - `createIx`, `create`
+  - `transferIx`, `transfer`
+- `sdk.ipCore.metadata`
+  - `createSchemaIx`, `createSchema`
+  - `createEntityMetadataIx`, `createEntityMetadata`
+  - `createIpMetadataIx`, `createIpMetadata`
+- `sdk.ipCore.derivative`
+  - `createIx`, `create`
+  - `updateLicenseIx`, `updateLicense`
+
+### License program (grant flow)
+
+License client has nested modules. For grant operations use:
+
+- `sdk.license.grant`
+  - `createIx`, `create`
+  - `revokeIx`, `revoke`
+
+Example:
 
 ```ts
-import { BN } from "@coral-xyz/anchor";
-import { PublicKey } from "@solana/web3.js";
+const grantSig = await sdk.license.grant.create({
+  originIp,
+  authorityEntity,
+  granteeEntity,
+  expiration: BigInt(Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30),
+});
 
-const entityPda = /* PublicKey */ undefined as any;
-const previousMetadataPda = /* PublicKey */ undefined as any;
-const newMetadataPda = /* PublicKey */ undefined as any;
-const schemaPda = /* PublicKey */ undefined as any;
-const authority = /* PublicKey */ undefined as any;
-
-const { transaction: updateEntityMetaTx } =
-  await sdk.metadata.generateUpdateEntityMetadataTransaction({
-    program: metadataProgram,
-    entityPda: entityPda as PublicKey,
-    previousMetadataPda: previousMetadataPda as PublicKey,
-    payer,
-    metadataCid: "ipfs://...",
-    controllers,
-  });
+const revokeSig = await sdk.license.grant.revoke({
+  originIp,
+  authorityEntity,
+  granteeEntity,
+});
 ```
 
-### Update IP Metadata
+---
+
+## PDA helpers
+
+The SDK exports PDA helpers so you can derive addresses yourself when needed.
 
 ```ts
-import { BN } from "@coral-xyz/anchor";
-import { PublicKey } from "@solana/web3.js";
-
-const ipAssetPda = /* PublicKey */ undefined as any;
-const entityPda = /* PublicKey */ undefined as any;
-const previousMetadataPda = /* PublicKey */ undefined as any;
-const newMetadataPda = /* PublicKey */ undefined as any;
-const schemaPda = /* PublicKey */ undefined as any;
-const authority = /* PublicKey */ undefined as any;
-
-const { transaction: updateIpMetaTx } =
-  await sdk.metadata.generateUpdateIpMetadataTransaction({
-    program: metadataProgram,
-    ipAssetPda: ipAssetPda as PublicKey,
-    entityPda: entityPda as PublicKey,
-    previousMetadataPda: previousMetadataPda as PublicKey,
-    newMetadataPda: newMetadataPda as PublicKey,
-    schemaPda: schemaPda as PublicKey,
-    authority: authority as PublicKey,
-    payer,
-    version: new BN(2),
-    metadataCid: "ipfs://...",
-    controllers,
-  });
+import {
+  deriveEntityPda,
+  deriveIpPda,
+  deriveMetadataSchemaPda,
+  deriveLicensePda,
+  deriveLicenseGrantPda,
+} from "@mycelium-ip/core-sdk";
 ```
 
-## Important Notes
+Use these if you need deterministic PDA derivation outside module calls.
 
-- Returns unsigned transactions without fee payer or blockhash. Set those in your app before signing and sending.
-- Core SDK does not create Connection, AnchorProvider, or Program. You must supply Program instances if your chosen transaction builder expects them.
-- No on-chain data is fetched by the SDK itself. Some existing transaction builders may check account state via program.account.\*; construct those programs and providers externally if you use those helpers.
+---
 
-## Next Steps
+## Utilities
 
-- Sign and send transactions using your own client or higher-level packages (e.g., client-sdk, react-sdk).
-- See the full list of builders in sdk/namespaces and transactions/.
+### Provider helper
+
+```ts
+import { createProvider } from "@mycelium-ip/core-sdk";
+
+const provider = createProvider(connection, wallet, {
+  commitment: "confirmed",
+});
+```
+
+### Transaction helper
+
+```ts
+import { sendInstruction } from "@mycelium-ip/core-sdk";
+
+const sig = await sendInstruction(provider, instruction);
+```
+
+### Conversion helpers
+
+Useful for byte-length constrained protocol fields and integer conversions:
+
+- `toFixedBytes(...)`
+- `utf8Bytes(...)`
+- `toU64Bn(...)`
+- `toI64Bn(...)`
+- `u64SeedBytes(...)`
+
+---
+
+## Common pitfalls
+
+- `wallet.publicKey` is required at initialization; missing key throws.
+- Sender methods require wallet signing capability (`signTransaction`/`signAllTransactions`).
+- Program IDs default from bundled IDLs, with fallback constants if IDL address is absent.
+- `MyceliumClientOptions.commitment` exists in types but is currently not consumed directly by `MyceliumClient`; use `confirmOptions` for provider/send behavior.
+
+---
+
+## Testing in this repo
+
+From the monorepo root:
+
+```bash
+pnpm --filter @mycelium-ip/core-sdk test
+pnpm --filter @mycelium-ip/core-sdk typecheck
+pnpm --filter @mycelium-ip/core-sdk lint
+```
+
+---
+
+## Support
+
+If you’re integrating this SDK in Node.js or Next.js and want a tailored example flow for your stack, open an issue in this repository with your environment details and target cluster.

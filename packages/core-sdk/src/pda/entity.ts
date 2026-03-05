@@ -1,33 +1,19 @@
 import { PublicKey } from "@solana/web3.js";
-import { ENTITY_PROGRAM_ID, SEEDS } from "../constants";
-import * as anchor from "@coral-xyz/anchor";
+import { IP_CORE_PROGRAM_ID, PDA_SEEDS } from "../constants/programs";
+import type { StringOrBytes } from "../types";
+import { toFixedBytes, utf8Bytes } from "../utils/conversions";
 
 export function deriveEntityPda(
-  owner: PublicKey,
-  entityIndex: anchor.BN,
+  creator: PublicKey,
+  handle: StringOrBytes,
+  programId: PublicKey = IP_CORE_PROGRAM_ID,
 ): [PublicKey, number] {
   return PublicKey.findProgramAddressSync(
     [
-      Buffer.from(SEEDS.ENTITY),
-      owner.toBuffer(),
-      entityIndex.toArrayLike(Buffer, "le", 8),
+      utf8Bytes(PDA_SEEDS.entity),
+      creator.toBytes(),
+      Uint8Array.from(toFixedBytes(handle, 32, "handle")),
     ],
-    ENTITY_PROGRAM_ID,
-  );
-}
-
-export function deriveEntityCounterPda(): [PublicKey, number] {
-  return PublicKey.findProgramAddressSync(
-    [Buffer.from(SEEDS.ENTITY_COUNTER)],
-    ENTITY_PROGRAM_ID,
-  );
-}
-
-export function deriveEntityTreasuryPda(
-  entity: PublicKey,
-): [PublicKey, number] {
-  return PublicKey.findProgramAddressSync(
-    [Buffer.from(SEEDS.ENTITY_TREASURY), entity.toBuffer()],
-    ENTITY_PROGRAM_ID,
+    programId,
   );
 }

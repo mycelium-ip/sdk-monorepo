@@ -1,33 +1,51 @@
 import { PublicKey } from "@solana/web3.js";
-import { METADATA_PROGRAM_ID, SEEDS } from "../constants";
-import * as anchor from "@coral-xyz/anchor";
+import { IP_CORE_PROGRAM_ID, PDA_SEEDS } from "../constants/programs";
+import type { StringOrBytes } from "../types";
+import { toFixedBytes, u64SeedBytes, utf8Bytes } from "../utils/conversions";
 
-export function deriveEntityMetadataPda(
-  entity: PublicKey,
-  version: number,
+export function deriveMetadataSchemaPda(
+  id: StringOrBytes,
+  version: StringOrBytes,
+  programId: PublicKey = IP_CORE_PROGRAM_ID,
 ): [PublicKey, number] {
-  const versionBN = new anchor.BN(version);
   return PublicKey.findProgramAddressSync(
     [
-      Buffer.from(SEEDS.ENTITY_METADATA),
-      entity.toBuffer(),
-      versionBN.toArrayLike(Buffer, "le", 8),
+      utf8Bytes(PDA_SEEDS.metadataSchema),
+      Uint8Array.from(toFixedBytes(id, 32, "id")),
+      Uint8Array.from(toFixedBytes(version, 16, "version")),
     ],
-    METADATA_PROGRAM_ID,
+    programId,
   );
 }
 
-export function deriveIPMetadataPda(
-  ipAsset: PublicKey,
-  version: number,
+export function deriveEntityMetadataPda(
+  entity: PublicKey,
+  revision: bigint | number,
+  programId: PublicKey = IP_CORE_PROGRAM_ID,
 ): [PublicKey, number] {
-  const versionBN = new anchor.BN(version);
   return PublicKey.findProgramAddressSync(
     [
-      Buffer.from(SEEDS.IP_METADATA),
-      ipAsset.toBuffer(),
-      versionBN.toArrayLike(Buffer, "le", 8),
+      utf8Bytes(PDA_SEEDS.metadata),
+      utf8Bytes(PDA_SEEDS.entityKind),
+      entity.toBytes(),
+      u64SeedBytes(revision),
     ],
-    METADATA_PROGRAM_ID,
+    programId,
+  );
+}
+
+export function deriveIpMetadataPda(
+  ip: PublicKey,
+  revision: bigint | number,
+  programId: PublicKey = IP_CORE_PROGRAM_ID,
+): [PublicKey, number] {
+  return PublicKey.findProgramAddressSync(
+    [
+      utf8Bytes(PDA_SEEDS.metadata),
+      utf8Bytes(PDA_SEEDS.ipKind),
+      ip.toBytes(),
+      u64SeedBytes(revision),
+    ],
+    programId,
   );
 }

@@ -8,14 +8,14 @@
     "build": "tsc -p tsconfig.build.json",
     "lint": "eslint .",
     "test": "vitest",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc -p tsconfig.build.json --noEmit"
   },
   "keywords": [],
   "author": "mycelium-dev",
   "license": "MIT",
   "packageManager": "pnpm@10.12.1",
   "dependencies": {
-    "@mycelium/core-sdk": "workspace:*"
+    "@mycelium-ip/core-sdk": "workspace:*"
   },
   "peerDependencies": {
     "react": ">=19"
