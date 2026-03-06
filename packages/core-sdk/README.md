@@ -164,9 +164,10 @@ const createEntityIx = await sdk.ipCore.entity.createIx({
   // creator optional (defaults to wallet.publicKey)
 });
 
+// The SDK hashes the content internally using SHA-256
 const createIpIx = await sdk.ipCore.ip.createIx({
   registrantEntity: new PublicKey("..."),
-  contentHash: "content-hash-v1",
+  content: new TextEncoder().encode("my-ip-content"),
   treasuryTokenAccount: new PublicKey("..."),
   payerTokenAccount: new PublicKey("..."),
   // payer optional (defaults to wallet.publicKey)
@@ -184,7 +185,7 @@ const entityTx = await sdk.ipCore.entity.create({
 
 const ipTx = await sdk.ipCore.ip.create({
   registrantEntity,
-  contentHash: "content-hash-v1",
+  content: new TextEncoder().encode("my-ip-content"),
   treasuryTokenAccount,
   payerTokenAccount,
 });

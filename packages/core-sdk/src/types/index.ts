@@ -53,7 +53,7 @@ export interface UpdateEntityControllersParams {
 
 export interface CreateIpParams {
   registrantEntity: PublicKey;
-  contentHash: StringOrBytes;
+  content: Uint8Array;
   treasuryTokenAccount: PublicKey;
   payerTokenAccount: PublicKey;
   payer?: PublicKey;
@@ -68,7 +68,7 @@ export interface TransferIpParams {
 export interface CreateMetadataSchemaParams {
   id: StringOrBytes;
   version: StringOrBytes;
-  hash: StringOrBytes;
+  data: Uint8Array;
   cid: StringOrBytes;
   creator?: PublicKey;
 }
@@ -77,7 +77,7 @@ export interface CreateEntityMetadataParams {
   entity: PublicKey;
   schema: PublicKey;
   revision: bigint | number;
-  hash: StringOrBytes;
+  data: Uint8Array;
   cid: StringOrBytes;
   payer?: PublicKey;
 }
@@ -87,7 +87,7 @@ export interface CreateIpMetadataParams {
   ownerEntity: PublicKey;
   schema: PublicKey;
   revision: bigint | number;
-  hash: StringOrBytes;
+  data: Uint8Array;
   cid: StringOrBytes;
   payer?: PublicKey;
 }

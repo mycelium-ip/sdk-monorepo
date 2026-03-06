@@ -11,7 +11,7 @@ import type {
   CreateMetadataSchemaParams,
   SendTxOptions,
 } from "../../types";
-import { toFixedBytes, toU64Bn } from "../../utils/conversions";
+import { sha256Hash, toFixedBytes, toU64Bn } from "../../utils/conversions";
 import { sendInstruction } from "../../utils/transactions";
 import type { IpCoreClient } from "./IpCoreClient";
 
@@ -32,7 +32,7 @@ export class MetadataModule {
       .createMetadataSchema(
         toFixedBytes(params.id, 32, "id"),
         toFixedBytes(params.version, 16, "version"),
-        toFixedBytes(params.hash, 32, "hash"),
+        toFixedBytes(sha256Hash(params.data), 32, "hash"),
         toFixedBytes(params.cid, 96, "cid"),
       )
       .accounts({
@@ -69,7 +69,7 @@ export class MetadataModule {
     return this.client.program.methods
       .createEntityMetadata(
         toU64Bn(params.revision, "revision"),
-        toFixedBytes(params.hash, 32, "hash"),
+        toFixedBytes(sha256Hash(params.data), 32, "hash"),
         toFixedBytes(params.cid, 96, "cid"),
       )
       .accounts({
@@ -108,7 +108,7 @@ export class MetadataModule {
     return this.client.program.methods
       .createIpMetadata(
         toU64Bn(params.revision, "revision"),
-        toFixedBytes(params.hash, 32, "hash"),
+        toFixedBytes(sha256Hash(params.data), 32, "hash"),
         toFixedBytes(params.cid, 96, "cid"),
       )
       .accounts({

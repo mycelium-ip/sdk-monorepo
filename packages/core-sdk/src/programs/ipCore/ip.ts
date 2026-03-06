@@ -8,7 +8,7 @@ import type {
   SendTxOptions,
   TransferIpParams,
 } from "../../types";
-import { toFixedBytes, utf8Bytes } from "../../utils/conversions";
+import { sha256Hash, toFixedBytes, utf8Bytes } from "../../utils/conversions";
 import { sendInstruction } from "../../utils/transactions";
 import type { IpCoreClient } from "./IpCoreClient";
 
@@ -19,9 +19,10 @@ export class IpModule {
 
   async createIx(params: CreateIpParams): Promise<TransactionInstruction> {
     const payer = this.resolveWalletPubkey(params.payer);
+    const contentHash = sha256Hash(params.content);
     const [ip] = deriveIpPda(
       params.registrantEntity,
-      params.contentHash,
+      contentHash,
       this.client.program.programId,
     );
     const [config] = PublicKey.findProgramAddressSync(
@@ -34,7 +35,7 @@ export class IpModule {
     );
 
     return this.client.program.methods
-      .createIp(toFixedBytes(params.contentHash, 32, "contentHash"))
+      .createIp(toFixedBytes(contentHash, 32, "contentHash"))
       .accounts({
         ip,
         registrantEntity: params.registrantEntity,

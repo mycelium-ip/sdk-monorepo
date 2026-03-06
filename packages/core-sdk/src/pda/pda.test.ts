@@ -1,5 +1,6 @@
 import { Keypair } from "@solana/web3.js";
 import { describe, expect, it } from "vitest";
+import { sha256Hash, utf8Bytes } from "../utils/conversions";
 import {
   deriveDerivativeLinkPda,
   deriveEntityMetadataPda,
@@ -23,8 +24,9 @@ describe("pda helpers", () => {
     const [entityB] = deriveEntityPda(creator, "my-handle");
     expect(entityA.toBase58()).toBe(entityB.toBase58());
 
-    const [ipA] = deriveIpPda(registrant, "0x1234");
-    const [ipB] = deriveIpPda(registrant, "0x1234");
+    const contentHash = sha256Hash(utf8Bytes("my-content"));
+    const [ipA] = deriveIpPda(registrant, contentHash);
+    const [ipB] = deriveIpPda(registrant, contentHash);
     expect(ipA.toBase58()).toBe(ipB.toBase58());
 
     const [schemaA] = deriveMetadataSchemaPda("schema", "v1");
