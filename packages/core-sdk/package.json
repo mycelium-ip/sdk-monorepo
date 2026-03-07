@@ -25,7 +25,12 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
-  "keywords": [],
+  "keywords": [
+    "solana",
+    "ip",
+    "mycelium",
+    "nodejs"
+  ],
   "author": "mycelium-dev",
   "license": "MIT",
   "packageManager": "pnpm@10.12.1",
