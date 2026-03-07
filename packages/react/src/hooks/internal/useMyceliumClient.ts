@@ -4,18 +4,20 @@ import type { MyceliumClient } from "@mycelium-ip/core-sdk";
 import { useMyceliumContext } from "./useMyceliumContext";
 
 /**
- * Returns the MyceliumClient instance from context.
+ * Returns the MyceliumClient instance from context, or null when the wallet
+ * is not yet connected.
  *
  * @throws Error if used outside of MyceliumIpProvider
- * @throws Error if wallet is not connected
  *
  * @example
  * ```ts
  * const client = useMyceliumClient();
- * const ix = await client.ipCore.entity.createIx({ ... });
+ * if (client) {
+ *   const ix = await client.ipCore.entity.createIx({ ... });
+ * }
  * ```
  */
-export function useMyceliumClient(): MyceliumClient {
+export function useMyceliumClient(): MyceliumClient | null {
   const { client } = useMyceliumContext();
   return client;
 }

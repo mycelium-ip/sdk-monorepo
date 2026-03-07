@@ -60,3 +60,42 @@ export function createTestWrapper(options: TestWrapperOptions = {}) {
     contextValue,
   };
 }
+
+/**
+ * Creates a test wrapper that simulates a disconnected state
+ * (provider mounted, but no wallet or client available).
+ */
+export function createDisconnectedTestWrapper() {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: { retry: false },
+      mutations: { retry: false },
+    },
+  });
+
+  const mockConnection = createMockConnection();
+
+  const contextValue: MyceliumContextValue = {
+    connection: mockConnection,
+    wallet: null,
+    client: null,
+    confirmation: "confirmed",
+  };
+
+  function DisconnectedWrapper({ children }: { children: ReactNode }) {
+    return (
+      <QueryClientProvider client={queryClient}>
+        <MyceliumContext.Provider value={contextValue}>
+          {children}
+        </MyceliumContext.Provider>
+      </QueryClientProvider>
+    );
+  }
+
+  return {
+    wrapper: DisconnectedWrapper,
+    queryClient,
+    mockConnection,
+    contextValue,
+  };
+}

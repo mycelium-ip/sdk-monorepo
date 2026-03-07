@@ -9,10 +9,10 @@ import type { MyceliumWallet } from "../types/wallet";
 export interface MyceliumContextValue {
   /** Solana RPC connection */
   connection: Connection;
-  /** Wallet implementing the MyceliumWallet interface */
-  wallet: MyceliumWallet;
-  /** Core SDK client instance */
-  client: MyceliumClient;
+  /** Wallet implementing the MyceliumWallet interface, or null when not connected */
+  wallet: MyceliumWallet | null;
+  /** Core SDK client instance, or null when wallet is not connected */
+  client: MyceliumClient | null;
   /** Transaction confirmation level */
   confirmation: Commitment;
 }

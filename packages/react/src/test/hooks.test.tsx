@@ -2,9 +2,10 @@ import { renderHook, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { useCreateEntity } from "../hooks/entity/useCreateEntity";
 import { useMyceliumContext } from "../hooks/internal/useMyceliumContext";
+import { useMyceliumWallet } from "../hooks/internal/useMyceliumWallet";
 import { queryKeys } from "../hooks/queries/queryKeys";
 import { createMockPublicKey } from "./mocks";
-import { createTestWrapper } from "./wrapper";
+import { createDisconnectedTestWrapper, createTestWrapper } from "./wrapper";
 
 describe("useMyceliumContext", () => {
   it("throws when used outside provider", () => {
@@ -23,6 +24,35 @@ describe("useMyceliumContext", () => {
     expect(result.current.wallet).toBe(contextValue.wallet);
     expect(result.current.client).toBe(contextValue.client);
     expect(result.current.confirmation).toBe("confirmed");
+  });
+
+  it("returns context with null wallet/client when disconnected", () => {
+    const { wrapper } = createDisconnectedTestWrapper();
+
+    const { result } = renderHook(() => useMyceliumContext(), { wrapper });
+
+    expect(result.current.wallet).toBeNull();
+    expect(result.current.client).toBeNull();
+  });
+});
+
+describe("useMyceliumWallet", () => {
+  it("returns isConnected true when wallet with publicKey is present", () => {
+    const { wrapper } = createTestWrapper();
+
+    const { result } = renderHook(() => useMyceliumWallet(), { wrapper });
+
+    expect(result.current.isConnected).toBe(true);
+    expect(result.current.wallet).not.toBeNull();
+  });
+
+  it("returns isConnected false when wallet is null", () => {
+    const { wrapper } = createDisconnectedTestWrapper();
+
+    const { result } = renderHook(() => useMyceliumWallet(), { wrapper });
+
+    expect(result.current.isConnected).toBe(false);
+    expect(result.current.wallet).toBeNull();
   });
 });
 
@@ -68,6 +98,36 @@ describe("useCreateEntity", () => {
         queryKey: queryKeys.entities(),
       });
     }
+  });
+
+  it("exposes isWalletConnected true when wallet is connected", () => {
+    const { wrapper } = createTestWrapper();
+
+    const { result } = renderHook(() => useCreateEntity(), { wrapper });
+
+    expect(result.current.isWalletConnected).toBe(true);
+  });
+
+  it("exposes isWalletConnected false when wallet is null", () => {
+    const { wrapper } = createDisconnectedTestWrapper();
+
+    const { result } = renderHook(() => useCreateEntity(), { wrapper });
+
+    expect(result.current.isWalletConnected).toBe(false);
+  });
+
+  it("throws Wallet not connected when mutate is called without wallet", async () => {
+    const { wrapper } = createDisconnectedTestWrapper();
+
+    const { result } = renderHook(() => useCreateEntity(), { wrapper });
+
+    result.current.mutate({ handle: "test-entity" });
+
+    await waitFor(() => {
+      expect(result.current.isError).toBe(true);
+    });
+
+    expect(result.current.error?.message).toBe("Wallet not connected");
   });
 });
 

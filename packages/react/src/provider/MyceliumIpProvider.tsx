@@ -32,8 +32,8 @@ export interface MyceliumIpProviderProps {
   /** Solana RPC connection (required) */
   connection: Connection;
 
-  /** Wallet implementing the MyceliumWallet interface (required) */
-  wallet: MyceliumWallet;
+  /** Wallet implementing the MyceliumWallet interface (optional; mutations will throw when null/undefined) */
+  wallet?: MyceliumWallet | null;
 
   /**
    * Existing TanStack Query client.
@@ -94,8 +94,8 @@ export function MyceliumIpProvider({
 
   // Create the core SDK client
   const client = useMemo(() => {
-    // Only create client if wallet has a public key
-    if (!wallet.publicKey) {
+    // Only create client if wallet exists and has a public key
+    if (!wallet?.publicKey) {
       return null;
     }
 
@@ -118,15 +118,12 @@ export function MyceliumIpProvider({
     });
   }, [connection, wallet]);
 
-  // Create context value
-  const contextValue = useMemo<MyceliumContextValue | null>(() => {
-    if (!client) {
-      return null;
-    }
-
+  // Create context value — always non-null inside the provider;
+  // wallet and client are null when the wallet is not yet connected.
+  const contextValue = useMemo<MyceliumContextValue>(() => {
     return {
       connection,
-      wallet,
+      wallet: wallet ?? null,
       client,
       confirmation,
     };

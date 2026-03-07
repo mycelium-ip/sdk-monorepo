@@ -36,15 +36,27 @@ import { queryKeys } from "../queries/queryKeys";
 export function useUpdateEntityControllers() {
   const { client, connection, wallet, confirmation } = useMyceliumContext();
   const queryClient = useQueryClient();
+  const isWalletConnected = wallet !== null && wallet.publicKey !== null;
 
-  return useMutation<TransactionResult, Error, UpdateEntityControllersParams>({
-    mutationFn: async (params) => {
-      const instruction =
-        await client.ipCore.entity.updateControllersIx(params);
-      return executeTransaction(connection, wallet, instruction, confirmation);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.entities() });
-    },
-  });
+  return {
+    ...useMutation<TransactionResult, Error, UpdateEntityControllersParams>({
+      mutationFn: async (params) => {
+        if (!client || !wallet) {
+          throw new Error("Wallet not connected");
+        }
+        const instruction =
+          await client.ipCore.entity.updateControllersIx(params);
+        return executeTransaction(
+          connection,
+          wallet,
+          instruction,
+          confirmation,
+        );
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: queryKeys.entities() });
+      },
+    }),
+    isWalletConnected,
+  };
 }

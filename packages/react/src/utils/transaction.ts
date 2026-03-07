@@ -33,11 +33,11 @@ export interface TransactionResult {
  */
 export async function executeTransaction(
   connection: Connection,
-  wallet: MyceliumWallet,
+  wallet: MyceliumWallet | null,
   instruction: TransactionInstruction,
   confirmation: Commitment,
 ): Promise<TransactionResult> {
-  if (!wallet.publicKey) {
+  if (!wallet?.publicKey) {
     throw new Error("Wallet not connected");
   }
 

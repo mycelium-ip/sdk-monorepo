@@ -9,8 +9,10 @@ import {
 /**
  * Returns the full Mycelium context value.
  *
+ * `wallet` and `client` may be `null` when the wallet is not yet connected.
+ * Mutation hooks guard against this by throwing "Wallet not connected" at call time.
+ *
  * @throws Error if used outside of MyceliumIpProvider
- * @throws Error if wallet is not connected (no publicKey)
  *
  * @example
  * ```ts

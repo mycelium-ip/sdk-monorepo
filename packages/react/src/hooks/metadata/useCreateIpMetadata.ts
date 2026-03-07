@@ -39,16 +39,28 @@ import { queryKeys } from "../queries/queryKeys";
 export function useCreateIpMetadata() {
   const { client, connection, wallet, confirmation } = useMyceliumContext();
   const queryClient = useQueryClient();
+  const isWalletConnected = wallet !== null && wallet.publicKey !== null;
 
-  return useMutation<TransactionResult, Error, CreateIpMetadataParams>({
-    mutationFn: async (params) => {
-      const instruction =
-        await client.ipCore.metadata.createIpMetadataIx(params);
-      return executeTransaction(connection, wallet, instruction, confirmation);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.ips() });
-      queryClient.invalidateQueries({ queryKey: queryKeys.metadata() });
-    },
-  });
+  return {
+    ...useMutation<TransactionResult, Error, CreateIpMetadataParams>({
+      mutationFn: async (params) => {
+        if (!client || !wallet) {
+          throw new Error("Wallet not connected");
+        }
+        const instruction =
+          await client.ipCore.metadata.createIpMetadataIx(params);
+        return executeTransaction(
+          connection,
+          wallet,
+          instruction,
+          confirmation,
+        );
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: queryKeys.ips() });
+        queryClient.invalidateQueries({ queryKey: queryKeys.metadata() });
+      },
+    }),
+    isWalletConnected,
+  };
 }

@@ -36,14 +36,26 @@ import { queryKeys } from "../queries/queryKeys";
 export function useTransferIp() {
   const { client, connection, wallet, confirmation } = useMyceliumContext();
   const queryClient = useQueryClient();
+  const isWalletConnected = wallet !== null && wallet.publicKey !== null;
 
-  return useMutation<TransactionResult, Error, TransferIpParams>({
-    mutationFn: async (params) => {
-      const instruction = await client.ipCore.ip.transferIx(params);
-      return executeTransaction(connection, wallet, instruction, confirmation);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.ips() });
-    },
-  });
+  return {
+    ...useMutation<TransactionResult, Error, TransferIpParams>({
+      mutationFn: async (params) => {
+        if (!client || !wallet) {
+          throw new Error("Wallet not connected");
+        }
+        const instruction = await client.ipCore.ip.transferIx(params);
+        return executeTransaction(
+          connection,
+          wallet,
+          instruction,
+          confirmation,
+        );
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: queryKeys.ips() });
+      },
+    }),
+    isWalletConnected,
+  };
 }
