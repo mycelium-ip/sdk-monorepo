@@ -1,6 +1,6 @@
 {
   "name": "@mycelium-ip/react",
-  "version": "0.1.0-alpha.0",
+  "version": "0.1.0-alpha.1",
   "private": false,
   "type": "module",
   "description": "React hooks for the Mycelium IP protocol",
@@ -14,6 +14,9 @@
     "dist",
     "README.md"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": [
     "solana",
     "ip",
