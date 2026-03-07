@@ -1,0 +1,952 @@
+# @mycelium-ip/react
+
+React hooks for the Mycelium IP protocol. This package provides a wallet-agnostic React integration built on top of TanStack Query.
+
+## Features
+
+- **Wallet-agnostic** — Works with any wallet (Solana Wallet Adapter, Privy, embedded wallets)
+- **TanStack Query powered** — Built-in caching, loading states, and automatic cache invalidation
+- **Next.js compatible** — Works with client components out of the box
+- **TypeScript first** — Full type safety with comprehensive TypeScript definitions
+- **Minimal abstraction** — Thin wrapper over `@mycelium-ip/core-sdk`
+
+## Installation
+
+```bash
+# npm
+npm install @mycelium-ip/react @mycelium-ip/core-sdk
+
+# yarn
+yarn add @mycelium-ip/react @mycelium-ip/core-sdk
+
+# pnpm
+pnpm add @mycelium-ip/react @mycelium-ip/core-sdk
+```
+
+### Peer Dependencies
+
+Make sure you have the following peer dependencies installed:
+
+```bash
+npm install @solana/web3.js @tanstack/react-query react
+```
+
+## Quick Start
+
+```tsx
+import { Connection } from "@solana/web3.js";
+import { MyceliumIpProvider, useCreateEntity } from "@mycelium-ip/react";
+
+// 1. Wrap your app with the provider
+function App() {
+  const connection = new Connection("https://api.devnet.solana.com");
+  const wallet = useYourWalletAdapter(); // See Wallet Integration section
+
+  return (
+    <MyceliumIpProvider connection={connection} wallet={wallet}>
+      <CreateEntityButton />
+    </MyceliumIpProvider>
+  );
+}
+
+// 2. Use hooks in your components
+function CreateEntityButton() {
+  const { mutate, isPending, isSuccess } = useCreateEntity();
+
+  const handleCreate = () => {
+    mutate({
+      handle: new TextEncoder().encode("my-entity"),
+      additionalControllers: [],
+      signatureThreshold: 1,
+    });
+  };
+
+  return (
+    <button onClick={handleCreate} disabled={isPending}>
+      {isPending ? "Creating..." : "Create Entity"}
+    </button>
+  );
+}
+```
+
+## Wallet Integration
+
+The SDK is completely wallet-agnostic. You provide a wallet object implementing the `MyceliumWallet` interface, allowing integration with any wallet provider.
+
+### MyceliumWallet Interface
+
+```typescript
+interface MyceliumWallet {
+  /** The public key of the connected wallet (null if not connected) */
+  publicKey: PublicKey | null;
+
+  /** Signs a single transaction */
+  signTransaction<T extends Transaction | VersionedTransaction>(
+    transaction: T,
+  ): Promise<T>;
+
+  /** Signs multiple transactions (optional) */
+  signAllTransactions?<T extends Transaction | VersionedTransaction>(
+    transactions: T[],
+  ): Promise<T[]>;
+
+  /** Signs an arbitrary message (optional) */
+  signMessage?(message: Uint8Array): Promise<Uint8Array>;
+}
+```
+
+### Solana Wallet Adapter
+
+If you're using [`@solana/wallet-adapter-react`](https://github.com/solana-labs/wallet-adapter):
+
+```tsx
+"use client";
+
+import { useWallet } from "@solana/wallet-adapter-react";
+import { useConnection } from "@solana/wallet-adapter-react";
+import { MyceliumIpProvider, type MyceliumWallet } from "@mycelium-ip/react";
+import { useMemo } from "react";
+
+function MyceliumProvider({ children }: { children: React.ReactNode }) {
+  const { connection } = useConnection();
+  const { publicKey, signTransaction, signAllTransactions, signMessage } =
+    useWallet();
+
+  // Adapt Wallet Adapter to MyceliumWallet interface
+  const wallet = useMemo<MyceliumWallet>(
+    () => ({
+      publicKey,
+      signTransaction: signTransaction!,
+      signAllTransactions,
+      signMessage,
+    }),
+    [publicKey, signTransaction, signAllTransactions, signMessage],
+  );
+
+  // Don't render provider until wallet is connected
+  if (!publicKey || !signTransaction) {
+    return <>{children}</>;
+  }
+
+  return (
+    <MyceliumIpProvider connection={connection} wallet={wallet}>
+      {children}
+    </MyceliumIpProvider>
+  );
+}
+```
+
+### Privy Embedded Wallet
+
+If you're using [`@privy-io/react-auth`](https://docs.privy.io/) with Solana embedded wallets:
+
+```tsx
+"use client";
+
+import { useSolanaWallets } from "@privy-io/react-auth/solana";
+import { usePrivy } from "@privy-io/react-auth";
+import { Connection, PublicKey } from "@solana/web3.js";
+import { MyceliumIpProvider, type MyceliumWallet } from "@mycelium-ip/react";
+import { useMemo } from "react";
+
+function MyceliumPrivyProvider({ children }: { children: React.ReactNode }) {
+  const { ready, authenticated } = usePrivy();
+  const { wallets } = useSolanaWallets();
+
+  // Get the embedded wallet (or first available wallet)
+  const embeddedWallet =
+    wallets.find((w) => w.walletClientType === "privy") ?? wallets[0];
+
+  const connection = useMemo(
+    () => new Connection(process.env.NEXT_PUBLIC_SOLANA_RPC_URL!),
+    [],
+  );
+
+  // Adapt Privy wallet to MyceliumWallet interface
+  const wallet = useMemo<MyceliumWallet | null>(() => {
+    if (!embeddedWallet?.address) return null;
+
+    return {
+      publicKey: new PublicKey(embeddedWallet.address),
+      signTransaction: async (transaction) => {
+        return embeddedWallet.signTransaction(transaction);
+      },
+      signAllTransactions: async (transactions) => {
+        // Privy supports batch signing
+        const signed = [];
+        for (const tx of transactions) {
+          signed.push(await embeddedWallet.signTransaction(tx));
+        }
+        return signed;
+      },
+      signMessage: async (message) => {
+        const signature = await embeddedWallet.signMessage(message);
+        return signature;
+      },
+    };
+  }, [embeddedWallet]);
+
+  // Wait for Privy to be ready and user to be authenticated
+  if (!ready || !authenticated || !wallet) {
+    return <>{children}</>;
+  }
+
+  return (
+    <MyceliumIpProvider connection={connection} wallet={wallet}>
+      {children}
+    </MyceliumIpProvider>
+  );
+}
+
+export default MyceliumPrivyProvider;
+```
+
+#### Complete Privy Setup Example
+
+Here's a complete example showing how to set up Privy with Mycelium in a Next.js App Router application:
+
+```tsx
+// app/providers.tsx
+"use client";
+
+import { PrivyProvider } from "@privy-io/react-auth";
+import { toSolanaWalletConnectors } from "@privy-io/react-auth/solana";
+import MyceliumPrivyProvider from "./MyceliumPrivyProvider";
+
+const solanaConnectors = toSolanaWalletConnectors({
+  shouldAutoConnect: true,
+});
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return (
+    <PrivyProvider
+      appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID!}
+      config={{
+        appearance: {
+          theme: "dark",
+        },
+        embeddedWallets: {
+          solana: {
+            createOnLogin: "users-without-wallets",
+          },
+        },
+        externalWallets: {
+          solana: {
+            connectors: solanaConnectors,
+          },
+        },
+      }}
+    >
+      <MyceliumPrivyProvider>{children}</MyceliumPrivyProvider>
+    </PrivyProvider>
+  );
+}
+```
+
+```tsx
+// app/layout.tsx
+import { Providers } from "./providers";
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <body>
+        <Providers>{children}</Providers>
+      </body>
+    </html>
+  );
+}
+```
+
+## Provider
+
+### MyceliumIpProvider
+
+The provider initializes the SDK and must wrap your application (or the part that uses Mycelium hooks).
+
+```tsx
+<MyceliumIpProvider
+  connection={connection}
+  wallet={wallet}
+  queryClient={queryClient} // optional
+  options={{
+    confirmation: "confirmed",
+    devtools: true,
+  }}
+>
+  <App />
+</MyceliumIpProvider>
+```
+
+### Props
+
+| Prop          | Type                        | Required | Description                                                             |
+| ------------- | --------------------------- | -------- | ----------------------------------------------------------------------- |
+| `connection`  | `Connection`                | Yes      | Solana RPC connection                                                   |
+| `wallet`      | `MyceliumWallet`            | Yes      | Wallet implementing the MyceliumWallet interface                        |
+| `queryClient` | `QueryClient`               | No       | Existing TanStack Query client. If omitted, a default client is created |
+| `options`     | `MyceliumIpProviderOptions` | No       | Provider configuration options                                          |
+
+### Options
+
+| Option         | Type         | Default       | Description                                                                  |
+| -------------- | ------------ | ------------- | ---------------------------------------------------------------------------- |
+| `confirmation` | `Commitment` | `"confirmed"` | Transaction confirmation level (`"processed"`, `"confirmed"`, `"finalized"`) |
+| `devtools`     | `boolean`    | `false`       | Enable TanStack Query devtools                                               |
+
+## Hooks Reference
+
+All mutation hooks return TanStack Query's `UseMutationResult`, providing:
+
+- `mutate` / `mutateAsync` — Execute the mutation
+- `isPending` — Loading state
+- `isSuccess` / `isError` — Result states
+- `data` — Transaction result (signature)
+- `error` — Error object if failed
+- `reset` — Reset mutation state
+
+### Entity Hooks
+
+#### useCreateEntity
+
+Creates a new entity in the protocol.
+
+```tsx
+import { useCreateEntity } from "@mycelium-ip/react";
+
+function CreateEntity() {
+  const { mutate, isPending } = useCreateEntity();
+
+  const handleCreate = () => {
+    mutate({
+      handle: new TextEncoder().encode("my-organization"),
+      additionalControllers: [], // Additional PublicKeys that can control this entity
+      signatureThreshold: 1, // Required signatures for multi-sig
+    });
+  };
+
+  return <button onClick={handleCreate}>Create Entity</button>;
+}
+```
+
+#### useUpdateEntityControllers
+
+Updates the controllers and signature threshold of an entity.
+
+```tsx
+import { useUpdateEntityControllers } from "@mycelium-ip/react";
+
+function UpdateControllers({ entityPubkey }: { entityPubkey: PublicKey }) {
+  const { mutate } = useUpdateEntityControllers();
+
+  const handleUpdate = () => {
+    mutate({
+      entity: entityPubkey,
+      newControllers: [controller1, controller2],
+      newThreshold: 2,
+    });
+  };
+
+  return <button onClick={handleUpdate}>Update Controllers</button>;
+}
+```
+
+### IP Hooks
+
+#### useCreateIp
+
+Creates a new IP (Intellectual Property) asset.
+
+```tsx
+import { useCreateIp } from "@mycelium-ip/react";
+
+function CreateIp({ entityPubkey }: { entityPubkey: PublicKey }) {
+  const { mutate, isPending } = useCreateIp();
+
+  const handleCreate = () => {
+    mutate({
+      registrantEntity: entityPubkey,
+      content: new TextEncoder().encode("ipfs://QmXxx..."), // Content identifier
+      treasuryTokenAccount: treasuryAccount, // Protocol treasury token account
+      payerTokenAccount: payerAccount, // Payer's token account for fees
+    });
+  };
+
+  return <button onClick={handleCreate}>Register IP</button>;
+}
+```
+
+#### useTransferIp
+
+Transfers ownership of an IP to another entity.
+
+```tsx
+import { useTransferIp } from "@mycelium-ip/react";
+
+function TransferIp({ ipPubkey, currentOwner, newOwner }: Props) {
+  const { mutate } = useTransferIp();
+
+  const handleTransfer = () => {
+    mutate({
+      ip: ipPubkey,
+      currentOwnerEntity: currentOwner,
+      newOwnerEntity: newOwner,
+    });
+  };
+
+  return <button onClick={handleTransfer}>Transfer IP</button>;
+}
+```
+
+### License Hooks
+
+#### useCreateLicense
+
+Creates a license for an IP.
+
+```tsx
+import { useCreateLicense } from "@mycelium-ip/react";
+
+function CreateLicense({ ipPubkey, entityPubkey }: Props) {
+  const { mutate } = useCreateLicense();
+
+  const handleCreate = () => {
+    mutate({
+      originIp: ipPubkey,
+      ownerEntity: entityPubkey,
+      derivativesAllowed: true, // Whether derivatives can be created under this license
+    });
+  };
+
+  return <button onClick={handleCreate}>Create License</button>;
+}
+```
+
+#### useUpdateLicense
+
+Updates an existing license.
+
+```tsx
+import { useUpdateLicense } from "@mycelium-ip/react";
+
+function UpdateLicense({ ipPubkey, entityPubkey }: Props) {
+  const { mutate } = useUpdateLicense();
+
+  const handleUpdate = () => {
+    mutate({
+      originIp: ipPubkey,
+      authorityEntity: entityPubkey,
+      derivativesAllowed: false,
+    });
+  };
+
+  return <button onClick={handleUpdate}>Update License</button>;
+}
+```
+
+#### useRevokeLicense
+
+Revokes a license.
+
+```tsx
+import { useRevokeLicense } from "@mycelium-ip/react";
+
+function RevokeLicense({ ipPubkey, entityPubkey }: Props) {
+  const { mutate } = useRevokeLicense();
+
+  const handleRevoke = () => {
+    mutate({
+      originIp: ipPubkey,
+      authorityEntity: entityPubkey,
+    });
+  };
+
+  return <button onClick={handleRevoke}>Revoke License</button>;
+}
+```
+
+### Grant Hooks
+
+#### useCreateLicenseGrant
+
+Creates a license grant for another entity.
+
+```tsx
+import { useCreateLicenseGrant } from "@mycelium-ip/react";
+
+function CreateGrant({ ipPubkey, authorityEntity, granteeEntity }: Props) {
+  const { mutate } = useCreateLicenseGrant();
+
+  const handleGrant = () => {
+    mutate({
+      originIp: ipPubkey,
+      authorityEntity: authorityEntity,
+      granteeEntity: granteeEntity,
+      expiration: Math.floor(Date.now() / 1000) + 86400 * 365, // 1 year from now
+    });
+  };
+
+  return <button onClick={handleGrant}>Grant License</button>;
+}
+```
+
+#### useRevokeLicenseGrant
+
+Revokes a license grant.
+
+```tsx
+import { useRevokeLicenseGrant } from "@mycelium-ip/react";
+
+function RevokeGrant({ ipPubkey, authorityEntity, granteeEntity }: Props) {
+  const { mutate } = useRevokeLicenseGrant();
+
+  const handleRevoke = () => {
+    mutate({
+      originIp: ipPubkey,
+      authorityEntity: authorityEntity,
+      granteeEntity: granteeEntity,
+    });
+  };
+
+  return <button onClick={handleRevoke}>Revoke Grant</button>;
+}
+```
+
+### Derivative Hooks
+
+#### useCreateDerivativeLink
+
+Creates a derivative link between two IPs.
+
+```tsx
+import { useCreateDerivativeLink } from "@mycelium-ip/react";
+
+function CreateDerivative({ parentIp, childIp, childOwner }: Props) {
+  const { mutate } = useCreateDerivativeLink();
+
+  const handleCreate = () => {
+    mutate({
+      parentIp: parentIp,
+      childIp: childIp,
+      childOwnerEntity: childOwner,
+      licenseGrant: grantPubkey,
+      license: licensePubkey,
+    });
+  };
+
+  return <button onClick={handleCreate}>Link Derivative</button>;
+}
+```
+
+#### useUpdateDerivativeLicense
+
+Updates the license on a derivative link.
+
+```tsx
+import { useUpdateDerivativeLicense } from "@mycelium-ip/react";
+
+function UpdateDerivativeLicense({ parentIp, childIp, childOwner }: Props) {
+  const { mutate } = useUpdateDerivativeLicense();
+
+  const handleUpdate = () => {
+    mutate({
+      parentIp: parentIp,
+      childIp: childIp,
+      childOwnerEntity: childOwner,
+      newLicenseGrant: newGrantPubkey,
+      newLicense: newLicensePubkey,
+    });
+  };
+
+  return <button onClick={handleUpdate}>Update Derivative License</button>;
+}
+```
+
+### Metadata Hooks
+
+#### useCreateMetadataSchema
+
+Creates a new metadata schema.
+
+```tsx
+import { useCreateMetadataSchema } from "@mycelium-ip/react";
+
+function CreateSchema() {
+  const { mutate } = useCreateMetadataSchema();
+
+  const handleCreate = () => {
+    mutate({
+      id: new TextEncoder().encode("artwork-schema"),
+      version: 1,
+      data: new TextEncoder().encode(
+        JSON.stringify({
+          type: "object",
+          properties: {
+            title: { type: "string" },
+            artist: { type: "string" },
+          },
+        }),
+      ),
+      cid: new TextEncoder().encode("ipfs://QmSchema..."),
+    });
+  };
+
+  return <button onClick={handleCreate}>Create Schema</button>;
+}
+```
+
+#### useCreateEntityMetadata
+
+Creates metadata for an entity.
+
+```tsx
+import { useCreateEntityMetadata } from "@mycelium-ip/react";
+
+function CreateEntityMetadata({ entityPubkey, schemaPubkey }: Props) {
+  const { mutate } = useCreateEntityMetadata();
+
+  const handleCreate = () => {
+    mutate({
+      entity: entityPubkey,
+      schema: schemaPubkey,
+      revision: 1,
+      data: new TextEncoder().encode(JSON.stringify({ name: "My Org" })),
+      cid: new TextEncoder().encode("ipfs://QmMetadata..."),
+    });
+  };
+
+  return <button onClick={handleCreate}>Add Metadata</button>;
+}
+```
+
+#### useCreateIpMetadata
+
+Creates metadata for an IP.
+
+```tsx
+import { useCreateIpMetadata } from "@mycelium-ip/react";
+
+function CreateIpMetadata({ ipPubkey, entityPubkey, schemaPubkey }: Props) {
+  const { mutate } = useCreateIpMetadata();
+
+  const handleCreate = () => {
+    mutate({
+      ip: ipPubkey,
+      ownerEntity: entityPubkey,
+      schema: schemaPubkey,
+      revision: 1,
+      data: new TextEncoder().encode(
+        JSON.stringify({
+          title: "My Artwork",
+          artist: "Anonymous",
+        }),
+      ),
+      cid: new TextEncoder().encode("ipfs://QmIpMetadata..."),
+    });
+  };
+
+  return <button onClick={handleCreate}>Add IP Metadata</button>;
+}
+```
+
+### Accessor Hooks
+
+These hooks provide access to the underlying SDK and context values.
+
+```tsx
+import {
+  useMyceliumClient,
+  useMyceliumConnection,
+  useMyceliumWallet,
+  useMyceliumContext,
+} from "@mycelium-ip/react";
+
+function MyComponent() {
+  // Get the core SDK client for direct access
+  const client = useMyceliumClient();
+
+  // Get the Solana connection
+  const connection = useMyceliumConnection();
+
+  // Get the wallet
+  const wallet = useMyceliumWallet();
+
+  // Get everything at once
+  const { client, connection, wallet, confirmation } = useMyceliumContext();
+}
+```
+
+## Transaction Results
+
+All mutation hooks return a `TransactionResult` on success:
+
+```typescript
+interface TransactionResult {
+  signature: string; // The transaction signature
+}
+```
+
+### Handling Results
+
+```tsx
+function CreateEntityWithFeedback() {
+  const { mutate, isPending, isSuccess, isError, data, error } =
+    useCreateEntity();
+
+  const handleCreate = () => {
+    mutate(
+      {
+        handle: new TextEncoder().encode("my-entity"),
+        additionalControllers: [],
+        signatureThreshold: 1,
+      },
+      {
+        onSuccess: (result) => {
+          console.log("Transaction signature:", result.signature);
+          // Show success toast, redirect, etc.
+        },
+        onError: (error) => {
+          console.error("Transaction failed:", error.message);
+          // Show error toast
+        },
+      },
+    );
+  };
+
+  return (
+    <div>
+      <button onClick={handleCreate} disabled={isPending}>
+        {isPending ? "Creating..." : "Create Entity"}
+      </button>
+      {isSuccess && <p>Success! Signature: {data.signature}</p>}
+      {isError && <p>Error: {error.message}</p>}
+    </div>
+  );
+}
+```
+
+### Async/Await Pattern
+
+```tsx
+async function handleCreateEntity() {
+  const { mutateAsync } = useCreateEntity();
+
+  try {
+    const result = await mutateAsync({
+      handle: new TextEncoder().encode("my-entity"),
+      additionalControllers: [],
+      signatureThreshold: 1,
+    });
+    console.log("Created with signature:", result.signature);
+  } catch (error) {
+    console.error("Failed to create entity:", error);
+  }
+}
+```
+
+## Query Keys
+
+The SDK exports `queryKeys` for custom cache invalidation or building custom queries:
+
+```tsx
+import { queryKeys, useMyceliumClient } from "@mycelium-ip/react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+
+// Available query keys
+queryKeys.all; // ["mycelium"]
+queryKeys.entities(); // ["mycelium", "entities"]
+queryKeys.entity(id); // ["mycelium", "entities", id]
+queryKeys.ips(); // ["mycelium", "ips"]
+queryKeys.ip(id); // ["mycelium", "ips", id]
+queryKeys.licenses(); // ["mycelium", "licenses"]
+queryKeys.license(id); // ["mycelium", "licenses", id]
+queryKeys.grants(); // ["mycelium", "grants"]
+queryKeys.grant(id); // ["mycelium", "grants", id]
+queryKeys.metadata(); // ["mycelium", "metadata"]
+queryKeys.derivatives(); // ["mycelium", "derivatives"]
+queryKeys.derivative(id); // ["mycelium", "derivatives", id]
+
+// Manual cache invalidation
+function RefreshButton() {
+  const queryClient = useQueryClient();
+
+  return (
+    <button
+      onClick={() =>
+        queryClient.invalidateQueries({ queryKey: queryKeys.ips() })
+      }
+    >
+      Refresh IPs
+    </button>
+  );
+}
+```
+
+## Advanced Usage
+
+### Custom QueryClient
+
+Provide your own QueryClient for custom caching behavior:
+
+```tsx
+import { QueryClient } from "@tanstack/react-query";
+import { MyceliumIpProvider } from "@mycelium-ip/react";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 10, // 10 minutes
+      gcTime: 1000 * 60 * 60, // 1 hour
+      retry: 3,
+      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    },
+    mutations: {
+      retry: 1,
+    },
+  },
+});
+
+function App() {
+  return (
+    <MyceliumIpProvider
+      connection={connection}
+      wallet={wallet}
+      queryClient={queryClient}
+    >
+      <YourApp />
+    </MyceliumIpProvider>
+  );
+}
+```
+
+### TypeScript Types
+
+All parameter types are re-exported from `@mycelium-ip/core-sdk`:
+
+```typescript
+import type {
+  CreateEntityParams,
+  CreateIpParams,
+  CreateLicenseParams,
+  CreateLicenseGrantParams,
+  // ... etc
+} from "@mycelium-ip/core-sdk";
+```
+
+### Next.js App Router
+
+The provider is already marked with `"use client"`. In Next.js App Router, create a client component for the provider:
+
+```tsx
+// app/providers.tsx
+"use client";
+
+import { MyceliumIpProvider } from "@mycelium-ip/react";
+// ... wallet setup
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  // ... setup logic
+  return (
+    <MyceliumIpProvider connection={connection} wallet={wallet}>
+      {children}
+    </MyceliumIpProvider>
+  );
+}
+```
+
+```tsx
+// app/layout.tsx
+import { Providers } from "./providers";
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
+    </html>
+  );
+}
+```
+
+## API Reference
+
+### Exports
+
+```typescript
+// Provider
+export { MyceliumIpProvider } from "@mycelium-ip/react";
+export type {
+  MyceliumIpProviderProps,
+  MyceliumIpProviderOptions,
+  MyceliumContextValue,
+} from "@mycelium-ip/react";
+
+// Wallet type
+export type { MyceliumWallet } from "@mycelium-ip/react";
+
+// Transaction utilities
+export {
+  executeTransaction,
+  executeTransactionWithInstructions,
+} from "@mycelium-ip/react";
+export type { TransactionResult } from "@mycelium-ip/react";
+
+// Query keys
+export { queryKeys } from "@mycelium-ip/react";
+
+// Accessor hooks
+export {
+  useMyceliumClient,
+  useMyceliumConnection,
+  useMyceliumWallet,
+  useMyceliumContext,
+} from "@mycelium-ip/react";
+
+// Entity hooks
+export {
+  useCreateEntity,
+  useUpdateEntityControllers,
+} from "@mycelium-ip/react";
+
+// IP hooks
+export { useCreateIp, useTransferIp } from "@mycelium-ip/react";
+
+// License hooks
+export {
+  useCreateLicense,
+  useUpdateLicense,
+  useRevokeLicense,
+} from "@mycelium-ip/react";
+
+// Grant hooks
+export {
+  useCreateLicenseGrant,
+  useRevokeLicenseGrant,
+} from "@mycelium-ip/react";
+
+// Derivative hooks
+export {
+  useCreateDerivativeLink,
+  useUpdateDerivativeLicense,
+} from "@mycelium-ip/react";
+
+// Metadata hooks
+export {
+  useCreateMetadataSchema,
+  useCreateEntityMetadata,
+  useCreateIpMetadata,
+} from "@mycelium-ip/react";
+```
+
+## License
+
+MIT

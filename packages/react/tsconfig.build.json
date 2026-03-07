@@ -1,7 +1,14 @@
 {
-  "extends": "../../tsconfig.base.json",
-  "compilerOptions": {
-    "outDir": "dist"
-  },
-  "include": ["src"]
+	"extends": "../../tsconfig.base.json",
+	"compilerOptions": {
+		"outDir": "dist",
+		"rootDir": "src",
+		"declaration": true,
+		"declarationMap": true,
+		"module": "ESNext",
+		"jsx": "react-jsx",
+		"lib": ["ES2017", "DOM"]
+	},
+	"include": ["src"],
+	"exclude": ["src/test", "**/*.test.ts", "**/*.test.tsx"]
 }
