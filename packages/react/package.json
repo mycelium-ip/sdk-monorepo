@@ -1,0 +1,56 @@
+{
+  "name": "@mycelium-ip/react",
+  "version": "0.1.0-alpha.0",
+  "private": false,
+  "type": "module",
+  "description": "React hooks for the Mycelium IP protocol",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "lint": "biome check .",
+    "test": "vitest",
+    "typecheck": "tsc -p tsconfig.build.json --noEmit"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "keywords": [
+    "solana",
+    "ip",
+    "mycelium",
+    "react",
+    "hooks"
+  ],
+  "author": "mycelium-dev",
+  "license": "MIT",
+  "packageManager": "pnpm@10.12.1",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "@mycelium-ip/core-sdk": "workspace:^"
+  },
+  "peerDependencies": {
+    "@solana/web3.js": ">=1.87.0",
+    "@tanstack/react-query": ">=5.0.0",
+    "react": ">=18"
+  },
+  "devDependencies": {
+    "@solana/web3.js": "^1.98.0",
+    "@tanstack/react-query": "^5.76.2",
+    "@tanstack/react-query-devtools": "^5.76.2",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "jsdom": "^26.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "vitest": "^3.1.1"
+  }
+}

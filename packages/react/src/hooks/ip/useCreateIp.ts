@@ -1,0 +1,50 @@
+"use client";
+
+import type { CreateIpParams } from "@mycelium-ip/core-sdk";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  executeTransaction,
+  type TransactionResult,
+} from "../../utils/transaction";
+import { useMyceliumContext } from "../internal/useMyceliumContext";
+import { queryKeys } from "../queries/queryKeys";
+
+/**
+ * Hook to create a new IP (Intellectual Property) asset.
+ *
+ * @example
+ * ```tsx
+ * function CreateIpButton({ entityPubkey }: { entityPubkey: PublicKey }) {
+ *   const { mutate, isPending } = useCreateIp();
+ *
+ *   const handleCreate = () => {
+ *     mutate({
+ *       registrantEntity: entityPubkey,
+ *       content: new TextEncoder().encode("ip-content-hash"),
+ *       treasuryTokenAccount: treasuryAccount,
+ *       payerTokenAccount: payerAccount,
+ *     });
+ *   };
+ *
+ *   return (
+ *     <button onClick={handleCreate} disabled={isPending}>
+ *       Create IP
+ *     </button>
+ *   );
+ * }
+ * ```
+ */
+export function useCreateIp() {
+  const { client, connection, wallet, confirmation } = useMyceliumContext();
+  const queryClient = useQueryClient();
+
+  return useMutation<TransactionResult, Error, CreateIpParams>({
+    mutationFn: async (params) => {
+      const instruction = await client.ipCore.ip.createIx(params);
+      return executeTransaction(connection, wallet, instruction, confirmation);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.ips() });
+    },
+  });
+}

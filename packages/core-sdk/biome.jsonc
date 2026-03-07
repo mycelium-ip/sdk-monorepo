@@ -1,0 +1,17 @@
+{
+  "extends": ["../../biome.jsonc"],
+  "linter": {
+    "rules": {
+      "nursery": {
+        "useSortedClasses": "off"
+      }
+    }
+  },
+  "css": {
+    "formatter": { "enabled": false },
+    "linter": { "enabled": false }
+  },
+  "html": {
+    "formatter": { "enabled": false }
+  }
+}

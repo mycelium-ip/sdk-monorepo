@@ -1,0 +1,12 @@
+{
+  "extends": ["../../biome.jsonc"],
+
+  "css": {
+    "formatter": { "enabled": false },
+    "linter": { "enabled": false }
+  },
+
+  "html": {
+    "formatter": { "enabled": false }
+  }
+}

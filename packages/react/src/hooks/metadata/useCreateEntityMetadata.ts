@@ -1,0 +1,53 @@
+"use client";
+
+import type { CreateEntityMetadataParams } from "@mycelium-ip/core-sdk";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  executeTransaction,
+  type TransactionResult,
+} from "../../utils/transaction";
+import { useMyceliumContext } from "../internal/useMyceliumContext";
+import { queryKeys } from "../queries/queryKeys";
+
+/**
+ * Hook to create metadata for an entity.
+ *
+ * @example
+ * ```tsx
+ * function AddEntityMetadata({ entityPubkey, schemaPubkey }: Props) {
+ *   const { mutate, isPending } = useCreateEntityMetadata();
+ *
+ *   const handleCreate = () => {
+ *     mutate({
+ *       entity: entityPubkey,
+ *       schema: schemaPubkey,
+ *       revision: 1n,
+ *       data: new TextEncoder().encode(JSON.stringify(metadata)),
+ *       cid: "Qm...",
+ *     });
+ *   };
+ *
+ *   return (
+ *     <button onClick={handleCreate} disabled={isPending}>
+ *       Add Metadata
+ *     </button>
+ *   );
+ * }
+ * ```
+ */
+export function useCreateEntityMetadata() {
+  const { client, connection, wallet, confirmation } = useMyceliumContext();
+  const queryClient = useQueryClient();
+
+  return useMutation<TransactionResult, Error, CreateEntityMetadataParams>({
+    mutationFn: async (params) => {
+      const instruction =
+        await client.ipCore.metadata.createEntityMetadataIx(params);
+      return executeTransaction(connection, wallet, instruction, confirmation);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.entities() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.metadata() });
+    },
+  });
+}
