@@ -379,6 +379,28 @@
       "discriminator": [19, 253, 88, 68, 201, 150, 58, 227]
     }
   ],
+  "events": [
+    {
+      "name": "LicenseCreated",
+      "discriminator": [105, 38, 238, 189, 101, 241, 12, 157]
+    },
+    {
+      "name": "LicenseGrantCreated",
+      "discriminator": [153, 223, 191, 253, 76, 79, 195, 58]
+    },
+    {
+      "name": "LicenseGrantRevoked",
+      "discriminator": [204, 61, 11, 39, 208, 191, 66, 242]
+    },
+    {
+      "name": "LicenseRevoked",
+      "discriminator": [185, 114, 47, 171, 61, 106, 25, 24]
+    },
+    {
+      "name": "LicenseUpdated",
+      "discriminator": [62, 154, 41, 164, 197, 7, 26, 54]
+    }
+  ],
   "errors": [
     {
       "code": 6000,
@@ -628,6 +650,40 @@
       }
     },
     {
+      "name": "LicenseCreated",
+      "docs": ["Emitted when a new license is created."],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "license",
+            "docs": ["The license PDA."],
+            "type": "pubkey"
+          },
+          {
+            "name": "origin_ip",
+            "docs": ["The origin IP this license is for."],
+            "type": "pubkey"
+          },
+          {
+            "name": "authority",
+            "docs": ["The authority entity (IP owner)."],
+            "type": "pubkey"
+          },
+          {
+            "name": "derivatives_allowed",
+            "docs": ["Whether derivatives are allowed."],
+            "type": "bool"
+          },
+          {
+            "name": "created_at",
+            "docs": ["Creation timestamp."],
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
       "name": "LicenseGrant",
       "docs": [
         "A grant of license rights to a specific entity.",
@@ -662,6 +718,137 @@
             "name": "bump",
             "docs": ["PDA bump seed."],
             "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LicenseGrantCreated",
+      "docs": ["Emitted when a new license grant is created."],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "license_grant",
+            "docs": ["The license grant PDA."],
+            "type": "pubkey"
+          },
+          {
+            "name": "license",
+            "docs": ["The license this grant is for."],
+            "type": "pubkey"
+          },
+          {
+            "name": "grantee",
+            "docs": ["The grantee entity."],
+            "type": "pubkey"
+          },
+          {
+            "name": "expiration",
+            "docs": ["Grant expiration (0 = no expiration)."],
+            "type": "i64"
+          },
+          {
+            "name": "granted_at",
+            "docs": ["Grant timestamp."],
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LicenseGrantRevoked",
+      "docs": ["Emitted when a license grant is revoked (closed)."],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "license_grant",
+            "docs": ["The license grant PDA."],
+            "type": "pubkey"
+          },
+          {
+            "name": "license",
+            "docs": ["The license this grant was for."],
+            "type": "pubkey"
+          },
+          {
+            "name": "grantee",
+            "docs": ["The grantee entity."],
+            "type": "pubkey"
+          },
+          {
+            "name": "authority",
+            "docs": ["The authority entity who revoked."],
+            "type": "pubkey"
+          },
+          {
+            "name": "rent_destination",
+            "docs": ["Destination for rent refund."],
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LicenseRevoked",
+      "docs": ["Emitted when a license is revoked (closed)."],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "license",
+            "docs": ["The license PDA."],
+            "type": "pubkey"
+          },
+          {
+            "name": "origin_ip",
+            "docs": ["The origin IP this license was for."],
+            "type": "pubkey"
+          },
+          {
+            "name": "authority",
+            "docs": ["The authority entity (IP owner)."],
+            "type": "pubkey"
+          },
+          {
+            "name": "rent_destination",
+            "docs": ["Destination for rent refund."],
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LicenseUpdated",
+      "docs": ["Emitted when a license is updated."],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "license",
+            "docs": ["The license PDA."],
+            "type": "pubkey"
+          },
+          {
+            "name": "origin_ip",
+            "docs": ["The origin IP this license is for."],
+            "type": "pubkey"
+          },
+          {
+            "name": "authority",
+            "docs": ["The authority entity (IP owner)."],
+            "type": "pubkey"
+          },
+          {
+            "name": "old_derivatives_allowed",
+            "docs": ["Previous derivatives_allowed value."],
+            "type": "bool"
+          },
+          {
+            "name": "new_derivatives_allowed",
+            "docs": ["New derivatives_allowed value."],
+            "type": "bool"
           }
         ]
       }

@@ -755,6 +755,60 @@
       "discriminator": [162, 26, 123, 61, 102, 146, 47, 73]
     }
   ],
+  "events": [
+    {
+      "name": "ConfigInitialized",
+      "discriminator": [181, 49, 200, 156, 19, 167, 178, 91]
+    },
+    {
+      "name": "ConfigUpdated",
+      "discriminator": [40, 241, 230, 122, 11, 19, 198, 194]
+    },
+    {
+      "name": "DerivativeLicenseUpdated",
+      "discriminator": [224, 105, 250, 233, 66, 19, 49, 196]
+    },
+    {
+      "name": "DerivativeLinkCreated",
+      "discriminator": [27, 142, 1, 92, 251, 49, 190, 224]
+    },
+    {
+      "name": "EntityControllersUpdated",
+      "discriminator": [222, 129, 130, 23, 226, 248, 216, 157]
+    },
+    {
+      "name": "EntityCreated",
+      "discriminator": [125, 231, 125, 132, 13, 116, 119, 126]
+    },
+    {
+      "name": "EntityMetadataCreated",
+      "discriminator": [107, 58, 16, 150, 116, 245, 192, 239]
+    },
+    {
+      "name": "IpCreated",
+      "discriminator": [145, 44, 30, 88, 215, 11, 28, 168]
+    },
+    {
+      "name": "IpMetadataCreated",
+      "discriminator": [151, 13, 118, 107, 237, 73, 83, 176]
+    },
+    {
+      "name": "IpTransferred",
+      "discriminator": [129, 251, 84, 89, 245, 173, 123, 225]
+    },
+    {
+      "name": "MetadataSchemaCreated",
+      "discriminator": [38, 11, 65, 175, 140, 7, 31, 74]
+    },
+    {
+      "name": "TreasuryInitialized",
+      "discriminator": [199, 73, 174, 205, 59, 145, 55, 179]
+    },
+    {
+      "name": "TreasuryWithdrawal",
+      "discriminator": [244, 117, 175, 46, 187, 109, 20, 16]
+    }
+  ],
   "errors": [
     {
       "code": 6000,
@@ -914,6 +968,123 @@
   ],
   "types": [
     {
+      "name": "ConfigInitialized",
+      "docs": ["Emitted when protocol configuration is initialized."],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "config",
+            "docs": ["The config PDA."],
+            "type": "pubkey"
+          },
+          {
+            "name": "authority",
+            "docs": ["The protocol authority."],
+            "type": "pubkey"
+          },
+          {
+            "name": "treasury",
+            "docs": ["The treasury PDA."],
+            "type": "pubkey"
+          },
+          {
+            "name": "registration_currency",
+            "docs": ["The registration currency mint."],
+            "type": "pubkey"
+          },
+          {
+            "name": "registration_fee",
+            "docs": ["The registration fee amount."],
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ConfigUpdated",
+      "docs": ["Emitted when protocol configuration is updated."],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "config",
+            "docs": ["The config PDA."],
+            "type": "pubkey"
+          },
+          {
+            "name": "authority",
+            "docs": ["The authority who made the change."],
+            "type": "pubkey"
+          },
+          {
+            "name": "new_authority",
+            "docs": ["New authority (if changed)."],
+            "type": {
+              "option": "pubkey"
+            }
+          },
+          {
+            "name": "new_treasury",
+            "docs": ["New treasury (if changed)."],
+            "type": {
+              "option": "pubkey"
+            }
+          },
+          {
+            "name": "new_registration_currency",
+            "docs": ["New registration currency (if changed)."],
+            "type": {
+              "option": "pubkey"
+            }
+          },
+          {
+            "name": "new_registration_fee",
+            "docs": ["New registration fee (if changed)."],
+            "type": {
+              "option": "u64"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "DerivativeLicenseUpdated",
+      "docs": ["Emitted when a derivative link's license is updated."],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "derivative_link",
+            "docs": ["The derivative link PDA."],
+            "type": "pubkey"
+          },
+          {
+            "name": "child_ip",
+            "docs": ["The child IP."],
+            "type": "pubkey"
+          },
+          {
+            "name": "old_license_grant",
+            "docs": ["The previous license grant."],
+            "type": "pubkey"
+          },
+          {
+            "name": "new_license_grant",
+            "docs": ["The new license grant."],
+            "type": "pubkey"
+          },
+          {
+            "name": "authority",
+            "docs": [
+              "The authority (child owner entity) who authorized the change."
+            ],
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
       "name": "DerivativeLink",
       "docs": [
         "A link between a parent IP and a derivative (child) IP.",
@@ -950,6 +1121,45 @@
             "name": "bump",
             "docs": ["PDA bump seed."],
             "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "DerivativeLinkCreated",
+      "docs": ["Emitted when a derivative link is created."],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "derivative_link",
+            "docs": ["The derivative link PDA."],
+            "type": "pubkey"
+          },
+          {
+            "name": "parent_ip",
+            "docs": ["The parent IP."],
+            "type": "pubkey"
+          },
+          {
+            "name": "child_ip",
+            "docs": ["The child IP (derivative)."],
+            "type": "pubkey"
+          },
+          {
+            "name": "license_grant",
+            "docs": ["The license grant used."],
+            "type": "pubkey"
+          },
+          {
+            "name": "child_owner_entity",
+            "docs": ["The child IP owner entity."],
+            "type": "pubkey"
+          },
+          {
+            "name": "created_at",
+            "docs": ["Creation timestamp."],
+            "type": "i64"
           }
         ]
       }
@@ -1024,6 +1234,144 @@
       }
     },
     {
+      "name": "EntityControllersUpdated",
+      "docs": ["Emitted when entity controllers are updated."],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "entity",
+            "docs": ["The entity PDA."],
+            "type": "pubkey"
+          },
+          {
+            "name": "authority",
+            "docs": ["The entity (acts as authority)."],
+            "type": "pubkey"
+          },
+          {
+            "name": "old_controller_count",
+            "docs": ["Previous controller count."],
+            "type": "u8"
+          },
+          {
+            "name": "new_controller_count",
+            "docs": ["New controller count."],
+            "type": "u8"
+          },
+          {
+            "name": "old_threshold",
+            "docs": ["Previous signature threshold."],
+            "type": "u8"
+          },
+          {
+            "name": "new_threshold",
+            "docs": ["New signature threshold."],
+            "type": "u8"
+          },
+          {
+            "name": "updated_at",
+            "docs": ["Update timestamp."],
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "EntityCreated",
+      "docs": ["Emitted when a new entity is created."],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "entity",
+            "docs": ["The entity PDA."],
+            "type": "pubkey"
+          },
+          {
+            "name": "creator",
+            "docs": ["The entity creator."],
+            "type": "pubkey"
+          },
+          {
+            "name": "handle",
+            "docs": ["The entity handle."],
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "controller_count",
+            "docs": ["Number of controllers."],
+            "type": "u8"
+          },
+          {
+            "name": "signature_threshold",
+            "docs": ["Required signature threshold."],
+            "type": "u8"
+          },
+          {
+            "name": "created_at",
+            "docs": ["Creation timestamp."],
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "EntityMetadataCreated",
+      "docs": ["Emitted when entity metadata is created."],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "metadata",
+            "docs": ["The metadata PDA."],
+            "type": "pubkey"
+          },
+          {
+            "name": "entity",
+            "docs": ["The entity this metadata belongs to."],
+            "type": "pubkey"
+          },
+          {
+            "name": "authority",
+            "docs": ["The entity (acts as authority)."],
+            "type": "pubkey"
+          },
+          {
+            "name": "schema",
+            "docs": ["The metadata schema."],
+            "type": "pubkey"
+          },
+          {
+            "name": "revision",
+            "docs": ["The metadata revision number."],
+            "type": "u64"
+          },
+          {
+            "name": "hash",
+            "docs": ["The metadata hash."],
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "cid",
+            "docs": ["The metadata CID."],
+            "type": {
+              "array": ["u8", 96]
+            }
+          },
+          {
+            "name": "created_at",
+            "docs": ["Creation timestamp."],
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
       "name": "IpAccount",
       "docs": [
         "An on-chain IP (Intellectual Property) registration.",
@@ -1078,6 +1426,126 @@
             "name": "bump",
             "docs": ["PDA bump seed."],
             "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "IpCreated",
+      "docs": ["Emitted when a new IP is registered."],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "ip",
+            "docs": ["The IP account PDA."],
+            "type": "pubkey"
+          },
+          {
+            "name": "content_hash",
+            "docs": ["The content hash."],
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "registrant_entity",
+            "docs": ["The registrant entity."],
+            "type": "pubkey"
+          },
+          {
+            "name": "registration_fee",
+            "docs": ["The registration fee paid."],
+            "type": "u64"
+          },
+          {
+            "name": "created_at",
+            "docs": ["Creation timestamp."],
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "IpMetadataCreated",
+      "docs": ["Emitted when IP metadata is created."],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "metadata",
+            "docs": ["The metadata PDA."],
+            "type": "pubkey"
+          },
+          {
+            "name": "ip",
+            "docs": ["The IP this metadata belongs to."],
+            "type": "pubkey"
+          },
+          {
+            "name": "owner_entity",
+            "docs": ["The owner entity."],
+            "type": "pubkey"
+          },
+          {
+            "name": "schema",
+            "docs": ["The metadata schema."],
+            "type": "pubkey"
+          },
+          {
+            "name": "revision",
+            "docs": ["The metadata revision number."],
+            "type": "u64"
+          },
+          {
+            "name": "hash",
+            "docs": ["The metadata hash."],
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "cid",
+            "docs": ["The metadata CID."],
+            "type": {
+              "array": ["u8", 96]
+            }
+          },
+          {
+            "name": "created_at",
+            "docs": ["Creation timestamp."],
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "IpTransferred",
+      "docs": ["Emitted when IP ownership is transferred."],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "ip",
+            "docs": ["The IP account PDA."],
+            "type": "pubkey"
+          },
+          {
+            "name": "from_entity",
+            "docs": ["The previous owner entity."],
+            "type": "pubkey"
+          },
+          {
+            "name": "to_entity",
+            "docs": ["The new owner entity."],
+            "type": "pubkey"
+          },
+          {
+            "name": "authority",
+            "docs": [
+              "The authority (from_entity) who authorized the transfer."
+            ],
+            "type": "pubkey"
           }
         ]
       }
@@ -1217,6 +1685,58 @@
       }
     },
     {
+      "name": "MetadataSchemaCreated",
+      "docs": ["Emitted when a metadata schema is created."],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "schema",
+            "docs": ["The schema PDA."],
+            "type": "pubkey"
+          },
+          {
+            "name": "schema_id",
+            "docs": ["The schema ID."],
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "version",
+            "docs": ["The schema version."],
+            "type": {
+              "array": ["u8", 16]
+            }
+          },
+          {
+            "name": "hash",
+            "docs": ["The schema hash."],
+            "type": {
+              "array": ["u8", 32]
+            }
+          },
+          {
+            "name": "cid",
+            "docs": ["The schema CID."],
+            "type": {
+              "array": ["u8", 96]
+            }
+          },
+          {
+            "name": "creator",
+            "docs": ["The schema creator."],
+            "type": "pubkey"
+          },
+          {
+            "name": "created_at",
+            "docs": ["Creation timestamp."],
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
       "name": "ProtocolConfig",
       "docs": [
         "Protocol-wide configuration account.",
@@ -1278,6 +1798,64 @@
             "name": "bump",
             "docs": ["PDA bump seed."],
             "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TreasuryInitialized",
+      "docs": ["Emitted when protocol treasury is initialized."],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "treasury",
+            "docs": ["The treasury PDA."],
+            "type": "pubkey"
+          },
+          {
+            "name": "authority",
+            "docs": ["The treasury authority."],
+            "type": "pubkey"
+          },
+          {
+            "name": "config",
+            "docs": ["The protocol config PDA."],
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TreasuryWithdrawal",
+      "docs": ["Emitted when tokens are withdrawn from treasury."],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "treasury",
+            "docs": ["The treasury PDA."],
+            "type": "pubkey"
+          },
+          {
+            "name": "authority",
+            "docs": ["The authority who made the withdrawal."],
+            "type": "pubkey"
+          },
+          {
+            "name": "destination",
+            "docs": ["The destination token account."],
+            "type": "pubkey"
+          },
+          {
+            "name": "mint",
+            "docs": ["The token mint."],
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "docs": ["The amount withdrawn."],
+            "type": "u64"
           }
         ]
       }
