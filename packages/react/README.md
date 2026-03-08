@@ -692,6 +692,116 @@ function CreateIpMetadata({ ipPubkey, entityPubkey, schemaPubkey }: Props) {
 }
 ```
 
+### Composite Hooks
+
+These hooks bundle multiple on-chain instructions into a **single atomic transaction**, reducing network round-trips and guaranteeing that both operations succeed or fail together.
+
+#### useCreateEntityWithMetadata
+
+Creates a new entity and attaches metadata in one transaction. The entity PDA is derived automatically from the caller's wallet public key and the provided `handle`.
+
+```tsx
+import { useCreateEntityWithMetadata } from "@mycelium-ip/react";
+
+function CreateEntityWithMetadata({
+  schemaPubkey,
+}: {
+  schemaPubkey: PublicKey;
+}) {
+  const { mutate, isPending, isSuccess, data } = useCreateEntityWithMetadata();
+
+  const handleCreate = () => {
+    mutate({
+      entity: {
+        handle: "my-organization",
+        additionalControllers: [],
+        signatureThreshold: 1,
+      },
+      metadata: {
+        schema: schemaPubkey,
+        revision: 1n,
+        data: new TextEncoder().encode(JSON.stringify({ name: "My Org" })),
+        cid: "ipfs://QmMetadata...",
+      },
+    });
+  };
+
+  return (
+    <div>
+      <button onClick={handleCreate} disabled={isPending}>
+        {isPending ? "Creating..." : "Create Entity with Metadata"}
+      </button>
+      {isSuccess && <p>Created entity! Signature: {data.signature}</p>}
+    </div>
+  );
+}
+```
+
+The mutation resolves with a `CreateEntityWithMetadataResult`:
+
+```typescript
+interface CreateEntityWithMetadataResult {
+  signature: string; // Transaction signature
+  entityCreated?: EntityCreated; // Decoded EntityCreated event
+  entityMetadataCreated?: EntityMetadataCreated; // Decoded EntityMetadataCreated event
+}
+```
+
+#### useCreateIpWithMetadata
+
+Creates a new IP asset and attaches metadata in one transaction. The IP PDA is derived automatically from `registrantEntity` and the content hash. The `ownerEntity` for the metadata instruction is also inferred from the IP params.
+
+```tsx
+import { useCreateIpWithMetadata } from "@mycelium-ip/react";
+
+function CreateIpWithMetadata({
+  entityPubkey,
+  schemaPubkey,
+  treasuryAccount,
+  payerAccount,
+}: Props) {
+  const { mutate, isPending, isSuccess, data } = useCreateIpWithMetadata();
+
+  const handleCreate = () => {
+    mutate({
+      ip: {
+        registrantEntity: entityPubkey,
+        content: new TextEncoder().encode("ipfs://QmXxx..."),
+        treasuryTokenAccount: treasuryAccount,
+        payerTokenAccount: payerAccount,
+      },
+      metadata: {
+        schema: schemaPubkey,
+        revision: 1n,
+        data: new TextEncoder().encode(
+          JSON.stringify({ title: "My Artwork", artist: "Anonymous" }),
+        ),
+        cid: "ipfs://QmIpMetadata...",
+      },
+    });
+  };
+
+  return (
+    <div>
+      <button onClick={handleCreate} disabled={isPending}>
+        {isPending ? "Registering..." : "Register IP with Metadata"}
+      </button>
+      {isSuccess && <p>Registered IP! Signature: {data.signature}</p>}
+    </div>
+  );
+}
+```
+
+The mutation resolves with a `CreateIpWithMetadataResult`:
+
+```typescript
+interface CreateIpWithMetadataResult {
+  signature: string; // Transaction signature
+  ipCreated?: IpCreated; // Decoded IpCreated event
+  ipMetadataCreated?: IpMetadataCreated; // Decoded IpMetadataCreated event
+}
+```
+
 ### Accessor Hooks
 
 These hooks provide access to the underlying SDK and context values.
@@ -954,10 +1064,23 @@ export {
 export {
   useCreateEntity,
   useUpdateEntityControllers,
+  useCreateEntityWithMetadata,
+} from "@mycelium-ip/react";
+export type {
+  CreateEntityWithMetadataParams,
+  CreateEntityWithMetadataResult,
 } from "@mycelium-ip/react";
 
 // IP hooks
-export { useCreateIp, useTransferIp } from "@mycelium-ip/react";
+export {
+  useCreateIp,
+  useTransferIp,
+  useCreateIpWithMetadata,
+} from "@mycelium-ip/react";
+export type {
+  CreateIpWithMetadataParams,
+  CreateIpWithMetadataResult,
+} from "@mycelium-ip/react";
 
 // License hooks
 export {

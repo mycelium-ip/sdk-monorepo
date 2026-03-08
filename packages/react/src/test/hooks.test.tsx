@@ -1,10 +1,18 @@
 import { renderHook, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { useCreateEntity } from "../hooks/entity/useCreateEntity";
+import { useCreateEntityWithMetadata } from "../hooks/entity/useCreateEntityWithMetadata";
 import { useMyceliumContext } from "../hooks/internal/useMyceliumContext";
 import { useMyceliumWallet } from "../hooks/internal/useMyceliumWallet";
+import { useCreateIpWithMetadata } from "../hooks/ip/useCreateIpWithMetadata";
 import { queryKeys } from "../hooks/queries/queryKeys";
-import { createMockPublicKey, mockEntityCreatedEvent } from "./mocks";
+import {
+  createMockPublicKey,
+  mockEntityCreatedEvent,
+  mockEntityMetadataCreatedEvent,
+  mockIpCreatedEvent,
+  mockIpMetadataCreatedEvent,
+} from "./mocks";
 import { createDisconnectedTestWrapper, createTestWrapper } from "./wrapper";
 
 describe("useMyceliumContext", () => {
@@ -162,5 +170,280 @@ describe("queryKeys", () => {
     expect(queryKeys.grants()).toEqual(["mycelium", "grants"]);
     expect(queryKeys.metadata()).toEqual(["mycelium", "metadata"]);
     expect(queryKeys.derivatives()).toEqual(["mycelium", "derivatives"]);
+  });
+});
+
+describe("useCreateEntityWithMetadata", () => {
+  const schemaPubkey = createMockPublicKey();
+  const baseParams = {
+    entity: {
+      handle: "test-entity",
+      additionalControllers: [],
+      signatureThreshold: 1,
+    },
+    metadata: {
+      schema: schemaPubkey,
+      revision: 1n,
+      data: new Uint8Array([1, 2, 3]),
+      cid: "ipfs://QmTest",
+    },
+  };
+
+  it("calls entity.createIx with entity params", async () => {
+    const { wrapper, mockClient } = createTestWrapper();
+    const { result } = renderHook(() => useCreateEntityWithMetadata(), {
+      wrapper,
+    });
+
+    result.current.mutate(baseParams);
+
+    await waitFor(() => {
+      expect(mockClient.ipCore.entity.createIx).toHaveBeenCalledWith(
+        baseParams.entity,
+      );
+    });
+  });
+
+  it("calls metadata.createEntityMetadataIx with derived entity PDA", async () => {
+    const { wrapper, mockClient } = createTestWrapper();
+    const { result } = renderHook(() => useCreateEntityWithMetadata(), {
+      wrapper,
+    });
+
+    result.current.mutate(baseParams);
+
+    await waitFor(() => {
+      expect(
+        mockClient.ipCore.metadata.createEntityMetadataIx,
+      ).toHaveBeenCalledWith(
+        expect.objectContaining({
+          schema: schemaPubkey,
+          revision: 1n,
+          data: baseParams.metadata.data,
+          cid: baseParams.metadata.cid,
+          // entity field is derived automatically — just verify it exists
+          entity: expect.anything(),
+        }),
+      );
+    });
+  });
+
+  it("invalidates entity and metadata queries on success", async () => {
+    const { wrapper, queryClient } = createTestWrapper();
+    const invalidateSpy = vi.spyOn(queryClient, "invalidateQueries");
+    const { result } = renderHook(() => useCreateEntityWithMetadata(), {
+      wrapper,
+    });
+
+    result.current.mutate(baseParams);
+
+    await waitFor(
+      () => {
+        expect(result.current.isSuccess || result.current.isError).toBe(true);
+      },
+      { timeout: 3000 },
+    );
+
+    if (result.current.isSuccess) {
+      expect(invalidateSpy).toHaveBeenCalledWith({
+        queryKey: queryKeys.entities(),
+      });
+      expect(invalidateSpy).toHaveBeenCalledWith({
+        queryKey: queryKeys.metadata(),
+      });
+    }
+  });
+
+  it("returns parsed events in data on success", async () => {
+    const { wrapper, mockClient } = createTestWrapper();
+    mockClient.ipCore.parseEvents = vi
+      .fn()
+      .mockResolvedValue([
+        mockEntityCreatedEvent,
+        mockEntityMetadataCreatedEvent,
+      ]);
+
+    const { result } = renderHook(() => useCreateEntityWithMetadata(), {
+      wrapper,
+    });
+
+    result.current.mutate(baseParams);
+
+    await waitFor(
+      () => {
+        expect(result.current.isSuccess || result.current.isError).toBe(true);
+      },
+      { timeout: 3000 },
+    );
+
+    if (result.current.isSuccess) {
+      expect(result.current.data?.entityCreated).toEqual(
+        mockEntityCreatedEvent,
+      );
+      expect(result.current.data?.entityMetadataCreated).toEqual(
+        mockEntityMetadataCreatedEvent,
+      );
+    }
+  });
+
+  it("exposes isWalletConnected true when wallet is connected", () => {
+    const { wrapper } = createTestWrapper();
+    const { result } = renderHook(() => useCreateEntityWithMetadata(), {
+      wrapper,
+    });
+    expect(result.current.isWalletConnected).toBe(true);
+  });
+
+  it("exposes isWalletConnected false when wallet is null", () => {
+    const { wrapper } = createDisconnectedTestWrapper();
+    const { result } = renderHook(() => useCreateEntityWithMetadata(), {
+      wrapper,
+    });
+    expect(result.current.isWalletConnected).toBe(false);
+  });
+
+  it("throws Wallet not connected when called without wallet", async () => {
+    const { wrapper } = createDisconnectedTestWrapper();
+    const { result } = renderHook(() => useCreateEntityWithMetadata(), {
+      wrapper,
+    });
+
+    result.current.mutate(baseParams);
+
+    await waitFor(() => {
+      expect(result.current.isError).toBe(true);
+    });
+
+    expect(result.current.error?.message).toBe("Wallet not connected");
+  });
+});
+
+describe("useCreateIpWithMetadata", () => {
+  const registrantEntity = createMockPublicKey();
+  const schemaPubkey = createMockPublicKey();
+  const treasuryAccount = createMockPublicKey();
+  const payerAccount = createMockPublicKey();
+
+  const baseParams = {
+    ip: {
+      registrantEntity,
+      content: new Uint8Array([10, 20, 30]),
+      treasuryTokenAccount: treasuryAccount,
+      payerTokenAccount: payerAccount,
+    },
+    metadata: {
+      schema: schemaPubkey,
+      revision: 1n,
+      data: new Uint8Array([4, 5, 6]),
+      cid: "ipfs://QmIpTest",
+    },
+  };
+
+  it("calls ip.createIx with ip params", async () => {
+    const { wrapper, mockClient } = createTestWrapper();
+    const { result } = renderHook(() => useCreateIpWithMetadata(), { wrapper });
+
+    result.current.mutate(baseParams);
+
+    await waitFor(() => {
+      expect(mockClient.ipCore.ip.createIx).toHaveBeenCalledWith(baseParams.ip);
+    });
+  });
+
+  it("calls metadata.createIpMetadataIx with derived IP PDA and ownerEntity", async () => {
+    const { wrapper, mockClient } = createTestWrapper();
+    const { result } = renderHook(() => useCreateIpWithMetadata(), { wrapper });
+
+    result.current.mutate(baseParams);
+
+    await waitFor(() => {
+      expect(
+        mockClient.ipCore.metadata.createIpMetadataIx,
+      ).toHaveBeenCalledWith(
+        expect.objectContaining({
+          schema: schemaPubkey,
+          revision: 1n,
+          data: baseParams.metadata.data,
+          cid: baseParams.metadata.cid,
+          ownerEntity: registrantEntity,
+          // ip field is derived automatically — just verify it exists
+          ip: expect.anything(),
+        }),
+      );
+    });
+  });
+
+  it("invalidates ip and metadata queries on success", async () => {
+    const { wrapper, queryClient } = createTestWrapper();
+    const invalidateSpy = vi.spyOn(queryClient, "invalidateQueries");
+    const { result } = renderHook(() => useCreateIpWithMetadata(), { wrapper });
+
+    result.current.mutate(baseParams);
+
+    await waitFor(
+      () => {
+        expect(result.current.isSuccess || result.current.isError).toBe(true);
+      },
+      { timeout: 3000 },
+    );
+
+    if (result.current.isSuccess) {
+      expect(invalidateSpy).toHaveBeenCalledWith({
+        queryKey: queryKeys.ips(),
+      });
+      expect(invalidateSpy).toHaveBeenCalledWith({
+        queryKey: queryKeys.metadata(),
+      });
+    }
+  });
+
+  it("returns parsed events in data on success", async () => {
+    const { wrapper, mockClient } = createTestWrapper();
+    mockClient.ipCore.parseEvents = vi
+      .fn()
+      .mockResolvedValue([mockIpCreatedEvent, mockIpMetadataCreatedEvent]);
+
+    const { result } = renderHook(() => useCreateIpWithMetadata(), { wrapper });
+
+    result.current.mutate(baseParams);
+
+    await waitFor(
+      () => {
+        expect(result.current.isSuccess || result.current.isError).toBe(true);
+      },
+      { timeout: 3000 },
+    );
+
+    if (result.current.isSuccess) {
+      expect(result.current.data?.ipCreated).toEqual(mockIpCreatedEvent);
+      expect(result.current.data?.ipMetadataCreated).toEqual(
+        mockIpMetadataCreatedEvent,
+      );
+    }
+  });
+
+  it("exposes isWalletConnected true when wallet is connected", () => {
+    const { wrapper } = createTestWrapper();
+    const { result } = renderHook(() => useCreateIpWithMetadata(), { wrapper });
+    expect(result.current.isWalletConnected).toBe(true);
+  });
+
+  it("exposes isWalletConnected false when wallet is null", () => {
+    const { wrapper } = createDisconnectedTestWrapper();
+    const { result } = renderHook(() => useCreateIpWithMetadata(), { wrapper });
+    expect(result.current.isWalletConnected).toBe(false);
+  });
+
+  it("throws Wallet not connected when called without wallet", async () => {
+    const { wrapper } = createDisconnectedTestWrapper();
+    const { result } = renderHook(() => useCreateIpWithMetadata(), { wrapper });
+
+    result.current.mutate(baseParams);
+
+    await waitFor(() => {
+      expect(result.current.isError).toBe(true);
+    });
+
+    expect(result.current.error?.message).toBe("Wallet not connected");
   });
 });

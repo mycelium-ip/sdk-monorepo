@@ -2,7 +2,10 @@ import type { AnchorProvider } from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import type { Connection, PublicKey } from "@solana/web3.js";
 import { getIdls, getProgramIds } from "../../constants/programs";
-import type { MyceliumCluster } from "../../types";
+import { deriveEntityPda } from "../../pda/entity";
+import { deriveIpPda } from "../../pda/ip";
+import type { MyceliumCluster, StringOrBytes } from "../../types";
+import { sha256Hash } from "../../utils/conversions";
 import { parseTransactionEvents } from "../../utils/events";
 import { DerivativeModule } from "./derivative";
 import { EntityModule } from "./entity";
@@ -49,5 +52,55 @@ export class IpCoreClient {
       this.program,
     );
     return events[0] as E;
+  }
+
+  /**
+   * Parse all Anchor events from a confirmed transaction.
+   *
+   * Use this when a single transaction emits multiple events (e.g. composite
+   * instructions). React hooks use this as an `eventParser` callback so the
+   * React package does not need a direct dependency on `@coral-xyz/anchor`.
+   *
+   * @param connection - Solana RPC connection
+   * @param signature  - Transaction signature
+   */
+  async parseEvents<E>(
+    connection: Connection,
+    signature: string,
+  ): Promise<E[]> {
+    return parseTransactionEvents<E>(connection, signature, this.program);
+  }
+
+  /**
+   * Derive the entity PDA for the given creator and handle.
+   *
+   * Useful when you need the entity address before the entity has been created
+   * on-chain, e.g. to populate subsequent instructions in the same transaction.
+   *
+   * @param creator - The creator public key
+   * @param handle  - The entity handle (string or bytes)
+   */
+  deriveEntityAddress(creator: PublicKey, handle: StringOrBytes): PublicKey {
+    const [pda] = deriveEntityPda(creator, handle, this.program.programId);
+    return pda;
+  }
+
+  /**
+   * Derive the IP PDA for the given registrant entity and content.
+   *
+   * Useful when you need the IP address before the IP has been created on-chain,
+   * e.g. to populate subsequent instructions in the same transaction.
+   *
+   * @param registrantEntity - The registrant entity public key
+   * @param content          - The raw IP content (will be hashed internally)
+   */
+  deriveIpAddress(registrantEntity: PublicKey, content: Uint8Array): PublicKey {
+    const contentHash = sha256Hash(content);
+    const [pda] = deriveIpPda(
+      registrantEntity,
+      contentHash,
+      this.program.programId,
+    );
+    return pda;
   }
 }

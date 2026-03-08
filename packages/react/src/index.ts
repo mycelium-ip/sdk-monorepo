@@ -32,6 +32,11 @@ export { useCreateDerivativeLink } from "./hooks/derivative/useCreateDerivativeL
 export { useUpdateDerivativeLicense } from "./hooks/derivative/useUpdateDerivativeLicense";
 // Entity mutation hooks
 export { useCreateEntity } from "./hooks/entity/useCreateEntity";
+export {
+  useCreateEntityWithMetadata,
+  type CreateEntityWithMetadataParams,
+  type CreateEntityWithMetadataResult,
+} from "./hooks/entity/useCreateEntityWithMetadata";
 export { useUpdateEntityControllers } from "./hooks/entity/useUpdateEntityControllers";
 // Grant mutation hooks
 export { useCreateLicenseGrant } from "./hooks/grant/useCreateLicenseGrant";
@@ -44,6 +49,11 @@ export { useMyceliumWallet } from "./hooks/internal/useMyceliumWallet";
 
 // IP mutation hooks
 export { useCreateIp } from "./hooks/ip/useCreateIp";
+export {
+  useCreateIpWithMetadata,
+  type CreateIpWithMetadataParams,
+  type CreateIpWithMetadataResult,
+} from "./hooks/ip/useCreateIpWithMetadata";
 export { useTransferIp } from "./hooks/ip/useTransferIp";
 // License mutation hooks
 export { useCreateLicense } from "./hooks/license/useCreateLicense";

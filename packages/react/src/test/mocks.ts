@@ -1,5 +1,11 @@
 import type { MyceliumClient } from "@mycelium-ip/core-sdk";
-import type { EntityCreated, LicenseCreated } from "@mycelium-ip/core-sdk";
+import type {
+  EntityCreated,
+  EntityMetadataCreated,
+  IpCreated,
+  IpMetadataCreated,
+  LicenseCreated,
+} from "@mycelium-ip/core-sdk";
 import {
   type Connection,
   Keypair,
@@ -18,6 +24,45 @@ export const mockEntityCreatedEvent: EntityCreated = {
   handle: new Array(32).fill(0),
   controllerCount: 1,
   signatureThreshold: 1,
+  createdAt: 0n,
+};
+
+/**
+ * Mock EntityMetadataCreated event emitted when entity metadata is created.
+ */
+export const mockEntityMetadataCreatedEvent: EntityMetadataCreated = {
+  metadata: Keypair.generate().publicKey,
+  entity: Keypair.generate().publicKey,
+  authority: Keypair.generate().publicKey,
+  schema: Keypair.generate().publicKey,
+  revision: 1,
+  hash: new Array(32).fill(0),
+  cid: new Array(96).fill(0),
+  createdAt: 0n,
+};
+
+/**
+ * Mock IpCreated event emitted when an IP is registered.
+ */
+export const mockIpCreatedEvent: IpCreated = {
+  ip: Keypair.generate().publicKey,
+  contentHash: new Array(32).fill(0),
+  registrantEntity: Keypair.generate().publicKey,
+  registrationFee: 0,
+  createdAt: 0n,
+};
+
+/**
+ * Mock IpMetadataCreated event emitted when IP metadata is created.
+ */
+export const mockIpMetadataCreatedEvent: IpMetadataCreated = {
+  metadata: Keypair.generate().publicKey,
+  ip: Keypair.generate().publicKey,
+  ownerEntity: Keypair.generate().publicKey,
+  schema: Keypair.generate().publicKey,
+  revision: 1,
+  hash: new Array(32).fill(0),
+  cid: new Array(96).fill(0),
   createdAt: 0n,
 };
 
@@ -172,6 +217,16 @@ export function createMockMyceliumClient(): MyceliumClient {
       metadata: createMockMetadataModule(),
       derivative: createMockDerivativeModule(),
       parseEvent: vi.fn().mockResolvedValue(mockEntityCreatedEvent),
+      parseEvents: vi
+        .fn()
+        .mockResolvedValue([
+          mockEntityCreatedEvent,
+          mockEntityMetadataCreatedEvent,
+        ]),
+      deriveEntityAddress: vi
+        .fn()
+        .mockReturnValue(Keypair.generate().publicKey),
+      deriveIpAddress: vi.fn().mockReturnValue(Keypair.generate().publicKey),
     },
     license: {
       license: createMockLicenseModule(),
