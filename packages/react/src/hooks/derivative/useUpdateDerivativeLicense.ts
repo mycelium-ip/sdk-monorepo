@@ -1,6 +1,9 @@
 "use client";
 
-import type { UpdateDerivativeLicenseParams } from "@mycelium-ip/core-sdk";
+import type {
+  DerivativeLicenseUpdated,
+  UpdateDerivativeLicenseParams,
+} from "@mycelium-ip/core-sdk";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   executeTransaction,
@@ -41,7 +44,11 @@ export function useUpdateDerivativeLicense() {
   const isWalletConnected = wallet !== null && wallet.publicKey !== null;
 
   return {
-    ...useMutation<TransactionResult, Error, UpdateDerivativeLicenseParams>({
+    ...useMutation<
+      TransactionResult<DerivativeLicenseUpdated>,
+      Error,
+      UpdateDerivativeLicenseParams
+    >({
       mutationFn: async (params) => {
         if (!client || !wallet) {
           throw new Error("Wallet not connected");
@@ -53,6 +60,8 @@ export function useUpdateDerivativeLicense() {
           wallet,
           instruction,
           confirmation,
+          (conn, sig) =>
+            client.ipCore.parseEvent<DerivativeLicenseUpdated>(conn, sig),
         );
       },
       onSuccess: () => {

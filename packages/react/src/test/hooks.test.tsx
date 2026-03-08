@@ -4,7 +4,7 @@ import { useCreateEntity } from "../hooks/entity/useCreateEntity";
 import { useMyceliumContext } from "../hooks/internal/useMyceliumContext";
 import { useMyceliumWallet } from "../hooks/internal/useMyceliumWallet";
 import { queryKeys } from "../hooks/queries/queryKeys";
-import { createMockPublicKey } from "./mocks";
+import { createMockPublicKey, mockEntityCreatedEvent } from "./mocks";
 import { createDisconnectedTestWrapper, createTestWrapper } from "./wrapper";
 
 describe("useMyceliumContext", () => {
@@ -97,6 +97,26 @@ describe("useCreateEntity", () => {
       expect(invalidateSpy).toHaveBeenCalledWith({
         queryKey: queryKeys.entities(),
       });
+    }
+  });
+
+  it("returns parsed event in data.event on success", async () => {
+    const { wrapper, mockClient } = createTestWrapper();
+
+    const { result } = renderHook(() => useCreateEntity(), { wrapper });
+
+    result.current.mutate({ handle: "test-entity" });
+
+    await waitFor(
+      () => {
+        expect(result.current.isSuccess || result.current.isError).toBe(true);
+      },
+      { timeout: 3000 },
+    );
+
+    if (result.current.isSuccess) {
+      expect(result.current.data?.event).toEqual(mockEntityCreatedEvent);
+      expect(mockClient.ipCore.parseEvent).toHaveBeenCalled();
     }
   });
 

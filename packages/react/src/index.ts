@@ -2,8 +2,30 @@
 // Do not export internal modules directly.
 // Provider
 
-// Re-export cluster type from core-sdk for convenience
+// Re-export event types and cluster type from core-sdk for convenience
 export type { MyceliumCluster } from "@mycelium-ip/core-sdk";
+export type {
+  ConfigInitialized,
+  ConfigUpdated,
+  DerivativeLicenseUpdated,
+  DerivativeLinkCreated,
+  EntityControllersUpdated,
+  EntityCreated,
+  EntityMetadataCreated,
+  IpCoreEvent,
+  IpCreated,
+  IpMetadataCreated,
+  IpTransferred,
+  LicenseCreated,
+  LicenseEvent,
+  LicenseGrantCreated,
+  LicenseGrantRevoked,
+  LicenseRevoked,
+  LicenseUpdated,
+  MetadataSchemaCreated,
+  TreasuryInitialized,
+  TreasuryWithdrawal,
+} from "@mycelium-ip/core-sdk";
 
 // Derivative mutation hooks
 export { useCreateDerivativeLink } from "./hooks/derivative/useCreateDerivativeLink";

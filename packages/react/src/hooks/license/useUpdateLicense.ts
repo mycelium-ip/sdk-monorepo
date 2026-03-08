@@ -1,6 +1,9 @@
 "use client";
 
-import type { UpdateLicenseParams } from "@mycelium-ip/core-sdk";
+import type {
+  LicenseUpdated,
+  UpdateLicenseParams,
+} from "@mycelium-ip/core-sdk";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   executeTransaction,
@@ -39,7 +42,11 @@ export function useUpdateLicense() {
   const isWalletConnected = wallet !== null && wallet.publicKey !== null;
 
   return {
-    ...useMutation<TransactionResult, Error, UpdateLicenseParams>({
+    ...useMutation<
+      TransactionResult<LicenseUpdated>,
+      Error,
+      UpdateLicenseParams
+    >({
       mutationFn: async (params) => {
         if (!client || !wallet) {
           throw new Error("Wallet not connected");
@@ -50,6 +57,7 @@ export function useUpdateLicense() {
           wallet,
           instruction,
           confirmation,
+          (conn, sig) => client.license.parseEvent<LicenseUpdated>(conn, sig),
         );
       },
       onSuccess: () => {

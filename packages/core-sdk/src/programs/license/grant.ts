@@ -3,8 +3,11 @@ import { SystemProgram } from "@solana/web3.js";
 import { deriveLicenseGrantPda, deriveLicensePda } from "../../pda/license";
 import type {
   CreateLicenseGrantParams,
+  LicenseGrantCreated,
+  LicenseGrantRevoked,
   RevokeLicenseGrantParams,
   SendTxOptions,
+  TransactionResult,
 } from "../../types";
 import { toI64Bn } from "../../utils/conversions";
 import { sendInstruction } from "../../utils/transactions";
@@ -46,11 +49,12 @@ export class GrantModule {
   async create(
     params: CreateLicenseGrantParams,
     options?: SendTxOptions,
-  ): Promise<string> {
+  ): Promise<TransactionResult<LicenseGrantCreated>> {
     const instruction = await this.createIx(params);
-    return sendInstruction(
+    return sendInstruction<LicenseGrantCreated>(
       this.client.provider,
       instruction,
+      this.client.program,
       options?.sendOptions,
       options?.confirmOptions,
     );
@@ -85,11 +89,12 @@ export class GrantModule {
   async revoke(
     params: RevokeLicenseGrantParams,
     options?: SendTxOptions,
-  ): Promise<string> {
+  ): Promise<TransactionResult<LicenseGrantRevoked>> {
     const instruction = await this.revokeIx(params);
-    return sendInstruction(
+    return sendInstruction<LicenseGrantRevoked>(
       this.client.provider,
       instruction,
+      this.client.program,
       options?.sendOptions,
       options?.confirmOptions,
     );

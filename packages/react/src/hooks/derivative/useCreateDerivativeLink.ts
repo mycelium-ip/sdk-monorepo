@@ -1,6 +1,9 @@
 "use client";
 
-import type { CreateDerivativeLinkParams } from "@mycelium-ip/core-sdk";
+import type {
+  CreateDerivativeLinkParams,
+  DerivativeLinkCreated,
+} from "@mycelium-ip/core-sdk";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   executeTransaction,
@@ -41,7 +44,11 @@ export function useCreateDerivativeLink() {
   const isWalletConnected = wallet !== null && wallet.publicKey !== null;
 
   return {
-    ...useMutation<TransactionResult, Error, CreateDerivativeLinkParams>({
+    ...useMutation<
+      TransactionResult<DerivativeLinkCreated>,
+      Error,
+      CreateDerivativeLinkParams
+    >({
       mutationFn: async (params) => {
         if (!client || !wallet) {
           throw new Error("Wallet not connected");
@@ -52,6 +59,8 @@ export function useCreateDerivativeLink() {
           wallet,
           instruction,
           confirmation,
+          (conn, sig) =>
+            client.ipCore.parseEvent<DerivativeLinkCreated>(conn, sig),
         );
       },
       onSuccess: () => {

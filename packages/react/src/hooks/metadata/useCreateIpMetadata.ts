@@ -1,6 +1,9 @@
 "use client";
 
-import type { CreateIpMetadataParams } from "@mycelium-ip/core-sdk";
+import type {
+  CreateIpMetadataParams,
+  IpMetadataCreated,
+} from "@mycelium-ip/core-sdk";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   executeTransaction,
@@ -42,7 +45,11 @@ export function useCreateIpMetadata() {
   const isWalletConnected = wallet !== null && wallet.publicKey !== null;
 
   return {
-    ...useMutation<TransactionResult, Error, CreateIpMetadataParams>({
+    ...useMutation<
+      TransactionResult<IpMetadataCreated>,
+      Error,
+      CreateIpMetadataParams
+    >({
       mutationFn: async (params) => {
         if (!client || !wallet) {
           throw new Error("Wallet not connected");
@@ -54,6 +61,7 @@ export function useCreateIpMetadata() {
           wallet,
           instruction,
           confirmation,
+          (conn, sig) => client.ipCore.parseEvent<IpMetadataCreated>(conn, sig),
         );
       },
       onSuccess: () => {

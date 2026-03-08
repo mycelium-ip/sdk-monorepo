@@ -8,10 +8,16 @@ import type { MyceliumWallet } from "../types/wallet";
 
 /**
  * Result of executing a transaction.
+ *
+ * The `event` field is populated when an `eventParser` is provided to
+ * `executeTransaction`. It contains the first strongly-typed Anchor event
+ * decoded from the transaction logs.
  */
-export interface TransactionResult {
+export interface TransactionResult<E = void> {
   /** Transaction signature */
   signature: string;
+  /** Decoded Anchor event (only present when an eventParser was supplied). */
+  event?: E;
 }
 
 /**
@@ -22,21 +28,24 @@ export interface TransactionResult {
  * 3. Sign transaction using wallet
  * 4. Send transaction to the network
  * 5. Confirm transaction with specified commitment level
+ * 6. Optionally parse and attach a strongly-typed Anchor event
  *
- * @param connection - Solana RPC connection
- * @param wallet - Wallet for signing
- * @param instruction - Transaction instruction to execute
+ * @param connection   - Solana RPC connection
+ * @param wallet       - Wallet for signing
+ * @param instruction  - Transaction instruction to execute
  * @param confirmation - Commitment level for confirmation
- * @returns Transaction signature
+ * @param eventParser  - Optional async callback that receives `(connection, signature)` and returns a decoded event
+ * @returns TransactionResult including signature and optional event
  *
  * @throws Error if wallet is not connected (no publicKey)
  */
-export async function executeTransaction(
+export async function executeTransaction<E = void>(
   connection: Connection,
   wallet: MyceliumWallet | null,
   instruction: TransactionInstruction,
   confirmation: Commitment,
-): Promise<TransactionResult> {
+  eventParser?: (connection: Connection, signature: string) => Promise<E>,
+): Promise<TransactionResult<E>> {
   if (!wallet?.publicKey) {
     throw new Error("Wallet not connected");
   }
@@ -68,6 +77,11 @@ export async function executeTransaction(
     },
     confirmation,
   );
+
+  if (eventParser) {
+    const event = await eventParser(connection, signature);
+    return { signature, event };
+  }
 
   return { signature };
 }

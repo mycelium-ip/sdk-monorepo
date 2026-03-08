@@ -9,7 +9,11 @@ import type {
   CreateEntityMetadataParams,
   CreateIpMetadataParams,
   CreateMetadataSchemaParams,
+  EntityMetadataCreated,
+  IpMetadataCreated,
+  MetadataSchemaCreated,
   SendTxOptions,
+  TransactionResult,
 } from "../../types";
 import { sha256Hash, toFixedBytes, toU64Bn } from "../../utils/conversions";
 import { sendInstruction } from "../../utils/transactions";
@@ -46,11 +50,12 @@ export class MetadataModule {
   async createSchema(
     params: CreateMetadataSchemaParams,
     options?: SendTxOptions,
-  ): Promise<string> {
+  ): Promise<TransactionResult<MetadataSchemaCreated>> {
     const instruction = await this.createSchemaIx(params);
-    return sendInstruction(
+    return sendInstruction<MetadataSchemaCreated>(
       this.client.provider,
       instruction,
+      this.client.program,
       options?.sendOptions,
       options?.confirmOptions,
     );
@@ -85,11 +90,12 @@ export class MetadataModule {
   async createEntityMetadata(
     params: CreateEntityMetadataParams,
     options?: SendTxOptions,
-  ): Promise<string> {
+  ): Promise<TransactionResult<EntityMetadataCreated>> {
     const instruction = await this.createEntityMetadataIx(params);
-    return sendInstruction(
+    return sendInstruction<EntityMetadataCreated>(
       this.client.provider,
       instruction,
+      this.client.program,
       options?.sendOptions,
       options?.confirmOptions,
     );
@@ -125,11 +131,12 @@ export class MetadataModule {
   async createIpMetadata(
     params: CreateIpMetadataParams,
     options?: SendTxOptions,
-  ): Promise<string> {
+  ): Promise<TransactionResult<IpMetadataCreated>> {
     const instruction = await this.createIpMetadataIx(params);
-    return sendInstruction(
+    return sendInstruction<IpMetadataCreated>(
       this.client.provider,
       instruction,
+      this.client.program,
       options?.sendOptions,
       options?.confirmOptions,
     );

@@ -3,8 +3,12 @@ import { SystemProgram } from "@solana/web3.js";
 import { deriveLicensePda } from "../../pda/license";
 import type {
   CreateLicenseParams,
+  LicenseCreated,
+  LicenseRevoked,
+  LicenseUpdated,
   RevokeLicenseParams,
   SendTxOptions,
+  TransactionResult,
   UpdateLicenseParams,
 } from "../../types";
 import { sendInstruction } from "../../utils/transactions";
@@ -40,11 +44,12 @@ export class LicenseModule {
   async create(
     params: CreateLicenseParams,
     options?: SendTxOptions,
-  ): Promise<string> {
+  ): Promise<TransactionResult<LicenseCreated>> {
     const instruction = await this.createIx(params);
-    return sendInstruction(
+    return sendInstruction<LicenseCreated>(
       this.client.provider,
       instruction,
+      this.client.program,
       options?.sendOptions,
       options?.confirmOptions,
     );
@@ -71,11 +76,12 @@ export class LicenseModule {
   async update(
     params: UpdateLicenseParams,
     options?: SendTxOptions,
-  ): Promise<string> {
+  ): Promise<TransactionResult<LicenseUpdated>> {
     const instruction = await this.updateIx(params);
-    return sendInstruction(
+    return sendInstruction<LicenseUpdated>(
       this.client.provider,
       instruction,
+      this.client.program,
       options?.sendOptions,
       options?.confirmOptions,
     );
@@ -101,11 +107,12 @@ export class LicenseModule {
   async revoke(
     params: RevokeLicenseParams,
     options?: SendTxOptions,
-  ): Promise<string> {
+  ): Promise<TransactionResult<LicenseRevoked>> {
     const instruction = await this.revokeIx(params);
-    return sendInstruction(
+    return sendInstruction<LicenseRevoked>(
       this.client.provider,
       instruction,
+      this.client.program,
       options?.sendOptions,
       options?.confirmOptions,
     );

@@ -1,6 +1,9 @@
 "use client";
 
-import type { UpdateEntityControllersParams } from "@mycelium-ip/core-sdk";
+import type {
+  EntityControllersUpdated,
+  UpdateEntityControllersParams,
+} from "@mycelium-ip/core-sdk";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   executeTransaction,
@@ -39,7 +42,11 @@ export function useUpdateEntityControllers() {
   const isWalletConnected = wallet !== null && wallet.publicKey !== null;
 
   return {
-    ...useMutation<TransactionResult, Error, UpdateEntityControllersParams>({
+    ...useMutation<
+      TransactionResult<EntityControllersUpdated>,
+      Error,
+      UpdateEntityControllersParams
+    >({
       mutationFn: async (params) => {
         if (!client || !wallet) {
           throw new Error("Wallet not connected");
@@ -51,6 +58,8 @@ export function useUpdateEntityControllers() {
           wallet,
           instruction,
           confirmation,
+          (conn, sig) =>
+            client.ipCore.parseEvent<EntityControllersUpdated>(conn, sig),
         );
       },
       onSuccess: () => {

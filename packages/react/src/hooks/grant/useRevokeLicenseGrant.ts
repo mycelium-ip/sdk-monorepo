@@ -1,6 +1,9 @@
 "use client";
 
-import type { RevokeLicenseGrantParams } from "@mycelium-ip/core-sdk";
+import type {
+  LicenseGrantRevoked,
+  RevokeLicenseGrantParams,
+} from "@mycelium-ip/core-sdk";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   executeTransaction,
@@ -39,7 +42,11 @@ export function useRevokeLicenseGrant() {
   const isWalletConnected = wallet !== null && wallet.publicKey !== null;
 
   return {
-    ...useMutation<TransactionResult, Error, RevokeLicenseGrantParams>({
+    ...useMutation<
+      TransactionResult<LicenseGrantRevoked>,
+      Error,
+      RevokeLicenseGrantParams
+    >({
       mutationFn: async (params) => {
         if (!client || !wallet) {
           throw new Error("Wallet not connected");
@@ -50,6 +57,8 @@ export function useRevokeLicenseGrant() {
           wallet,
           instruction,
           confirmation,
+          (conn, sig) =>
+            client.license.parseEvent<LicenseGrantRevoked>(conn, sig),
         );
       },
       onSuccess: () => {

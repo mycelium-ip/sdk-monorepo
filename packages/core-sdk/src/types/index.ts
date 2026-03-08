@@ -9,6 +9,8 @@ import type {
   VersionedTransaction,
 } from "@solana/web3.js";
 
+export * from "./events";
+
 export type StringOrBytes = string | Uint8Array | number[];
 
 export interface WalletAdapterLike {
@@ -36,6 +38,16 @@ export interface MyceliumClientOptions {
 export interface SendTxOptions {
   sendOptions?: SendOptions;
   confirmOptions?: ConfirmOptions;
+}
+
+/**
+ * Result of a send transaction call, including a strongly-typed parsed event.
+ */
+export interface TransactionResult<E> {
+  /** Transaction signature returned by `sendAndConfirm`. */
+  signature: string;
+  /** The first Anchor event decoded from the transaction logs. */
+  event: E;
 }
 
 export interface ModuleContext {

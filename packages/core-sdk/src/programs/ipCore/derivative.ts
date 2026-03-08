@@ -3,7 +3,10 @@ import { SystemProgram } from "@solana/web3.js";
 import { deriveDerivativeLinkPda } from "../../pda/derivative";
 import type {
   CreateDerivativeLinkParams,
+  DerivativeLicenseUpdated,
+  DerivativeLinkCreated,
   SendTxOptions,
+  TransactionResult,
   UpdateDerivativeLicenseParams,
 } from "../../types";
 import { sendInstruction } from "../../utils/transactions";
@@ -42,11 +45,12 @@ export class DerivativeModule {
   async create(
     params: CreateDerivativeLinkParams,
     options?: SendTxOptions,
-  ): Promise<string> {
+  ): Promise<TransactionResult<DerivativeLinkCreated>> {
     const instruction = await this.createIx(params);
-    return sendInstruction(
+    return sendInstruction<DerivativeLinkCreated>(
       this.client.provider,
       instruction,
+      this.client.program,
       options?.sendOptions,
       options?.confirmOptions,
     );
@@ -79,11 +83,12 @@ export class DerivativeModule {
   async updateLicense(
     params: UpdateDerivativeLicenseParams,
     options?: SendTxOptions,
-  ): Promise<string> {
+  ): Promise<TransactionResult<DerivativeLicenseUpdated>> {
     const instruction = await this.updateLicenseIx(params);
-    return sendInstruction(
+    return sendInstruction<DerivativeLicenseUpdated>(
       this.client.provider,
       instruction,
+      this.client.program,
       options?.sendOptions,
       options?.confirmOptions,
     );

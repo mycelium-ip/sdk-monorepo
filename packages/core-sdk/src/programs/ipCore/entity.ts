@@ -3,7 +3,10 @@ import { SystemProgram } from "@solana/web3.js";
 import { deriveEntityPda } from "../../pda/entity";
 import type {
   CreateEntityParams,
+  EntityControllersUpdated,
+  EntityCreated,
   SendTxOptions,
+  TransactionResult,
   UpdateEntityControllersParams,
 } from "../../types";
 import { toFixedBytes } from "../../utils/conversions";
@@ -38,11 +41,12 @@ export class EntityModule {
   async create(
     params: CreateEntityParams,
     options?: SendTxOptions,
-  ): Promise<string> {
+  ): Promise<TransactionResult<EntityCreated>> {
     const instruction = await this.createIx(params);
-    return sendInstruction(
+    return sendInstruction<EntityCreated>(
       this.client.provider,
       instruction,
+      this.client.program,
       options?.sendOptions,
       options?.confirmOptions,
     );
@@ -62,11 +66,12 @@ export class EntityModule {
   async updateControllers(
     params: UpdateEntityControllersParams,
     options?: SendTxOptions,
-  ): Promise<string> {
+  ): Promise<TransactionResult<EntityControllersUpdated>> {
     const instruction = await this.updateControllersIx(params);
-    return sendInstruction(
+    return sendInstruction<EntityControllersUpdated>(
       this.client.provider,
       instruction,
+      this.client.program,
       options?.sendOptions,
       options?.confirmOptions,
     );

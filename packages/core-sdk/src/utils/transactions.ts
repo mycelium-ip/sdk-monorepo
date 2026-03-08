@@ -1,3 +1,4 @@
+import type { Program } from "@coral-xyz/anchor";
 import type { AnchorProvider } from "@coral-xyz/anchor";
 import type {
   ConfirmOptions,
@@ -5,16 +6,25 @@ import type {
   TransactionInstruction,
 } from "@solana/web3.js";
 import { Transaction } from "@solana/web3.js";
+import type { TransactionResult } from "../types";
+import { parseTransactionEvents } from "./events";
 
-export async function sendInstruction(
+export async function sendInstruction<E>(
   provider: AnchorProvider,
   instruction: TransactionInstruction,
+  program: Program,
   sendOptions?: SendOptions,
   confirmOptions?: ConfirmOptions,
-): Promise<string> {
+): Promise<TransactionResult<E>> {
   const transaction = new Transaction().add(instruction);
-  return provider.sendAndConfirm(transaction, [], {
+  const signature = await provider.sendAndConfirm(transaction, [], {
     ...(confirmOptions ?? {}),
     ...(sendOptions ?? {}),
   });
+  const events = await parseTransactionEvents<E>(
+    provider.connection,
+    signature,
+    program,
+  );
+  return { signature, event: events[0] as E };
 }

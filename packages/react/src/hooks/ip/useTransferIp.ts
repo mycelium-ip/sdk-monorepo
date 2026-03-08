@@ -1,6 +1,6 @@
 "use client";
 
-import type { TransferIpParams } from "@mycelium-ip/core-sdk";
+import type { IpTransferred, TransferIpParams } from "@mycelium-ip/core-sdk";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   executeTransaction,
@@ -39,7 +39,7 @@ export function useTransferIp() {
   const isWalletConnected = wallet !== null && wallet.publicKey !== null;
 
   return {
-    ...useMutation<TransactionResult, Error, TransferIpParams>({
+    ...useMutation<TransactionResult<IpTransferred>, Error, TransferIpParams>({
       mutationFn: async (params) => {
         if (!client || !wallet) {
           throw new Error("Wallet not connected");
@@ -50,6 +50,7 @@ export function useTransferIp() {
           wallet,
           instruction,
           confirmation,
+          (conn, sig) => client.ipCore.parseEvent<IpTransferred>(conn, sig),
         );
       },
       onSuccess: () => {

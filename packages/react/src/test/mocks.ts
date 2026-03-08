@@ -1,4 +1,5 @@
 import type { MyceliumClient } from "@mycelium-ip/core-sdk";
+import type { EntityCreated, LicenseCreated } from "@mycelium-ip/core-sdk";
 import {
   type Connection,
   Keypair,
@@ -7,6 +8,29 @@ import {
 } from "@solana/web3.js";
 import { vi } from "vitest";
 import type { MyceliumWallet } from "../types/wallet";
+
+/**
+ * Mock EntityCreated event emitted when an entity is created.
+ */
+export const mockEntityCreatedEvent: EntityCreated = {
+  entity: Keypair.generate().publicKey,
+  creator: Keypair.generate().publicKey,
+  handle: new Array(32).fill(0),
+  controllerCount: 1,
+  signatureThreshold: 1,
+  createdAt: 0n,
+};
+
+/**
+ * Mock LicenseCreated event emitted when a license is created.
+ */
+export const mockLicenseCreatedEvent: LicenseCreated = {
+  license: Keypair.generate().publicKey,
+  originIp: Keypair.generate().publicKey,
+  authority: Keypair.generate().publicKey,
+  derivativesAllowed: true,
+  createdAt: 0n,
+};
 
 /**
  * Creates a mock Solana Connection.
@@ -19,6 +43,7 @@ export function createMockConnection(): Connection {
     }),
     sendRawTransaction: vi.fn().mockResolvedValue("mockSignature123"),
     confirmTransaction: vi.fn().mockResolvedValue({ value: { err: null } }),
+    getTransaction: vi.fn().mockResolvedValue(null),
     commitment: "confirmed",
   } as unknown as Connection;
 }
@@ -146,10 +171,12 @@ export function createMockMyceliumClient(): MyceliumClient {
       ip: createMockIpModule(),
       metadata: createMockMetadataModule(),
       derivative: createMockDerivativeModule(),
+      parseEvent: vi.fn().mockResolvedValue(mockEntityCreatedEvent),
     },
     license: {
       license: createMockLicenseModule(),
       grant: createMockGrantModule(),
+      parseEvent: vi.fn().mockResolvedValue(mockLicenseCreatedEvent),
     },
   } as unknown as MyceliumClient;
 }

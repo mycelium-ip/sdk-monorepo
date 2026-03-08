@@ -1,6 +1,6 @@
 "use client";
 
-import type { CreateEntityParams } from "@mycelium-ip/core-sdk";
+import type { CreateEntityParams, EntityCreated } from "@mycelium-ip/core-sdk";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   executeTransaction,
@@ -39,23 +39,26 @@ export function useCreateEntity() {
   const isWalletConnected = wallet !== null && wallet.publicKey !== null;
 
   return {
-    ...useMutation<TransactionResult, Error, CreateEntityParams>({
-      mutationFn: async (params) => {
-        if (!client || !wallet) {
-          throw new Error("Wallet not connected");
-        }
-        const instruction = await client.ipCore.entity.createIx(params);
-        return executeTransaction(
-          connection,
-          wallet,
-          instruction,
-          confirmation,
-        );
+    ...useMutation<TransactionResult<EntityCreated>, Error, CreateEntityParams>(
+      {
+        mutationFn: async (params) => {
+          if (!client || !wallet) {
+            throw new Error("Wallet not connected");
+          }
+          const instruction = await client.ipCore.entity.createIx(params);
+          return executeTransaction(
+            connection,
+            wallet,
+            instruction,
+            confirmation,
+            (conn, sig) => client.ipCore.parseEvent<EntityCreated>(conn, sig),
+          );
+        },
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: queryKeys.entities() });
+        },
       },
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: queryKeys.entities() });
-      },
-    }),
+    ),
     isWalletConnected,
   };
 }

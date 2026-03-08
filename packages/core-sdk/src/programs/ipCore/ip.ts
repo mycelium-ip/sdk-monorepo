@@ -5,7 +5,10 @@ import { PDA_SEEDS } from "../../constants/programs";
 import { deriveIpPda } from "../../pda/ip";
 import type {
   CreateIpParams,
+  IpCreated,
+  IpTransferred,
   SendTxOptions,
+  TransactionResult,
   TransferIpParams,
 } from "../../types";
 import { sha256Hash, toFixedBytes, utf8Bytes } from "../../utils/conversions";
@@ -53,11 +56,12 @@ export class IpModule {
   async create(
     params: CreateIpParams,
     options?: SendTxOptions,
-  ): Promise<string> {
+  ): Promise<TransactionResult<IpCreated>> {
     const instruction = await this.createIx(params);
-    return sendInstruction(
+    return sendInstruction<IpCreated>(
       this.client.provider,
       instruction,
+      this.client.program,
       options?.sendOptions,
       options?.confirmOptions,
     );
@@ -77,11 +81,12 @@ export class IpModule {
   async transfer(
     params: TransferIpParams,
     options?: SendTxOptions,
-  ): Promise<string> {
+  ): Promise<TransactionResult<IpTransferred>> {
     const instruction = await this.transferIx(params);
-    return sendInstruction(
+    return sendInstruction<IpTransferred>(
       this.client.provider,
       instruction,
+      this.client.program,
       options?.sendOptions,
       options?.confirmOptions,
     );
