@@ -145,17 +145,20 @@ If you're using [`@privy-io/react-auth`](https://docs.privy.io/) with Solana emb
 
 import { useSolanaWallets } from "@privy-io/react-auth/solana";
 import { usePrivy } from "@privy-io/react-auth";
-import { Connection, PublicKey } from "@solana/web3.js";
+import { Connection, PublicKey, Transaction } from "@solana/web3.js";
 import { MyceliumIpProvider, type MyceliumWallet } from "@mycelium-ip/react";
 import { useMemo } from "react";
+
+// Minimal Privy Solana signing types to avoid external type imports
+type PrivySolanaSignTransactionInput = { transaction: Uint8Array };
+type PrivySolanaSignTransactionOutput = { signedTransaction: Uint8Array };
 
 function MyceliumPrivyProvider({ children }: { children: React.ReactNode }) {
   const { ready, authenticated } = usePrivy();
   const { wallets } = useSolanaWallets();
 
   // Get the embedded wallet (or first available wallet)
-  const embeddedWallet =
-    wallets.find((w) => w.walletClientType === "privy") ?? wallets[0];
+  const embeddedWallet = wallets[0];
 
   const connection = useMemo(
     () => new Connection(process.env.NEXT_PUBLIC_SOLANA_RPC_URL!),
@@ -166,24 +169,60 @@ function MyceliumPrivyProvider({ children }: { children: React.ReactNode }) {
   const wallet = useMemo<MyceliumWallet | null>(() => {
     if (!embeddedWallet?.address) return null;
 
+    const signTransaction = async (tx: Transaction): Promise<Transaction> => {
+      if (!embeddedWallet?.signTransaction) {
+        throw new Error("Wallet does not support signTransaction");
+      }
+      const input: PrivySolanaSignTransactionInput = {
+        transaction: tx.serialize({
+          requireAllSignatures: false,
+          verifySignatures: false,
+        }),
+      };
+      const result:
+        | PrivySolanaSignTransactionOutput
+        | PrivySolanaSignTransactionOutput[] =
+        await embeddedWallet.signTransaction(input);
+      const outputs = Array.isArray(result) ? result : [result];
+      const output = outputs[0];
+      const signedTx = Transaction.from(Buffer.from(output.signedTransaction));
+      return signedTx;
+    };
+
+    const signAllTransactions = async (
+      txs: Transaction[],
+    ): Promise<Transaction[]> => {
+      // Many Privy wallets don't implement batch signing
+      // Prefer batch signing via variadic inputs when available
+      const inputs: PrivySolanaSignTransactionInput[] = txs.map((tx) => ({
+        transaction: tx.serialize() as Uint8Array,
+      }));
+      const batch:
+        | PrivySolanaSignTransactionOutput
+        | PrivySolanaSignTransactionOutput[] =
+        await embeddedWallet.signTransaction(...inputs);
+      const outputs: PrivySolanaSignTransactionOutput[] = Array.isArray(batch)
+        ? batch
+        : [batch];
+      return outputs.map((o) =>
+        Transaction.from(Buffer.from(o.signedTransaction)),
+      );
+    };
+
+    const signMessage = async (message: Uint8Array): Promise<Uint8Array> => {
+      if (!embeddedWallet?.signMessage) {
+        throw new Error("Wallet does not support signMessage");
+      }
+      const result = await embeddedWallet.signMessage({ message });
+      return result.signedMessage;
+    };
+
     return {
       publicKey: new PublicKey(embeddedWallet.address),
-      signTransaction: async (transaction) => {
-        return embeddedWallet.signTransaction(transaction);
-      },
-      signAllTransactions: async (transactions) => {
-        // Privy supports batch signing
-        const signed = [];
-        for (const tx of transactions) {
-          signed.push(await embeddedWallet.signTransaction(tx));
-        }
-        return signed;
-      },
-      signMessage: async (message) => {
-        const signature = await embeddedWallet.signMessage(message);
-        return signature;
-      },
-    };
+      signTransaction,
+      signAllTransactions,
+      signMessage,
+    } as MyceliumWallet;
   }, [embeddedWallet]);
 
   // Wait for Privy to be ready and user to be authenticated
