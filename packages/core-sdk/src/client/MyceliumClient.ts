@@ -8,13 +8,15 @@ export class MyceliumClient {
   readonly license: LicenseClient;
 
   constructor(options: MyceliumClientOptions) {
+    const cluster = options.cluster ?? "devnet";
+
     const provider = createProvider(
       options.connection,
       options.wallet,
       options.confirmOptions,
     );
 
-    this.ipCore = new IpCoreClient(provider);
-    this.license = new LicenseClient(provider);
+    this.ipCore = new IpCoreClient(provider, cluster);
+    this.license = new LicenseClient(provider, cluster);
   }
 }

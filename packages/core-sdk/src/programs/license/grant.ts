@@ -1,6 +1,5 @@
 import type { PublicKey, TransactionInstruction } from "@solana/web3.js";
 import { SystemProgram } from "@solana/web3.js";
-import { IP_CORE_PROGRAM_ID } from "../../constants/programs";
 import { deriveLicenseGrantPda, deriveLicensePda } from "../../pda/license";
 import type {
   CreateLicenseGrantParams,
@@ -31,7 +30,7 @@ export class GrantModule {
     return this.client.program.methods
       .createLicenseGrant(
         toI64Bn(params.expiration, "expiration"),
-        params.ipCoreProgramId ?? IP_CORE_PROGRAM_ID,
+        params.ipCoreProgramId ?? this.client.ipCoreProgramId,
       )
       .accounts({
         licenseGrant,
@@ -72,7 +71,7 @@ export class GrantModule {
     const rentDestination = this.resolveWalletPubkey(params.rentDestination);
 
     return this.client.program.methods
-      .revokeLicenseGrant(params.ipCoreProgramId ?? IP_CORE_PROGRAM_ID)
+      .revokeLicenseGrant(params.ipCoreProgramId ?? this.client.ipCoreProgramId)
       .accounts({
         licenseGrant,
         license,

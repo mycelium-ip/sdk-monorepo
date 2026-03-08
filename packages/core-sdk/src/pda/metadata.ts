@@ -1,12 +1,12 @@
 import { PublicKey } from "@solana/web3.js";
-import { IP_CORE_PROGRAM_ID, PDA_SEEDS } from "../constants/programs";
+import { PDA_SEEDS } from "../constants/programs";
 import type { StringOrBytes } from "../types";
 import { toFixedBytes, u64SeedBytes, utf8Bytes } from "../utils/conversions";
 
 export function deriveMetadataSchemaPda(
   id: StringOrBytes,
   version: StringOrBytes,
-  programId: PublicKey = IP_CORE_PROGRAM_ID,
+  programId: PublicKey,
 ): [PublicKey, number] {
   return PublicKey.findProgramAddressSync(
     [
@@ -21,7 +21,7 @@ export function deriveMetadataSchemaPda(
 export function deriveEntityMetadataPda(
   entity: PublicKey,
   revision: bigint | number,
-  programId: PublicKey = IP_CORE_PROGRAM_ID,
+  programId: PublicKey,
 ): [PublicKey, number] {
   return PublicKey.findProgramAddressSync(
     [
@@ -37,7 +37,7 @@ export function deriveEntityMetadataPda(
 export function deriveIpMetadataPda(
   ip: PublicKey,
   revision: bigint | number,
-  programId: PublicKey = IP_CORE_PROGRAM_ID,
+  programId: PublicKey,
 ): [PublicKey, number] {
   return PublicKey.findProgramAddressSync(
     [

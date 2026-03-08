@@ -22,11 +22,15 @@ export interface WalletAdapterLike {
   signMessage?(message: Uint8Array): Promise<Uint8Array>;
 }
 
+export type MyceliumCluster = "devnet" | "mainnet-beta";
+
 export interface MyceliumClientOptions {
   connection: Connection;
   wallet: WalletAdapterLike;
   commitment?: Commitment;
   confirmOptions?: ConfirmOptions;
+  /** Target Solana cluster. Determines which program IDs are used. @default 'devnet' */
+  cluster?: MyceliumCluster;
 }
 
 export interface SendTxOptions {

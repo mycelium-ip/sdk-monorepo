@@ -38,6 +38,7 @@ export function createTestWrapper(options: TestWrapperOptions = {}) {
     wallet: mockWallet,
     client: mockClient,
     confirmation: "confirmed",
+    cluster: "devnet",
     ...options.contextValue,
   };
 
@@ -80,6 +81,7 @@ export function createDisconnectedTestWrapper() {
     wallet: null,
     client: null,
     confirmation: "confirmed",
+    cluster: "devnet",
   };
 
   function DisconnectedWrapper({ children }: { children: ReactNode }) {

@@ -1,6 +1,5 @@
 import type { PublicKey, TransactionInstruction } from "@solana/web3.js";
 import { SystemProgram } from "@solana/web3.js";
-import { LICENSE_PROGRAM_ID } from "../../constants/programs";
 import { deriveDerivativeLinkPda } from "../../pda/derivative";
 import type {
   CreateDerivativeLinkParams,
@@ -24,7 +23,9 @@ export class DerivativeModule {
     );
 
     return this.client.program.methods
-      .createDerivativeLink(params.licenseProgramId ?? LICENSE_PROGRAM_ID)
+      .createDerivativeLink(
+        params.licenseProgramId ?? this.client.licenseProgramId,
+      )
       .accounts({
         derivativeLink,
         parentIp: params.parentIp,
@@ -61,7 +62,9 @@ export class DerivativeModule {
     );
 
     return this.client.program.methods
-      .updateDerivativeLicense(params.licenseProgramId ?? LICENSE_PROGRAM_ID)
+      .updateDerivativeLicense(
+        params.licenseProgramId ?? this.client.licenseProgramId,
+      )
       .accounts({
         derivativeLink: params.derivativeLink ?? derivedDerivativeLink,
         childIp: params.childIp,

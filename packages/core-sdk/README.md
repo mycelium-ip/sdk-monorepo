@@ -14,8 +14,8 @@ The SDK wraps:
 ```ts
 import {
   MyceliumClient,
-  IP_CORE_PROGRAM_ID,
-  LICENSE_PROGRAM_ID,
+  PROGRAM_IDS,
+  getProgramIds,
   createProvider,
   sendInstruction,
   deriveEntityPda,
@@ -25,7 +25,8 @@ import {
 Main exports include:
 
 - `MyceliumClient`
-- program constants (`IP_CORE_PROGRAM_ID`, `LICENSE_PROGRAM_ID`, `PDA_SEEDS`)
+- program constants (`PROGRAM_IDS`, `getProgramIds`, `PDA_SEEDS`)
+- `MyceliumCluster` type (`'devnet' | 'mainnet-beta'`)
 - PDA helpers (`deriveEntityPda`, `deriveIpPda`, `deriveMetadataSchemaPda`, etc.)
 - utility helpers (`createProvider`, `sendInstruction`, conversion helpers)
 - all SDK types (params/interfaces)

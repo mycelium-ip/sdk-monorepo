@@ -1,31 +1,26 @@
-import type { AnchorProvider, Idl } from "@coral-xyz/anchor";
+import type { AnchorProvider } from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import type { PublicKey } from "@solana/web3.js";
-import licenseIdl from "../../../idl/license.json";
-import { LICENSE_PROGRAM_ID } from "../../constants/programs";
+import { getIdls, getProgramIds } from "../../constants/programs";
+import type { MyceliumCluster } from "../../types";
 import { GrantModule } from "./grant";
 import { LicenseModule } from "./license";
 
 export class LicenseClient {
   readonly provider: AnchorProvider;
   readonly program: Program;
+  readonly ipCoreProgramId: PublicKey;
 
   readonly license: LicenseModule;
   readonly grant: GrantModule;
 
-  constructor(
-    provider: AnchorProvider,
-    programId: PublicKey = LICENSE_PROGRAM_ID,
-    idl: Idl = licenseIdl as Idl,
-  ) {
+  constructor(provider: AnchorProvider, cluster: MyceliumCluster = "devnet") {
+    const programIds = getProgramIds(cluster);
+    const idls = getIdls(cluster);
+
+    this.ipCoreProgramId = programIds.ipCore;
     this.provider = provider;
-    this.program = new Program(
-      {
-        ...(idl as object),
-        address: programId.toBase58(),
-      } as Idl,
-      provider,
-    );
+    this.program = new Program(idls.license, provider);
 
     this.license = new LicenseModule(this);
     this.grant = new GrantModule(this);

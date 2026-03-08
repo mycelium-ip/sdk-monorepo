@@ -1,6 +1,6 @@
 "use client";
 
-import { MyceliumClient } from "@mycelium-ip/core-sdk";
+import { MyceliumClient, type MyceliumCluster } from "@mycelium-ip/core-sdk";
 import type { Commitment, Connection } from "@solana/web3.js";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -23,6 +23,12 @@ export interface MyceliumIpProviderOptions {
    * @default true in development, false in production
    */
   devtools?: boolean;
+
+  /**
+   * Target Solana cluster. Determines which program IDs are used.
+   * @default 'devnet'
+   */
+  cluster?: MyceliumCluster;
 }
 
 /**
@@ -85,6 +91,7 @@ export function MyceliumIpProvider({
 }: MyceliumIpProviderProps) {
   const confirmation = options?.confirmation ?? "confirmed";
   const showDevtools = options?.devtools ?? false;
+  const cluster: MyceliumCluster = options?.cluster ?? "devnet";
 
   // Create a default query client if none provided
   const resolvedQueryClient = useMemo(
@@ -115,8 +122,9 @@ export function MyceliumIpProvider({
           }),
         signMessage: wallet.signMessage,
       },
+      cluster,
     });
-  }, [connection, wallet]);
+  }, [connection, wallet, cluster]);
 
   // Create context value — always non-null inside the provider;
   // wallet and client are null when the wallet is not yet connected.
@@ -126,8 +134,9 @@ export function MyceliumIpProvider({
       wallet: wallet ?? null,
       client,
       confirmation,
+      cluster,
     };
-  }, [connection, wallet, client, confirmation]);
+  }, [connection, wallet, client, confirmation, cluster]);
 
   return (
     <QueryClientProvider client={resolvedQueryClient}>

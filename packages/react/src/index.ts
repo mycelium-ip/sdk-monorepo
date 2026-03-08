@@ -2,6 +2,9 @@
 // Do not export internal modules directly.
 // Provider
 
+// Re-export cluster type from core-sdk for convenience
+export type { MyceliumCluster } from "@mycelium-ip/core-sdk";
+
 // Derivative mutation hooks
 export { useCreateDerivativeLink } from "./hooks/derivative/useCreateDerivativeLink";
 export { useUpdateDerivativeLicense } from "./hooks/derivative/useUpdateDerivativeLicense";

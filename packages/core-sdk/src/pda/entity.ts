@@ -1,12 +1,12 @@
 import { PublicKey } from "@solana/web3.js";
-import { IP_CORE_PROGRAM_ID, PDA_SEEDS } from "../constants/programs";
+import { PDA_SEEDS } from "../constants/programs";
 import type { StringOrBytes } from "../types";
 import { toFixedBytes, utf8Bytes } from "../utils/conversions";
 
 export function deriveEntityPda(
   creator: PublicKey,
   handle: StringOrBytes,
-  programId: PublicKey = IP_CORE_PROGRAM_ID,
+  programId: PublicKey,
 ): [PublicKey, number] {
   return PublicKey.findProgramAddressSync(
     [

@@ -1,6 +1,5 @@
 import type { PublicKey, TransactionInstruction } from "@solana/web3.js";
 import { SystemProgram } from "@solana/web3.js";
-import { IP_CORE_PROGRAM_ID } from "../../constants/programs";
 import { deriveLicensePda } from "../../pda/license";
 import type {
   CreateLicenseParams,
@@ -24,7 +23,7 @@ export class LicenseModule {
     return this.client.program.methods
       .createLicense(
         params.derivativesAllowed,
-        params.ipCoreProgramId ?? IP_CORE_PROGRAM_ID,
+        params.ipCoreProgramId ?? this.client.ipCoreProgramId,
       )
       .accounts({
         license,
@@ -59,7 +58,7 @@ export class LicenseModule {
     return this.client.program.methods
       .updateLicense(
         params.derivativesAllowed,
-        params.ipCoreProgramId ?? IP_CORE_PROGRAM_ID,
+        params.ipCoreProgramId ?? this.client.ipCoreProgramId,
       )
       .accounts({
         license,
@@ -89,7 +88,7 @@ export class LicenseModule {
       this.client.program.programId,
     );
     return this.client.program.methods
-      .revokeLicense(params.ipCoreProgramId ?? IP_CORE_PROGRAM_ID)
+      .revokeLicense(params.ipCoreProgramId ?? this.client.ipCoreProgramId)
       .accounts({
         license,
         authorityEntity: params.authorityEntity,

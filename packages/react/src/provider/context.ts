@@ -1,4 +1,4 @@
-import type { MyceliumClient } from "@mycelium-ip/core-sdk";
+import type { MyceliumClient, MyceliumCluster } from "@mycelium-ip/core-sdk";
 import type { Commitment, Connection } from "@solana/web3.js";
 import { createContext } from "react";
 import type { MyceliumWallet } from "../types/wallet";
@@ -15,6 +15,8 @@ export interface MyceliumContextValue {
   client: MyceliumClient | null;
   /** Transaction confirmation level */
   confirmation: Commitment;
+  /** Target Solana cluster */
+  cluster: MyceliumCluster;
 }
 
 /**
