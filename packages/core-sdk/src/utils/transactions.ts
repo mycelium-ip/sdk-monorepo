@@ -21,10 +21,10 @@ export async function sendInstruction<E>(
     ...(confirmOptions ?? {}),
     ...(sendOptions ?? {}),
   });
-  const events = await parseTransactionEvents<E>(
+  const events = await parseTransactionEvents(
     provider.connection,
     signature,
     program,
   );
-  return { signature, event: events[0] as E };
+  return { signature, event: events[0]?.data as E };
 }

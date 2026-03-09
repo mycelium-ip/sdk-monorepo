@@ -136,12 +136,19 @@ export function useCreateEntityWithMetadata() {
           confirmation,
         );
 
-        // Parse both events emitted by the combined transaction.
+        // Parse events and filter by name (more robust than array indexing).
         const events = await client.ipCore.parseEvents(connection, signature);
         return {
           signature,
-          entityCreated: events[0] as EntityCreated | undefined,
-          entityMetadataCreated: events[1] as EntityMetadataCreated | undefined,
+          entityCreated: client.ipCore.findEventByName<EntityCreated>(
+            events,
+            "entityCreated",
+          ),
+          entityMetadataCreated:
+            client.ipCore.findEventByName<EntityMetadataCreated>(
+              events,
+              "entityMetadataCreated",
+            ),
         };
       },
       onSuccess: () => {

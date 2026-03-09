@@ -140,12 +140,18 @@ export function useCreateIpWithMetadata() {
           confirmation,
         );
 
-        // Parse both events emitted by the combined transaction.
+        // Parse events and filter by name (more robust than array indexing).
         const events = await client.ipCore.parseEvents(connection, signature);
         return {
           signature,
-          ipCreated: events[0] as IpCreated | undefined,
-          ipMetadataCreated: events[1] as IpMetadataCreated | undefined,
+          ipCreated: client.ipCore.findEventByName<IpCreated>(
+            events,
+            "ipCreated",
+          ),
+          ipMetadataCreated: client.ipCore.findEventByName<IpMetadataCreated>(
+            events,
+            "ipMetadataCreated",
+          ),
         };
       },
       onSuccess: () => {
