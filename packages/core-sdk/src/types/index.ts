@@ -92,7 +92,6 @@ export interface CreateMetadataSchemaParams {
 export interface CreateEntityMetadataParams {
   entity: PublicKey;
   schema: PublicKey;
-  revision: bigint | number;
   data: Uint8Array;
   cid: StringOrBytes;
   payer?: PublicKey;
@@ -102,7 +101,6 @@ export interface CreateIpMetadataParams {
   ip: PublicKey;
   ownerEntity: PublicKey;
   schema: PublicKey;
-  revision: bigint | number;
   data: Uint8Array;
   cid: StringOrBytes;
   payer?: PublicKey;

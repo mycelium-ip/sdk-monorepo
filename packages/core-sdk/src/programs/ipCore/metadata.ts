@@ -15,7 +15,7 @@ import type {
   SendTxOptions,
   TransactionResult,
 } from "../../types";
-import { sha256Hash, toFixedBytes, toU64Bn } from "../../utils/conversions";
+import { sha256Hash, toFixedBytes } from "../../utils/conversions";
 import { sendInstruction } from "../../utils/transactions";
 import type { IpCoreClient } from "./IpCoreClient";
 
@@ -65,15 +65,25 @@ export class MetadataModule {
     params: CreateEntityMetadataParams,
   ): Promise<TransactionInstruction> {
     const payer = this.resolveWalletPubkey(params.payer);
+
+    // Fetch the entity account to determine the next revision.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const entityAccount = await (
+      this.client.program.account as any
+    ).entity.fetch(params.entity);
+    const nextRevision =
+      BigInt(
+        (entityAccount.currentMetadataRevision as bigint | number).toString(),
+      ) + BigInt(1);
+
     const [metadata] = deriveEntityMetadataPda(
       params.entity,
-      params.revision,
+      nextRevision,
       this.client.program.programId,
     );
 
     return this.client.program.methods
       .createEntityMetadata(
-        toU64Bn(params.revision, "revision"),
         toFixedBytes(sha256Hash(params.data), 32, "hash"),
         toFixedBytes(params.cid, 96, "cid"),
       )
@@ -105,15 +115,25 @@ export class MetadataModule {
     params: CreateIpMetadataParams,
   ): Promise<TransactionInstruction> {
     const payer = this.resolveWalletPubkey(params.payer);
+
+    // Fetch the IP account to determine the next revision.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const ipAccount = await (
+      this.client.program.account as any
+    ).ipAccount.fetch(params.ip);
+    const nextRevision =
+      BigInt(
+        (ipAccount.currentMetadataRevision as bigint | number).toString(),
+      ) + BigInt(1);
+
     const [metadata] = deriveIpMetadataPda(
       params.ip,
-      params.revision,
+      nextRevision,
       this.client.program.programId,
     );
 
     return this.client.program.methods
       .createIpMetadata(
-        toU64Bn(params.revision, "revision"),
         toFixedBytes(sha256Hash(params.data), 32, "hash"),
         toFixedBytes(params.cid, 96, "cid"),
       )

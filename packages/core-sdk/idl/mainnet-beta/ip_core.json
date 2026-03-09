@@ -1,5 +1,5 @@
 {
-  "address": "47gfhX3eMBKzxHejX5n8HXxWSg8qi6DcbHDRRRXSoUUw",
+  "address": "CSSfTXVfCUmvZCEjPZxFne5EPewzTGCyYAybLNihLQM1",
   "metadata": {
     "name": "ip_core",
     "version": "0.1.0",
@@ -142,27 +142,7 @@
         {
           "name": "metadata",
           "docs": ["The metadata account to create (PDA)."],
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [109, 101, 116, 97, 100, 97, 116, 97]
-              },
-              {
-                "kind": "const",
-                "value": [101, 110, 116, 105, 116, 121]
-              },
-              {
-                "kind": "account",
-                "path": "entity"
-              },
-              {
-                "kind": "arg",
-                "path": "revision"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "entity",
@@ -186,10 +166,6 @@
         }
       ],
       "args": [
-        {
-          "name": "revision",
-          "type": "u64"
-        },
         {
           "name": "hash",
           "type": {
@@ -302,27 +278,7 @@
         {
           "name": "metadata",
           "docs": ["The metadata account to create (PDA)."],
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [109, 101, 116, 97, 100, 97, 116, 97]
-              },
-              {
-                "kind": "const",
-                "value": [105, 112]
-              },
-              {
-                "kind": "account",
-                "path": "ip"
-              },
-              {
-                "kind": "arg",
-                "path": "revision"
-              }
-            ]
-          }
+          "writable": true
         },
         {
           "name": "ip",
@@ -350,10 +306,6 @@
         }
       ],
       "args": [
-        {
-          "name": "revision",
-          "type": "u64"
-        },
         {
           "name": "hash",
           "type": {

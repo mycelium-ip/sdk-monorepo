@@ -4,6 +4,10 @@ import type { Connection, PublicKey } from "@solana/web3.js";
 import { getIdls, getProgramIds } from "../../constants/programs";
 import { deriveEntityPda } from "../../pda/entity";
 import { deriveIpPda } from "../../pda/ip";
+import {
+  deriveEntityMetadataPda,
+  deriveIpMetadataPda,
+} from "../../pda/metadata";
 import type { MyceliumCluster, StringOrBytes } from "../../types";
 import { sha256Hash } from "../../utils/conversions";
 import { parseTransactionEvents } from "../../utils/events";
@@ -101,6 +105,43 @@ export class IpCoreClient {
       contentHash,
       this.program.programId,
     );
+    return pda;
+  }
+
+  /**
+   * Derive the entity metadata PDA for the given entity and revision.
+   *
+   * Useful in compound transactions where the entity is created in the same tx
+   * and does not yet exist on-chain, so the metadata PDA must be pre-computed
+   * (e.g. for building a combined create-entity + create-metadata instruction).
+   *
+   * @param entity   - The entity public key
+   * @param revision - The metadata revision (1 for the first metadata entry)
+   */
+  deriveEntityMetadataAddress(
+    entity: PublicKey,
+    revision: bigint | number,
+  ): PublicKey {
+    const [pda] = deriveEntityMetadataPda(
+      entity,
+      revision,
+      this.program.programId,
+    );
+    return pda;
+  }
+
+  /**
+   * Derive the IP metadata PDA for the given IP and revision.
+   *
+   * Useful in compound transactions where the IP is created in the same tx
+   * and does not yet exist on-chain, so the metadata PDA must be pre-computed
+   * (e.g. for building a combined create-IP + create-metadata instruction).
+   *
+   * @param ip       - The IP public key
+   * @param revision - The metadata revision (1 for the first metadata entry)
+   */
+  deriveIpMetadataAddress(ip: PublicKey, revision: bigint | number): PublicKey {
+    const [pda] = deriveIpMetadataPda(ip, revision, this.program.programId);
     return pda;
   }
 }

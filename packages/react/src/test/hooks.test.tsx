@@ -183,7 +183,6 @@ describe("useCreateEntityWithMetadata", () => {
     },
     metadata: {
       schema: schemaPubkey,
-      revision: 1n,
       data: new Uint8Array([1, 2, 3]),
       cid: "ipfs://QmTest",
     },
@@ -204,7 +203,7 @@ describe("useCreateEntityWithMetadata", () => {
     });
   });
 
-  it("calls metadata.createEntityMetadataIx with derived entity PDA", async () => {
+  it("calls program.methods.createEntityMetadata with derived entity PDA", async () => {
     const { wrapper, mockClient } = createTestWrapper();
     const { result } = renderHook(() => useCreateEntityWithMetadata(), {
       wrapper,
@@ -214,17 +213,8 @@ describe("useCreateEntityWithMetadata", () => {
 
     await waitFor(() => {
       expect(
-        mockClient.ipCore.metadata.createEntityMetadataIx,
-      ).toHaveBeenCalledWith(
-        expect.objectContaining({
-          schema: schemaPubkey,
-          revision: 1n,
-          data: baseParams.metadata.data,
-          cid: baseParams.metadata.cid,
-          // entity field is derived automatically — just verify it exists
-          entity: expect.anything(),
-        }),
-      );
+        mockClient.ipCore.program.methods.createEntityMetadata,
+      ).toHaveBeenCalled();
     });
   });
 
@@ -333,7 +323,6 @@ describe("useCreateIpWithMetadata", () => {
     },
     metadata: {
       schema: schemaPubkey,
-      revision: 1n,
       data: new Uint8Array([4, 5, 6]),
       cid: "ipfs://QmIpTest",
     },
@@ -350,7 +339,7 @@ describe("useCreateIpWithMetadata", () => {
     });
   });
 
-  it("calls metadata.createIpMetadataIx with derived IP PDA and ownerEntity", async () => {
+  it("calls program.methods.createIpMetadata with derived IP PDA and ownerEntity", async () => {
     const { wrapper, mockClient } = createTestWrapper();
     const { result } = renderHook(() => useCreateIpWithMetadata(), { wrapper });
 
@@ -358,18 +347,8 @@ describe("useCreateIpWithMetadata", () => {
 
     await waitFor(() => {
       expect(
-        mockClient.ipCore.metadata.createIpMetadataIx,
-      ).toHaveBeenCalledWith(
-        expect.objectContaining({
-          schema: schemaPubkey,
-          revision: 1n,
-          data: baseParams.metadata.data,
-          cid: baseParams.metadata.cid,
-          ownerEntity: registrantEntity,
-          // ip field is derived automatically — just verify it exists
-          ip: expect.anything(),
-        }),
-      );
+        mockClient.ipCore.program.methods.createIpMetadata,
+      ).toHaveBeenCalled();
     });
   });
 

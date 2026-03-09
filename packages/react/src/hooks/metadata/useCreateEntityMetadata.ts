@@ -24,7 +24,6 @@ import { queryKeys } from "../queries/queryKeys";
  *     mutate({
  *       entity: entityPubkey,
  *       schema: schemaPubkey,
- *       revision: 1n,
  *       data: new TextEncoder().encode(JSON.stringify(metadata)),
  *       cid: "Qm...",
  *     });

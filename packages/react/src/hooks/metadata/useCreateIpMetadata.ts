@@ -25,7 +25,6 @@ import { queryKeys } from "../queries/queryKeys";
  *       ip: ipPubkey,
  *       ownerEntity: ownerEntity,
  *       schema: schemaPubkey,
- *       revision: 1n,
  *       data: new TextEncoder().encode(JSON.stringify(metadata)),
  *       cid: "Qm...",
  *     });

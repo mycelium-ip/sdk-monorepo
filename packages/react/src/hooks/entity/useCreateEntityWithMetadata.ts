@@ -6,7 +6,9 @@ import type {
   EntityCreated,
   EntityMetadataCreated,
 } from "@mycelium-ip/core-sdk";
+import { sha256Hash, toFixedBytes } from "@mycelium-ip/core-sdk";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { SystemProgram } from "@solana/web3.js";
 import { executeTransactionWithInstructions } from "../../utils/transaction";
 import { useMyceliumContext } from "../internal/useMyceliumContext";
 import { queryKeys } from "../queries/queryKeys";
@@ -97,13 +99,34 @@ export function useCreateEntityWithMetadata() {
           params.entity.handle,
         );
 
-        // Build both instructions in parallel.
+        // Derive the metadata PDA with revision 1 (entity is being created in
+        // the same tx and doesn't exist on-chain yet).
+        const metadata = client.ipCore.deriveEntityMetadataAddress(
+          entityPda,
+          1,
+        );
+
+        const payer = params.metadata.payer ?? wallet.publicKey;
+        if (!payer) {
+          throw new Error("Wallet not connected");
+        }
+
+        // Build both instructions in parallel using the Anchor program directly.
         const [entityIx, metadataIx] = await Promise.all([
           client.ipCore.entity.createIx(params.entity),
-          client.ipCore.metadata.createEntityMetadataIx({
-            ...params.metadata,
-            entity: entityPda,
-          }),
+          client.ipCore.program.methods
+            .createEntityMetadata(
+              toFixedBytes(sha256Hash(params.metadata.data), 32, "hash"),
+              toFixedBytes(params.metadata.cid, 96, "cid"),
+            )
+            .accounts({
+              metadata,
+              entity: entityPda,
+              schema: params.metadata.schema,
+              payer,
+              systemProgram: SystemProgram.programId,
+            })
+            .instruction(),
         ]);
 
         const { signature } = await executeTransactionWithInstructions(

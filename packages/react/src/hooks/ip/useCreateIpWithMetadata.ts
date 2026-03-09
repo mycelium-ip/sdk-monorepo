@@ -6,7 +6,9 @@ import type {
   IpCreated,
   IpMetadataCreated,
 } from "@mycelium-ip/core-sdk";
+import { sha256Hash, toFixedBytes } from "@mycelium-ip/core-sdk";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { SystemProgram } from "@solana/web3.js";
 import { executeTransactionWithInstructions } from "../../utils/transaction";
 import { useMyceliumContext } from "../internal/useMyceliumContext";
 import { queryKeys } from "../queries/queryKeys";
@@ -65,7 +67,6 @@ export interface CreateIpWithMetadataResult {
  *       },
  *       metadata: {
  *         schema: schemaPubkey,
- *         revision: 1n,
  *         data: new TextEncoder().encode(
  *           JSON.stringify({ title: "My Artwork", artist: "Anonymous" }),
  *         ),
@@ -104,14 +105,32 @@ export function useCreateIpWithMetadata() {
           params.ip.content,
         );
 
-        // Build both instructions in parallel.
+        // Derive the metadata PDA with revision 1 (IP is being created in
+        // the same tx and doesn't exist on-chain yet).
+        const metadata = client.ipCore.deriveIpMetadataAddress(ipPda, 1);
+
+        const payer = params.metadata.payer ?? wallet.publicKey;
+        if (!payer) {
+          throw new Error("Wallet not connected");
+        }
+
+        // Build both instructions in parallel using the Anchor program directly.
         const [ipIx, metadataIx] = await Promise.all([
           client.ipCore.ip.createIx(params.ip),
-          client.ipCore.metadata.createIpMetadataIx({
-            ...params.metadata,
-            ip: ipPda,
-            ownerEntity: params.ip.registrantEntity,
-          }),
+          client.ipCore.program.methods
+            .createIpMetadata(
+              toFixedBytes(sha256Hash(params.metadata.data), 32, "hash"),
+              toFixedBytes(params.metadata.cid, 96, "cid"),
+            )
+            .accounts({
+              metadata,
+              ip: ipPda,
+              ownerEntity: params.ip.registrantEntity,
+              schema: params.metadata.schema,
+              payer,
+              systemProgram: SystemProgram.programId,
+            })
+            .instruction(),
         ]);
 
         const { signature } = await executeTransactionWithInstructions(

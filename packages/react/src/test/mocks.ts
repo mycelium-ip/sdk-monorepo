@@ -181,6 +181,32 @@ function createMockDerivativeModule() {
 }
 
 /**
+ * Creates a chainable Anchor method mock (method → accounts → instruction).
+ */
+function createMockChainableMethod() {
+  const mockIx = createMockInstruction();
+  const chain = {
+    accounts: vi.fn(),
+    instruction: vi.fn().mockResolvedValue(mockIx),
+  };
+  chain.accounts.mockReturnValue(chain);
+  return vi.fn().mockReturnValue(chain);
+}
+
+/**
+ * Creates a mock Anchor program with a programId and chainable methods mock.
+ */
+function createMockProgram() {
+  return {
+    programId: Keypair.generate().publicKey,
+    methods: {
+      createEntityMetadata: createMockChainableMethod(),
+      createIpMetadata: createMockChainableMethod(),
+    },
+  };
+}
+
+/**
  * Creates a mock License license module.
  */
 function createMockLicenseModule() {
@@ -212,6 +238,7 @@ function createMockGrantModule() {
 export function createMockMyceliumClient(): MyceliumClient {
   return {
     ipCore: {
+      program: createMockProgram(),
       entity: createMockEntityModule(),
       ip: createMockIpModule(),
       metadata: createMockMetadataModule(),
@@ -227,6 +254,12 @@ export function createMockMyceliumClient(): MyceliumClient {
         .fn()
         .mockReturnValue(Keypair.generate().publicKey),
       deriveIpAddress: vi.fn().mockReturnValue(Keypair.generate().publicKey),
+      deriveEntityMetadataAddress: vi
+        .fn()
+        .mockReturnValue(Keypair.generate().publicKey),
+      deriveIpMetadataAddress: vi
+        .fn()
+        .mockReturnValue(Keypair.generate().publicKey),
     },
     license: {
       license: createMockLicenseModule(),
