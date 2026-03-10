@@ -12,6 +12,9 @@ import { queryKeys } from "../queries/queryKeys";
 /**
  * Hook to create a new IP (Intellectual Property) asset.
  *
+ * The treasury and payer token accounts are automatically derived from the
+ * protocol config if not provided.
+ *
  * @example
  * ```tsx
  * function CreateIpButton({ entityPubkey }: { entityPubkey: PublicKey }) {
@@ -21,8 +24,6 @@ import { queryKeys } from "../queries/queryKeys";
  *     mutate({
  *       registrantEntity: entityPubkey,
  *       content: new TextEncoder().encode("ip-content-hash"),
- *       treasuryTokenAccount: treasuryAccount,
- *       payerTokenAccount: payerAccount,
  *     });
  *   };
  *

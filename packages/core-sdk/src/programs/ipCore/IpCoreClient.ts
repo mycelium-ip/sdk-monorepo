@@ -1,15 +1,20 @@
 import type { AnchorProvider } from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
-import type { Connection, PublicKey } from "@solana/web3.js";
-import { getIdls, getProgramIds } from "../../constants/programs";
+import type { Connection } from "@solana/web3.js";
+import { PublicKey } from "@solana/web3.js";
+import { getIdls, getProgramIds, PDA_SEEDS } from "../../constants/programs";
 import { deriveEntityPda } from "../../pda/entity";
 import { deriveIpPda } from "../../pda/ip";
 import {
   deriveEntityMetadataPda,
   deriveIpMetadataPda,
 } from "../../pda/metadata";
-import type { MyceliumCluster, StringOrBytes } from "../../types";
-import { sha256Hash } from "../../utils/conversions";
+import type {
+  MyceliumCluster,
+  ProtocolConfig,
+  StringOrBytes,
+} from "../../types";
+import { sha256Hash, utf8Bytes } from "../../utils/conversions";
 import {
   findEventByName,
   parseTransactionEvents,
@@ -164,5 +169,38 @@ export class IpCoreClient {
   deriveIpMetadataAddress(ip: PublicKey, revision: bigint | number): PublicKey {
     const [pda] = deriveIpMetadataPda(ip, revision, this.program.programId);
     return pda;
+  }
+
+  /**
+   * Derive the protocol config PDA address.
+   *
+   * @returns The config PDA address
+   */
+  deriveConfigAddress(): PublicKey {
+    const [pda] = PublicKey.findProgramAddressSync(
+      [utf8Bytes(PDA_SEEDS.config)],
+      this.program.programId,
+    );
+    return pda;
+  }
+
+  /**
+   * Fetch the protocol configuration from the on-chain config account.
+   *
+   * @returns The protocol configuration
+   */
+  async fetchConfig(): Promise<ProtocolConfig> {
+    const configAddress = this.deriveConfigAddress();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const account = await (this.program.account as any).protocolConfig.fetch(
+      configAddress,
+    );
+    return {
+      authority: account.authority,
+      treasury: account.treasury,
+      registrationCurrency: account.registrationCurrency,
+      registrationFee: BigInt(account.registrationFee.toString()),
+      bump: account.bump,
+    };
   }
 }

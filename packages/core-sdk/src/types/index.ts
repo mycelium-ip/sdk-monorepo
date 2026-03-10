@@ -70,9 +70,33 @@ export interface UpdateEntityControllersParams {
 export interface CreateIpParams {
   registrantEntity: PublicKey;
   content: Uint8Array;
-  treasuryTokenAccount: PublicKey;
-  payerTokenAccount: PublicKey;
+  /**
+   * Treasury token account to receive registration fee.
+   * If omitted, derived from protocol config.
+   */
+  treasuryTokenAccount?: PublicKey;
+  /**
+   * Payer's token account for the registration currency.
+   * If omitted, derived as the ATA of the payer wallet for the registration currency.
+   */
+  payerTokenAccount?: PublicKey;
   payer?: PublicKey;
+}
+
+/**
+ * Protocol configuration fetched from the on-chain config account.
+ */
+export interface ProtocolConfig {
+  /** The authority allowed to update configuration. */
+  authority: PublicKey;
+  /** The treasury PDA that receives registration fees. */
+  treasury: PublicKey;
+  /** The SPL token mint for registration fees. */
+  registrationCurrency: PublicKey;
+  /** The fee amount required to register an IP. */
+  registrationFee: bigint;
+  /** PDA bump seed. */
+  bump: number;
 }
 
 export interface TransferIpParams {

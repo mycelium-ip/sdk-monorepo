@@ -11,6 +11,7 @@ import type {
   TransactionResult,
   TransferIpParams,
 } from "../../types";
+import { deriveAta } from "../../utils/ata";
 import { sha256Hash, toFixedBytes, utf8Bytes } from "../../utils/conversions";
 import { sendInstruction } from "../../utils/transactions";
 import type { IpCoreClient } from "./IpCoreClient";
@@ -37,6 +38,22 @@ export class IpModule {
       this.client.program.programId,
     );
 
+    // Derive token accounts if not provided
+    let treasuryTokenAccount = params.treasuryTokenAccount;
+    let payerTokenAccount = params.payerTokenAccount;
+
+    if (!treasuryTokenAccount || !payerTokenAccount) {
+      const protocolConfig = await this.client.fetchConfig();
+      const mint = protocolConfig.registrationCurrency;
+
+      if (!treasuryTokenAccount) {
+        treasuryTokenAccount = deriveAta(mint, treasury);
+      }
+      if (!payerTokenAccount) {
+        payerTokenAccount = deriveAta(mint, payer);
+      }
+    }
+
     return this.client.program.methods
       .createIp(toFixedBytes(contentHash, 32, "contentHash"))
       .accounts({
@@ -44,8 +61,8 @@ export class IpModule {
         registrantEntity: params.registrantEntity,
         config,
         treasury,
-        treasuryTokenAccount: params.treasuryTokenAccount,
-        payerTokenAccount: params.payerTokenAccount,
+        treasuryTokenAccount,
+        payerTokenAccount,
         payer,
         tokenProgram: new PublicKey(TOKEN_PROGRAM_ID),
         systemProgram: SystemProgram.programId,

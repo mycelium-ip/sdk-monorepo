@@ -1,6 +1,6 @@
 {
   "name": "@mycelium-ip/core-sdk",
-  "version": "0.2.0-alpha.5",
+  "version": "0.2.0-alpha.6",
   "private": false,
   "type": "module",
   "description": "Typescript Core SDK for Mycelium IP protocol in Solana",
@@ -37,6 +37,7 @@
   "dependencies": {
     "@coral-xyz/anchor": "^0.32.1",
     "@noble/hashes": "^2.0.1",
+    "@solana/spl-token": "^0.4.13",
     "@solana/web3.js": "^1.98.4"
   },
   "devDependencies": {
