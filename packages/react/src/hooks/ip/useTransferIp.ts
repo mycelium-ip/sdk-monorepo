@@ -35,8 +35,14 @@ import { queryKeys } from "../queries/queryKeys";
  * ```
  */
 export function useTransferIp() {
-  const { client, connection, wallet, confirmation, cluster } =
-    useMyceliumContext();
+  const {
+    client,
+    connection,
+    wallet,
+    confirmation,
+    cluster,
+    executeTransaction: customExecutor,
+  } = useMyceliumContext();
   const queryClient = useQueryClient();
   const isWalletConnected = wallet !== null;
 
@@ -54,6 +60,7 @@ export function useTransferIp() {
           confirmation,
           clusterToChain(cluster),
           (conn, sig) => client.ipCore.parseEvent<IpTransferred>(conn, sig),
+          customExecutor,
         );
       },
       onSuccess: () => {

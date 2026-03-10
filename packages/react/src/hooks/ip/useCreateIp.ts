@@ -38,8 +38,14 @@ import { queryKeys } from "../queries/queryKeys";
  * ```
  */
 export function useCreateIp() {
-  const { client, connection, wallet, confirmation, cluster } =
-    useMyceliumContext();
+  const {
+    client,
+    connection,
+    wallet,
+    confirmation,
+    cluster,
+    executeTransaction: customExecutor,
+  } = useMyceliumContext();
   const queryClient = useQueryClient();
   const isWalletConnected = wallet !== null;
 
@@ -57,6 +63,7 @@ export function useCreateIp() {
           confirmation,
           clusterToChain(cluster),
           (conn, sig) => client.ipCore.parseEvent<IpCreated>(conn, sig),
+          customExecutor,
         );
       },
       onSuccess: () => {

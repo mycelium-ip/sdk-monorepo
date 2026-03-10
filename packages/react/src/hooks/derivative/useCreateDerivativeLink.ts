@@ -40,8 +40,14 @@ import { queryKeys } from "../queries/queryKeys";
  * ```
  */
 export function useCreateDerivativeLink() {
-  const { client, connection, wallet, confirmation, cluster } =
-    useMyceliumContext();
+  const {
+    client,
+    connection,
+    wallet,
+    confirmation,
+    cluster,
+    executeTransaction: customExecutor,
+  } = useMyceliumContext();
   const queryClient = useQueryClient();
   const isWalletConnected = wallet !== null;
 
@@ -64,6 +70,7 @@ export function useCreateDerivativeLink() {
           clusterToChain(cluster),
           (conn, sig) =>
             client.ipCore.parseEvent<DerivativeLinkCreated>(conn, sig),
+          customExecutor,
         );
       },
       onSuccess: () => {

@@ -40,8 +40,14 @@ import { queryKeys } from "../queries/queryKeys";
  * ```
  */
 export function useUpdateDerivativeLicense() {
-  const { client, connection, wallet, confirmation, cluster } =
-    useMyceliumContext();
+  const {
+    client,
+    connection,
+    wallet,
+    confirmation,
+    cluster,
+    executeTransaction: customExecutor,
+  } = useMyceliumContext();
   const queryClient = useQueryClient();
   const isWalletConnected = wallet !== null;
 
@@ -65,6 +71,7 @@ export function useUpdateDerivativeLicense() {
           clusterToChain(cluster),
           (conn, sig) =>
             client.ipCore.parseEvent<DerivativeLicenseUpdated>(conn, sig),
+          customExecutor,
         );
       },
       onSuccess: () => {

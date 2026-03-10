@@ -37,8 +37,14 @@ import { queryKeys } from "../queries/queryKeys";
  * ```
  */
 export function useRevokeLicense() {
-  const { client, connection, wallet, confirmation, cluster } =
-    useMyceliumContext();
+  const {
+    client,
+    connection,
+    wallet,
+    confirmation,
+    cluster,
+    executeTransaction: customExecutor,
+  } = useMyceliumContext();
   const queryClient = useQueryClient();
   const isWalletConnected = wallet !== null;
 
@@ -60,6 +66,7 @@ export function useRevokeLicense() {
           confirmation,
           clusterToChain(cluster),
           (conn, sig) => client.license.parseEvent<LicenseRevoked>(conn, sig),
+          customExecutor,
         );
       },
       onSuccess: () => {

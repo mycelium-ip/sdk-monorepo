@@ -5,6 +5,7 @@ import type {
 } from "@mycelium-ip/core-sdk";
 import type { Commitment, Connection } from "@solana/web3.js";
 import { createContext } from "react";
+import type { TransactionExecutor } from "../types";
 
 /**
  * Context value provided by MyceliumIpProvider.
@@ -20,6 +21,8 @@ export interface MyceliumContextValue {
   confirmation: Commitment;
   /** Target Solana cluster */
   cluster: MyceliumCluster;
+  /** Optional custom transaction executor (e.g. for Privy sponsored transactions) */
+  executeTransaction?: TransactionExecutor;
 }
 
 /**

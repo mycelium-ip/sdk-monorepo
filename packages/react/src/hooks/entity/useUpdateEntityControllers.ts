@@ -38,8 +38,14 @@ import { queryKeys } from "../queries/queryKeys";
  * ```
  */
 export function useUpdateEntityControllers() {
-  const { client, connection, wallet, confirmation, cluster } =
-    useMyceliumContext();
+  const {
+    client,
+    connection,
+    wallet,
+    confirmation,
+    cluster,
+    executeTransaction: customExecutor,
+  } = useMyceliumContext();
   const queryClient = useQueryClient();
   const isWalletConnected = wallet !== null;
 
@@ -63,6 +69,7 @@ export function useUpdateEntityControllers() {
           clusterToChain(cluster),
           (conn, sig) =>
             client.ipCore.parseEvent<EntityControllersUpdated>(conn, sig),
+          customExecutor,
         );
       },
       onSuccess: () => {

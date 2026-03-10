@@ -76,6 +76,7 @@ export type {
   StandardWalletWrapper,
   UnsupportedFeatureError,
 } from "@mycelium-ip/core-sdk";
+export type { TransactionExecutor } from "./types";
 
 // Utilities
 export {

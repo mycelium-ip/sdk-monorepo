@@ -121,7 +121,10 @@ If you’re using [`@privy-io/react-auth`](https://docs.privy.io/) with Solana e
 ```tsx
 "use client";
 
-import { useSolanaWallets } from "@privy-io/react-auth/solana";
+import {
+  useWallets,
+  useSignAndSendTransaction,
+} from "@privy-io/react-auth/solana";
 import { usePrivy } from "@privy-io/react-auth";
 import { Connection } from "@solana/web3.js";
 import { MyceliumIpProvider } from "@mycelium-ip/react";
@@ -130,7 +133,8 @@ import { useMemo } from "react";
 
 function MyceliumPrivyProvider({ children }: { children: React.ReactNode }) {
   const { ready, authenticated } = usePrivy();
-  const { wallets } = useSolanaWallets();
+  const { wallets } = useWallets();
+  const { signAndSendTransaction } = useSignAndSendTransaction();
 
   const embeddedWallet = wallets[0];
 
@@ -155,7 +159,17 @@ function MyceliumPrivyProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <MyceliumIpProvider connection={connection} wallet={standardWallet}>
+    <MyceliumIpProvider
+      connection={connection}
+      wallet={standardWallet}
+      executeTransaction={async (tx) => {
+        const { hash } = await signAndSendTransaction({
+          transaction: tx,
+          options: { sponsor: true },
+        });
+        return { signature: hash };
+      }}
+    >
       {children}
     </MyceliumIpProvider>
   );

@@ -39,8 +39,14 @@ import { queryKeys } from "../queries/queryKeys";
  * ```
  */
 export function useCreateLicenseGrant() {
-  const { client, connection, wallet, confirmation, cluster } =
-    useMyceliumContext();
+  const {
+    client,
+    connection,
+    wallet,
+    confirmation,
+    cluster,
+    executeTransaction: customExecutor,
+  } = useMyceliumContext();
   const queryClient = useQueryClient();
   const isWalletConnected = wallet !== null;
 
@@ -63,6 +69,7 @@ export function useCreateLicenseGrant() {
           clusterToChain(cluster),
           (conn, sig) =>
             client.license.parseEvent<LicenseGrantCreated>(conn, sig),
+          customExecutor,
         );
       },
       onSuccess: () => {

@@ -89,8 +89,14 @@ export interface CreateIpWithMetadataResult {
  * ```
  */
 export function useCreateIpWithMetadata() {
-  const { client, connection, wallet, confirmation, cluster } =
-    useMyceliumContext();
+  const {
+    client,
+    connection,
+    wallet,
+    confirmation,
+    cluster,
+    executeTransaction: customExecutor,
+  } = useMyceliumContext();
   const queryClient = useQueryClient();
   const isWalletConnected = wallet !== null;
 
@@ -145,6 +151,7 @@ export function useCreateIpWithMetadata() {
           [ipIx, metadataIx],
           confirmation,
           clusterToChain(cluster),
+          customExecutor,
         );
 
         // Parse events and filter by name (more robust than array indexing).

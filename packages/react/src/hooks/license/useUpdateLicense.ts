@@ -38,8 +38,14 @@ import { queryKeys } from "../queries/queryKeys";
  * ```
  */
 export function useUpdateLicense() {
-  const { client, connection, wallet, confirmation, cluster } =
-    useMyceliumContext();
+  const {
+    client,
+    connection,
+    wallet,
+    confirmation,
+    cluster,
+    executeTransaction: customExecutor,
+  } = useMyceliumContext();
   const queryClient = useQueryClient();
   const isWalletConnected = wallet !== null;
 
@@ -61,6 +67,7 @@ export function useUpdateLicense() {
           confirmation,
           clusterToChain(cluster),
           (conn, sig) => client.license.parseEvent<LicenseUpdated>(conn, sig),
+          customExecutor,
         );
       },
       onSuccess: () => {

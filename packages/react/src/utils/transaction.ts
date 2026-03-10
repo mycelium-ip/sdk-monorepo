@@ -14,6 +14,7 @@ import {
   type SolanaChain,
 } from "@solana/wallet-standard-chains";
 import bs58 from "bs58";
+import type { TransactionExecutor } from "../types";
 
 /**
  * Result of executing a transaction.
@@ -43,6 +44,7 @@ export interface TransactionResult<E = void> {
  * @param confirmation - Commitment level for confirmation
  * @param chain        - Solana chain identifier (e.g. "solana:devnet")
  * @param eventParser  - Optional async callback that receives `(connection, signature)` and returns a decoded event
+ * @param customExecutor - Optional custom transaction executor (overrides wallet sign/send)
  * @returns TransactionResult including signature and optional event
  *
  * @throws Error if wallet is not connected (no publicKey)
@@ -54,6 +56,7 @@ export async function executeTransaction<E = void>(
   confirmation: Commitment,
   chain: SolanaChain,
   eventParser?: (connection: Connection, signature: string) => Promise<E>,
+  customExecutor?: TransactionExecutor,
 ): Promise<TransactionResult<E>> {
   if (!wallet) {
     throw new Error("Wallet not connected");
@@ -70,7 +73,11 @@ export async function executeTransaction<E = void>(
 
   let signature: string;
 
-  if (wallet.supportsFeature("solana:signAndSendTransaction")) {
+  if (customExecutor) {
+    // Custom executor path: delegate sign + send to the provided function
+    const result = await customExecutor(transaction);
+    signature = result.signature;
+  } else if (wallet.supportsFeature("solana:signAndSendTransaction")) {
     // Preferred path: wallet signs + sends in one step
     const output = await wallet.signAndSendTransaction(transaction, chain);
     signature = bs58.encode(output.signature);
@@ -109,6 +116,7 @@ export async function executeTransaction<E = void>(
  * @param instructions - Transaction instructions to execute
  * @param confirmation - Commitment level for confirmation
  * @param chain - Solana chain identifier (e.g. "solana:devnet")
+ * @param customExecutor - Optional custom transaction executor (overrides wallet sign/send)
  * @returns Transaction signature
  *
  * @throws Error if wallet is not connected (no publicKey)
@@ -119,6 +127,7 @@ export async function executeTransactionWithInstructions(
   instructions: TransactionInstruction[],
   confirmation: Commitment,
   chain: SolanaChain,
+  customExecutor?: TransactionExecutor,
 ): Promise<TransactionResult> {
   if (!wallet.publicKey) {
     throw new Error("Wallet not connected");
@@ -138,7 +147,11 @@ export async function executeTransactionWithInstructions(
 
   let signature: string;
 
-  if (wallet.supportsFeature("solana:signAndSendTransaction")) {
+  if (customExecutor) {
+    // Custom executor path: delegate sign + send to the provided function
+    const result = await customExecutor(transaction);
+    signature = result.signature;
+  } else if (wallet.supportsFeature("solana:signAndSendTransaction")) {
     const output = await wallet.signAndSendTransaction(transaction, chain);
     signature = bs58.encode(output.signature);
   } else {

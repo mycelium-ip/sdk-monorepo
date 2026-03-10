@@ -5,6 +5,7 @@ import type { Wallet } from "@wallet-standard/base";
 import type { Commitment, Connection } from "@solana/web3.js";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { type ReactNode, useMemo } from "react";
+import type { TransactionExecutor } from "../types";
 import { MyceliumContext, type MyceliumContextValue } from "./context";
 
 /**
@@ -39,6 +40,33 @@ export interface MyceliumIpProviderProps {
    * If omitted, the provider creates one.
    */
   queryClient?: QueryClient;
+
+  /**
+   * Custom transaction executor that replaces the default wallet sign → send
+   * flow. When provided, all mutation hooks will delegate to this function
+   * instead of using the wallet adapter to sign and send.
+   *
+   * The function receives a fully-built unsigned `Transaction` and must return
+   * `{ signature }`. The SDK still handles confirmation and event parsing.
+   *
+   * @example
+   * ```tsx
+   * // Privy sponsored transaction
+   * const { signAndSendTransaction } = useSignAndSendTransaction();
+   *
+   * <MyceliumIpProvider
+   *   executeTransaction={async (tx) => {
+   *     const { hash } = await signAndSendTransaction({
+   *       transaction: tx,
+   *       options: { sponsor: true },
+   *     });
+   *     return { signature: hash };
+   *   }}
+   *   // ...
+   * />
+   * ```
+   */
+  executeTransaction?: TransactionExecutor;
 
   /** Provider options */
   options?: MyceliumIpProviderOptions;
@@ -79,6 +107,7 @@ export function MyceliumIpProvider({
   connection,
   wallet,
   queryClient,
+  executeTransaction,
   options,
   children,
 }: MyceliumIpProviderProps) {
@@ -113,8 +142,9 @@ export function MyceliumIpProvider({
       client,
       confirmation,
       cluster,
+      executeTransaction,
     };
-  }, [connection, client, confirmation, cluster]);
+  }, [connection, client, confirmation, cluster, executeTransaction]);
 
   return (
     <QueryClientProvider client={resolvedQueryClient}>

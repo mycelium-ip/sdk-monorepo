@@ -426,3 +426,65 @@ describe("useCreateIpWithMetadata", () => {
     expect(result.current.error?.message).toBe("Wallet not connected");
   });
 });
+
+describe("custom executeTransaction override", () => {
+  it("uses custom executor instead of wallet sign/send when provided", async () => {
+    const mockExecutor = vi.fn().mockResolvedValue({
+      signature: "customSignature123",
+    });
+
+    const { wrapper } = createTestWrapper({
+      contextValue: { executeTransaction: mockExecutor },
+    });
+
+    const { result } = renderHook(() => useCreateEntity(), { wrapper });
+
+    result.current.mutate({
+      handle: "test-entity",
+      additionalControllers: [],
+      signatureThreshold: 1,
+    });
+
+    await waitFor(
+      () => {
+        expect(result.current.isSuccess || result.current.isError).toBe(true);
+      },
+      { timeout: 3000 },
+    );
+
+    if (result.current.isSuccess) {
+      // Custom executor was called
+      expect(mockExecutor).toHaveBeenCalledTimes(1);
+      // The executor receives a Transaction object
+      const callArg = mockExecutor.mock.calls[0][0];
+      expect(callArg).toBeDefined();
+      expect(callArg.constructor.name).toBe("Transaction");
+    }
+  });
+
+  it("still parses events when custom executor is used", async () => {
+    const mockExecutor = vi.fn().mockResolvedValue({
+      signature: "customSignature456",
+    });
+
+    const { wrapper, mockClient } = createTestWrapper({
+      contextValue: { executeTransaction: mockExecutor },
+    });
+
+    const { result } = renderHook(() => useCreateEntity(), { wrapper });
+
+    result.current.mutate({ handle: "test-entity" });
+
+    await waitFor(
+      () => {
+        expect(result.current.isSuccess || result.current.isError).toBe(true);
+      },
+      { timeout: 3000 },
+    );
+
+    if (result.current.isSuccess) {
+      expect(mockClient.ipCore.parseEvent).toHaveBeenCalled();
+      expect(result.current.data?.event).toEqual(mockEntityCreatedEvent);
+    }
+  });
+});

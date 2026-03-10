@@ -35,8 +35,14 @@ import { queryKeys } from "../queries/queryKeys";
  * ```
  */
 export function useCreateEntity() {
-  const { client, connection, wallet, confirmation, cluster } =
-    useMyceliumContext();
+  const {
+    client,
+    connection,
+    wallet,
+    confirmation,
+    cluster,
+    executeTransaction: customExecutor,
+  } = useMyceliumContext();
   const queryClient = useQueryClient();
   const isWalletConnected = wallet !== null;
 
@@ -55,6 +61,7 @@ export function useCreateEntity() {
             confirmation,
             clusterToChain(cluster),
             (conn, sig) => client.ipCore.parseEvent<EntityCreated>(conn, sig),
+            customExecutor,
           );
         },
         onSuccess: () => {
