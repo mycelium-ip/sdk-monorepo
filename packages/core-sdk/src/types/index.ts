@@ -112,7 +112,11 @@ export interface TransferIpParams {
 export interface CreateMetadataSchemaParams {
   id: StringOrBytes;
   version: StringOrBytes;
-  data: Uint8Array;
+  /**
+   * SHA-256 hash of the schema data (32 bytes).
+   * Use `sha256Hash()` from this package to compute the hash.
+   */
+  dataHash: Uint8Array;
   cid: StringOrBytes;
   creator?: PublicKey;
 }
@@ -120,7 +124,11 @@ export interface CreateMetadataSchemaParams {
 export interface CreateEntityMetadataParams {
   entity: PublicKey;
   schema: PublicKey;
-  data: Uint8Array;
+  /**
+   * SHA-256 hash of the metadata content (32 bytes).
+   * Use `sha256Hash()` from this package to compute the hash.
+   */
+  dataHash: Uint8Array;
   cid: StringOrBytes;
   payer?: PublicKey;
 }
@@ -129,7 +137,11 @@ export interface CreateIpMetadataParams {
   ip: PublicKey;
   ownerEntity: PublicKey;
   schema: PublicKey;
-  data: Uint8Array;
+  /**
+   * SHA-256 hash of the metadata content (32 bytes).
+   * Use `sha256Hash()` from this package to compute the hash.
+   */
+  dataHash: Uint8Array;
   cid: StringOrBytes;
   payer?: PublicKey;
 }

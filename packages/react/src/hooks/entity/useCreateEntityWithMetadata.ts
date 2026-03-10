@@ -6,7 +6,7 @@ import type {
   EntityCreated,
   EntityMetadataCreated,
 } from "@mycelium-ip/core-sdk";
-import { sha256Hash, toFixedBytes } from "@mycelium-ip/core-sdk";
+import { toFixedBytes } from "@mycelium-ip/core-sdk";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { SystemProgram } from "@solana/web3.js";
 import { executeTransactionWithInstructions } from "../../utils/transaction";
@@ -58,7 +58,7 @@ export interface CreateEntityWithMetadataResult {
  *       metadata: {
  *         schema: schemaPubkey,
  *         revision: 1n,
- *         data: new TextEncoder().encode(JSON.stringify({ name: "My Org" })),
+ *         dataHash: sha256Hash(new TextEncoder().encode(JSON.stringify({ name: "My Org" }))),
  *         cid: "ipfs://QmMetadata...",
  *       },
  *     });
@@ -116,7 +116,7 @@ export function useCreateEntityWithMetadata() {
           client.ipCore.entity.createIx(params.entity),
           client.ipCore.program.methods
             .createEntityMetadata(
-              toFixedBytes(sha256Hash(params.metadata.data), 32, "hash"),
+              toFixedBytes(params.metadata.dataHash, 32, "dataHash"),
               toFixedBytes(params.metadata.cid, 96, "cid"),
             )
             .accounts({

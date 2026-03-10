@@ -2,7 +2,7 @@ import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import type { Transaction, VersionedTransaction } from "@solana/web3.js";
 import { describe, expect, it } from "vitest";
 import { getProgramIds } from "../constants/programs";
-import { utf8Bytes } from "../utils/conversions";
+import { sha256Hash, utf8Bytes } from "../utils/conversions";
 import { MyceliumClient } from "./MyceliumClient";
 
 describe("MyceliumClient smoke", () => {
@@ -39,7 +39,7 @@ describe("MyceliumClient smoke", () => {
     const schemaIx = await client.ipCore.metadata.createSchemaIx({
       id: "default-schema",
       version: "v1",
-      data: utf8Bytes("schema-content"),
+      dataHash: sha256Hash(utf8Bytes("schema-content")),
       cid: "cid://schema",
     });
 

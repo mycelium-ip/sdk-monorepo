@@ -6,7 +6,7 @@ import type {
   IpCreated,
   IpMetadataCreated,
 } from "@mycelium-ip/core-sdk";
-import { sha256Hash, toFixedBytes } from "@mycelium-ip/core-sdk";
+import { toFixedBytes } from "@mycelium-ip/core-sdk";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { SystemProgram } from "@solana/web3.js";
 import { executeTransactionWithInstructions } from "../../utils/transaction";
@@ -67,8 +67,10 @@ export interface CreateIpWithMetadataResult {
  *       },
  *       metadata: {
  *         schema: schemaPubkey,
- *         data: new TextEncoder().encode(
- *           JSON.stringify({ title: "My Artwork", artist: "Anonymous" }),
+ *         dataHash: sha256Hash(
+ *           new TextEncoder().encode(
+ *             JSON.stringify({ title: "My Artwork", artist: "Anonymous" }),
+ *           ),
  *         ),
  *         cid: "ipfs://QmIpMetadata...",
  *       },
@@ -119,7 +121,7 @@ export function useCreateIpWithMetadata() {
           client.ipCore.ip.createIx(params.ip),
           client.ipCore.program.methods
             .createIpMetadata(
-              toFixedBytes(sha256Hash(params.metadata.data), 32, "hash"),
+              toFixedBytes(params.metadata.dataHash, 32, "dataHash"),
               toFixedBytes(params.metadata.cid, 96, "cid"),
             )
             .accounts({

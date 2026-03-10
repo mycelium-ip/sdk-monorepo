@@ -183,7 +183,7 @@ describe("useCreateEntityWithMetadata", () => {
     },
     metadata: {
       schema: schemaPubkey,
-      data: new Uint8Array([1, 2, 3]),
+      dataHash: new Uint8Array([1, 2, 3]),
       cid: "ipfs://QmTest",
     },
   };
@@ -323,7 +323,7 @@ describe("useCreateIpWithMetadata", () => {
     },
     metadata: {
       schema: schemaPubkey,
-      data: new Uint8Array([4, 5, 6]),
+      dataHash: new Uint8Array([4, 5, 6]),
       cid: "ipfs://QmIpTest",
     },
   };
