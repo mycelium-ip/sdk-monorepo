@@ -1,10 +1,10 @@
 import type { Idl } from "@coral-xyz/anchor";
 import { PublicKey } from "@solana/web3.js";
-import devnetIpCoreIdl from "../../idl/devnet/ip_core.json";
-import devnetLicenseIdl from "../../idl/devnet/license.json";
+import devnetIpCoreIdl from "../idl/devnet/ip_core.json";
+import devnetLicenseIdl from "../idl/devnet/license.json";
 // TODO: replace with actual mainnet-beta addresses once the programs are deployed.
-import mainnetBetaIpCoreIdl from "../../idl/mainnet-beta/ip_core.json";
-import mainnetBetaLicenseIdl from "../../idl/mainnet-beta/license.json";
+import mainnetBetaIpCoreIdl from "../idl/mainnet-beta/ip_core.json";
+import mainnetBetaLicenseIdl from "../idl/mainnet-beta/license.json";
 import type { MyceliumCluster } from "../types";
 
 type IdlWithAddress = {
