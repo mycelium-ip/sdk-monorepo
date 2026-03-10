@@ -314,7 +314,6 @@ The provider initializes the SDK and must wrap your application (or the part tha
   queryClient={queryClient} // optional
   options={{
     confirmation: "confirmed",
-    devtools: true,
   }}
 >
   <App />
@@ -335,7 +334,27 @@ The provider initializes the SDK and must wrap your application (or the part tha
 | Option         | Type         | Default       | Description                                                                  |
 | -------------- | ------------ | ------------- | ---------------------------------------------------------------------------- |
 | `confirmation` | `Commitment` | `"confirmed"` | Transaction confirmation level (`"processed"`, `"confirmed"`, `"finalized"`) |
-| `devtools`     | `boolean`    | `false`       | Enable TanStack Query devtools                                               |
+
+### Adding React Query Devtools
+
+To enable React Query devtools for debugging, install the devtools package and add it to your app:
+
+```bash
+pnpm add @tanstack/react-query-devtools
+```
+
+```tsx
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
+function App() {
+  return (
+    <MyceliumIpProvider connection={connection} wallet={wallet}>
+      <YourApp />
+      <ReactQueryDevtools initialIsOpen={false} />
+    </MyceliumIpProvider>
+  );
+}
+```
 
 ## Hooks Reference
 

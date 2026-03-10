@@ -3,7 +3,6 @@
 import { MyceliumClient, type MyceliumCluster } from "@mycelium-ip/core-sdk";
 import type { Commitment, Connection } from "@solana/web3.js";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { type ReactNode, useMemo } from "react";
 import type { MyceliumWallet } from "../types/wallet";
 import { MyceliumContext, type MyceliumContextValue } from "./context";
@@ -17,12 +16,6 @@ export interface MyceliumIpProviderOptions {
    * @default "confirmed"
    */
   confirmation?: Commitment;
-
-  /**
-   * Enable TanStack Query devtools.
-   * @default true in development, false in production
-   */
-  devtools?: boolean;
 
   /**
    * Target Solana cluster. Determines which program IDs are used.
@@ -90,7 +83,6 @@ export function MyceliumIpProvider({
   children,
 }: MyceliumIpProviderProps) {
   const confirmation = options?.confirmation ?? "confirmed";
-  const showDevtools = options?.devtools ?? false;
   const cluster: MyceliumCluster = options?.cluster ?? "devnet";
 
   // Create a default query client if none provided
@@ -143,7 +135,6 @@ export function MyceliumIpProvider({
       <MyceliumContext.Provider value={contextValue}>
         {children}
       </MyceliumContext.Provider>
-      {showDevtools && <ReactQueryDevtools initialIsOpen={false} />}
     </QueryClientProvider>
   );
 }

@@ -1,6 +1,6 @@
 {
   "name": "@mycelium-ip/react",
-  "version": "0.1.0-alpha.11",
+  "version": "0.1.0-alpha.12",
   "private": false,
   "type": "module",
   "description": "React hooks for the Mycelium IP protocol",
@@ -44,9 +44,6 @@
     "react": ">=18"
   },
   "devDependencies": {
-    "@solana/web3.js": "^1.98.0",
-    "@tanstack/react-query": "^5.76.2",
-    "@tanstack/react-query-devtools": "^5.76.2",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@types/react": "^19.0.0",
