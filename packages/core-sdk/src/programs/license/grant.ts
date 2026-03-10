@@ -9,7 +9,7 @@ import type {
   SendTxOptions,
   TransactionResult,
 } from "../../types";
-import { toI64Bn } from "../../utils/conversions";
+import { toI64Bn } from "../../utils/bn";
 import { sendInstruction } from "../../utils/transactions";
 import type { LicenseClient } from "./LicenseClient";
 

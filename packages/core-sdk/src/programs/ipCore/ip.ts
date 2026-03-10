@@ -12,7 +12,7 @@ import type {
   TransferIpParams,
 } from "../../types";
 import { deriveAta } from "../../utils/ata";
-import { toFixedBytes, utf8Bytes } from "../../utils/conversions";
+import { toFixedBytes, utf8Bytes } from "../../utils/bytes";
 import { sendInstruction } from "../../utils/transactions";
 import type { IpCoreClient } from "./IpCoreClient";
 

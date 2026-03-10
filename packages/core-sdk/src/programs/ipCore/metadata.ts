@@ -15,7 +15,7 @@ import type {
   SendTxOptions,
   TransactionResult,
 } from "../../types";
-import { toFixedBytes } from "../../utils/conversions";
+import { toFixedBytes } from "../../utils/bytes";
 import { sendInstruction } from "../../utils/transactions";
 import type { IpCoreClient } from "./IpCoreClient";
 

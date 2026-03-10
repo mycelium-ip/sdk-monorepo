@@ -14,7 +14,7 @@ import type {
   ProtocolConfig,
   StringOrBytes,
 } from "../../types";
-import { utf8Bytes } from "../../utils/conversions";
+import { utf8Bytes } from "../../utils/bytes";
 import {
   findEventByName,
   parseTransactionEvents,

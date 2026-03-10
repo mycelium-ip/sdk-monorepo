@@ -1,12 +1,7 @@
 import { describe, expect, it } from "vitest";
-import {
-  sha256Hash,
-  toFixedBytes,
-  u64SeedBytes,
-  utf8Bytes,
-} from "./conversions";
+import { sha256Hash, toFixedBytes, u64SeedBytes, utf8Bytes } from "./bytes";
 
-describe("conversions", () => {
+describe("bytes", () => {
   it("computes sha256 hash returning 32 bytes", () => {
     const hash = sha256Hash(utf8Bytes("hello"));
     expect(hash).toBeInstanceOf(Uint8Array);

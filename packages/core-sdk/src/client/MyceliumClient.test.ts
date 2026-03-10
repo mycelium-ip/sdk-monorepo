@@ -2,7 +2,7 @@ import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import type { Transaction, VersionedTransaction } from "@solana/web3.js";
 import { describe, expect, it } from "vitest";
 import { getProgramIds } from "../constants/programs";
-import { sha256Hash, utf8Bytes } from "../utils/conversions";
+import { sha256Hash, utf8Bytes } from "../utils/bytes";
 import { MyceliumClient } from "./MyceliumClient";
 
 describe("MyceliumClient smoke", () => {

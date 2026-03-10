@@ -1,7 +1,7 @@
 import { PublicKey } from "@solana/web3.js";
 import { PDA_SEEDS } from "../constants/programs";
 import type { StringOrBytes } from "../types";
-import { toFixedBytes, u64SeedBytes, utf8Bytes } from "../utils/conversions";
+import { toFixedBytes, u64SeedBytes, utf8Bytes } from "../utils/bytes";
 
 export function deriveMetadataSchemaPda(
   id: StringOrBytes,

@@ -1,6 +1,6 @@
 import { PublicKey } from "@solana/web3.js";
 import { PDA_SEEDS } from "../constants/programs";
-import { utf8Bytes } from "../utils/conversions";
+import { utf8Bytes } from "../utils/bytes";
 
 export function deriveIpPda(
   registrantEntity: PublicKey,

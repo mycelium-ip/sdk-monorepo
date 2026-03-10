@@ -1,7 +1,7 @@
 import { PublicKey } from "@solana/web3.js";
 import { PDA_SEEDS } from "../constants/programs";
 import type { StringOrBytes } from "../types";
-import { toFixedBytes, utf8Bytes } from "../utils/conversions";
+import { toFixedBytes, utf8Bytes } from "../utils/bytes";
 
 export function deriveEntityPda(
   creator: PublicKey,

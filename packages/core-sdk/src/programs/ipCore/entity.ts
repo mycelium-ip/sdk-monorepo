@@ -9,7 +9,7 @@ import type {
   TransactionResult,
   UpdateEntityControllersParams,
 } from "../../types";
-import { toFixedBytes } from "../../utils/conversions";
+import { toFixedBytes } from "../../utils/bytes";
 import { sendInstruction } from "../../utils/transactions";
 import type { IpCoreClient } from "./IpCoreClient";
 
