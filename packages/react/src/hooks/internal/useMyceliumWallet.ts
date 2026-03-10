@@ -1,15 +1,15 @@
 "use client";
 
-import type { MyceliumWallet } from "../../types/wallet";
+import type { StandardWalletWrapper } from "@mycelium-ip/core-sdk";
 import { useMyceliumContext } from "./useMyceliumContext";
 
 export interface UseMyceliumWalletResult {
-  wallet: MyceliumWallet | null;
+  wallet: StandardWalletWrapper | null;
   isConnected: boolean;
 }
 
 /**
- * Returns the MyceliumWallet from context and a connection status flag.
+ * Returns the StandardWalletWrapper from context and a connection status flag.
  *
  * @throws Error if used outside of MyceliumIpProvider
  *
@@ -23,6 +23,6 @@ export interface UseMyceliumWalletResult {
  */
 export function useMyceliumWallet(): UseMyceliumWalletResult {
   const { wallet } = useMyceliumContext();
-  const isConnected = wallet !== null && wallet.publicKey !== null;
+  const isConnected = wallet !== null;
   return { wallet, isConnected };
 }

@@ -1,29 +1,52 @@
 import { Connection, Keypair, PublicKey } from "@solana/web3.js";
-import type { Transaction, VersionedTransaction } from "@solana/web3.js";
-import { describe, expect, it } from "vitest";
+import type { Wallet, WalletAccount } from "@wallet-standard/base";
+import { describe, expect, it, vi } from "vitest";
 import { getProgramIds } from "../constants/programs";
 import { sha256Hash, utf8Bytes } from "../utils/bytes";
 import { MyceliumClient } from "./MyceliumClient";
 
+function createTestWallet(publicKey?: PublicKey): Wallet {
+  const pk = publicKey ?? Keypair.generate().publicKey;
+  const account: WalletAccount = {
+    address: pk.toBase58(),
+    publicKey: pk.toBytes(),
+    chains: ["solana:devnet"],
+    features: ["solana:signTransaction", "solana:signMessage"],
+  };
+  return {
+    version: "1.0.0" as const,
+    name: "Test Wallet",
+    icon: "data:image/svg+xml;base64," as `data:image/${"svg+xml" | "webp" | "png" | "gif"};base64,${string}`,
+    chains: ["solana:devnet"],
+    accounts: [account],
+    features: {
+      "solana:signTransaction": {
+        version: "1.0.0" as const,
+        supportedTransactionVersions: ["legacy" as const, 0 as const],
+        signTransaction: vi
+          .fn()
+          .mockResolvedValue([
+            { signedTransaction: new Uint8Array([1, 2, 3]) },
+          ]),
+      },
+      "solana:signMessage": {
+        version: "1.0.0" as const,
+        signMessage: vi
+          .fn()
+          .mockResolvedValue([
+            {
+              signedMessage: new Uint8Array(32),
+              signature: new Uint8Array(64),
+            },
+          ]),
+      },
+    },
+  };
+}
+
 describe("MyceliumClient smoke", () => {
   it("builds instructions from each module", async () => {
-    const walletKeypair = Keypair.generate();
-    const wallet = {
-      publicKey: walletKeypair.publicKey,
-      async signTransaction<T extends Transaction | VersionedTransaction>(
-        transaction: T,
-      ): Promise<T> {
-        return transaction;
-      },
-      async signAllTransactions<T extends Transaction | VersionedTransaction>(
-        transactions: T[],
-      ): Promise<T[]> {
-        return transactions;
-      },
-      async signMessage(message: Uint8Array): Promise<Uint8Array> {
-        return message;
-      },
-    };
+    const wallet = createTestWallet();
 
     const client = new MyceliumClient({
       connection: new Connection("http://localhost:8899", "processed"),
@@ -87,20 +110,7 @@ describe("MyceliumClient smoke", () => {
 
 describe("MyceliumClient cluster", () => {
   it("defaults to devnet program IDs", () => {
-    const walletKeypair = Keypair.generate();
-    const wallet = {
-      publicKey: walletKeypair.publicKey,
-      async signTransaction<T extends Transaction | VersionedTransaction>(
-        transaction: T,
-      ): Promise<T> {
-        return transaction;
-      },
-      async signAllTransactions<T extends Transaction | VersionedTransaction>(
-        transactions: T[],
-      ): Promise<T[]> {
-        return transactions;
-      },
-    };
+    const wallet = createTestWallet();
 
     const client = new MyceliumClient({
       connection: new Connection("http://localhost:8899", "processed"),
@@ -117,20 +127,7 @@ describe("MyceliumClient cluster", () => {
   });
 
   it("uses mainnet-beta program IDs when cluster is mainnet-beta", () => {
-    const walletKeypair = Keypair.generate();
-    const wallet = {
-      publicKey: walletKeypair.publicKey,
-      async signTransaction<T extends Transaction | VersionedTransaction>(
-        transaction: T,
-      ): Promise<T> {
-        return transaction;
-      },
-      async signAllTransactions<T extends Transaction | VersionedTransaction>(
-        transactions: T[],
-      ): Promise<T[]> {
-        return transactions;
-      },
-    };
+    const wallet = createTestWallet();
 
     const client = new MyceliumClient({
       connection: new Connection("http://localhost:8899", "processed"),

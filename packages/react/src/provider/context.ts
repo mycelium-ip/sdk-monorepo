@@ -1,7 +1,10 @@
-import type { MyceliumClient, MyceliumCluster } from "@mycelium-ip/core-sdk";
+import type {
+  MyceliumClient,
+  MyceliumCluster,
+  StandardWalletWrapper,
+} from "@mycelium-ip/core-sdk";
 import type { Commitment, Connection } from "@solana/web3.js";
 import { createContext } from "react";
-import type { MyceliumWallet } from "../types/wallet";
 
 /**
  * Context value provided by MyceliumIpProvider.
@@ -9,8 +12,8 @@ import type { MyceliumWallet } from "../types/wallet";
 export interface MyceliumContextValue {
   /** Solana RPC connection */
   connection: Connection;
-  /** Wallet implementing the MyceliumWallet interface, or null when not connected */
-  wallet: MyceliumWallet | null;
+  /** Wallet Standard wrapper, or null when not connected */
+  wallet: StandardWalletWrapper | null;
   /** Core SDK client instance, or null when wallet is not connected */
   client: MyceliumClient | null;
   /** Transaction confirmation level */

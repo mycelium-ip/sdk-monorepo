@@ -4,7 +4,16 @@ import type {
   TransactionInstruction,
 } from "@solana/web3.js";
 import { Transaction } from "@solana/web3.js";
-import type { MyceliumWallet } from "../types/wallet";
+import type {
+  MyceliumCluster,
+  StandardWalletWrapper,
+} from "@mycelium-ip/core-sdk";
+import {
+  SOLANA_DEVNET_CHAIN,
+  SOLANA_MAINNET_CHAIN,
+  type SolanaChain,
+} from "@solana/wallet-standard-chains";
+import bs58 from "bs58";
 
 /**
  * Result of executing a transaction.
@@ -23,17 +32,16 @@ export interface TransactionResult<E = void> {
 /**
  * Execute the full transaction lifecycle.
  *
- * 1. Build transaction from instruction
- * 2. Set recent blockhash
- * 3. Sign transaction using wallet
- * 4. Send transaction to the network
- * 5. Confirm transaction with specified commitment level
- * 6. Optionally parse and attach a strongly-typed Anchor event
+ * When the wallet supports `solana:signAndSendTransaction`, that feature is
+ * preferred (the wallet handles signing and sending in one step). Otherwise
+ * the function falls back to signing locally and sending via the RPC
+ * connection.
  *
  * @param connection   - Solana RPC connection
- * @param wallet       - Wallet for signing
+ * @param wallet       - StandardWalletWrapper for signing
  * @param instruction  - Transaction instruction to execute
  * @param confirmation - Commitment level for confirmation
+ * @param chain        - Solana chain identifier (e.g. "solana:devnet")
  * @param eventParser  - Optional async callback that receives `(connection, signature)` and returns a decoded event
  * @returns TransactionResult including signature and optional event
  *
@@ -41,12 +49,13 @@ export interface TransactionResult<E = void> {
  */
 export async function executeTransaction<E = void>(
   connection: Connection,
-  wallet: MyceliumWallet | null,
+  wallet: StandardWalletWrapper | null,
   instruction: TransactionInstruction,
   confirmation: Commitment,
+  chain: SolanaChain,
   eventParser?: (connection: Connection, signature: string) => Promise<E>,
 ): Promise<TransactionResult<E>> {
-  if (!wallet?.publicKey) {
+  if (!wallet) {
     throw new Error("Wallet not connected");
   }
 
@@ -59,14 +68,20 @@ export async function executeTransaction<E = void>(
   transaction.recentBlockhash = blockhash;
   transaction.feePayer = wallet.publicKey;
 
-  // Sign the transaction
-  const signed = await wallet.signTransaction(transaction);
+  let signature: string;
 
-  // Send the transaction
-  const signature = await connection.sendRawTransaction(signed.serialize(), {
-    skipPreflight: false,
-    preflightCommitment: confirmation,
-  });
+  if (wallet.supportsFeature("solana:signAndSendTransaction")) {
+    // Preferred path: wallet signs + sends in one step
+    const output = await wallet.signAndSendTransaction(transaction, chain);
+    signature = bs58.encode(output.signature);
+  } else {
+    // Fallback: sign locally, send via connection
+    const signed = await wallet.signTransaction(transaction);
+    signature = await connection.sendRawTransaction(signed.serialize(), {
+      skipPreflight: false,
+      preflightCommitment: confirmation,
+    });
+  }
 
   // Confirm the transaction
   await connection.confirmTransaction(
@@ -90,18 +105,20 @@ export async function executeTransaction<E = void>(
  * Execute multiple instructions in a single transaction.
  *
  * @param connection - Solana RPC connection
- * @param wallet - Wallet for signing
+ * @param wallet - StandardWalletWrapper for signing
  * @param instructions - Transaction instructions to execute
  * @param confirmation - Commitment level for confirmation
+ * @param chain - Solana chain identifier (e.g. "solana:devnet")
  * @returns Transaction signature
  *
  * @throws Error if wallet is not connected (no publicKey)
  */
 export async function executeTransactionWithInstructions(
   connection: Connection,
-  wallet: MyceliumWallet,
+  wallet: StandardWalletWrapper,
   instructions: TransactionInstruction[],
   confirmation: Commitment,
+  chain: SolanaChain,
 ): Promise<TransactionResult> {
   if (!wallet.publicKey) {
     throw new Error("Wallet not connected");
@@ -119,14 +136,18 @@ export async function executeTransactionWithInstructions(
   transaction.recentBlockhash = blockhash;
   transaction.feePayer = wallet.publicKey;
 
-  // Sign the transaction
-  const signed = await wallet.signTransaction(transaction);
+  let signature: string;
 
-  // Send the transaction
-  const signature = await connection.sendRawTransaction(signed.serialize(), {
-    skipPreflight: false,
-    preflightCommitment: confirmation,
-  });
+  if (wallet.supportsFeature("solana:signAndSendTransaction")) {
+    const output = await wallet.signAndSendTransaction(transaction, chain);
+    signature = bs58.encode(output.signature);
+  } else {
+    const signed = await wallet.signTransaction(transaction);
+    signature = await connection.sendRawTransaction(signed.serialize(), {
+      skipPreflight: false,
+      preflightCommitment: confirmation,
+    });
+  }
 
   // Confirm the transaction
   await connection.confirmTransaction(
@@ -139,4 +160,16 @@ export async function executeTransactionWithInstructions(
   );
 
   return { signature };
+}
+
+/**
+ * Map a {@link MyceliumCluster} to its Wallet Standard {@link SolanaChain}.
+ */
+export function clusterToChain(cluster: MyceliumCluster): SolanaChain {
+  switch (cluster) {
+    case "mainnet-beta":
+      return SOLANA_MAINNET_CHAIN;
+    case "devnet":
+      return SOLANA_DEVNET_CHAIN;
+  }
 }

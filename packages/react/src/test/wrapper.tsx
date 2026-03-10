@@ -7,7 +7,7 @@ import {
 import {
   createMockConnection,
   createMockMyceliumClient,
-  createMockWallet,
+  createMockWalletWrapper,
 } from "./mocks";
 
 interface TestWrapperOptions {
@@ -30,7 +30,7 @@ export function createTestWrapper(options: TestWrapperOptions = {}) {
   });
 
   const mockConnection = createMockConnection();
-  const mockWallet = createMockWallet();
+  const mockWallet = createMockWalletWrapper();
   const mockClient = createMockMyceliumClient();
 
   const contextValue: MyceliumContextValue = {

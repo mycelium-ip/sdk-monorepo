@@ -3,6 +3,7 @@
 import type { IpTransferred, TransferIpParams } from "@mycelium-ip/core-sdk";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
+  clusterToChain,
   executeTransaction,
   type TransactionResult,
 } from "../../utils/transaction";
@@ -34,9 +35,10 @@ import { queryKeys } from "../queries/queryKeys";
  * ```
  */
 export function useTransferIp() {
-  const { client, connection, wallet, confirmation } = useMyceliumContext();
+  const { client, connection, wallet, confirmation, cluster } =
+    useMyceliumContext();
   const queryClient = useQueryClient();
-  const isWalletConnected = wallet !== null && wallet.publicKey !== null;
+  const isWalletConnected = wallet !== null;
 
   return {
     ...useMutation<TransactionResult<IpTransferred>, Error, TransferIpParams>({
@@ -50,6 +52,7 @@ export function useTransferIp() {
           wallet,
           instruction,
           confirmation,
+          clusterToChain(cluster),
           (conn, sig) => client.ipCore.parseEvent<IpTransferred>(conn, sig),
         );
       },

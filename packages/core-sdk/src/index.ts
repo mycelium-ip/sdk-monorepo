@@ -8,3 +8,4 @@ export * from "./utils/events";
 export * from "./utils/provider";
 export * from "./utils/transactions";
 export * from "./pda";
+export * from "./wallet";

@@ -1,6 +1,6 @@
 {
   "name": "@mycelium-ip/react",
-  "version": "0.1.0-alpha.13",
+  "version": "0.1.0-alpha.14",
   "private": false,
   "type": "module",
   "description": "React hooks for the Mycelium IP protocol",
@@ -36,7 +36,10 @@
     }
   },
   "dependencies": {
-    "@mycelium-ip/core-sdk": "workspace:^"
+    "@mycelium-ip/core-sdk": "workspace:^",
+    "@solana/wallet-standard-chains": "^1.1.1",
+    "@wallet-standard/base": "^1.1.0",
+    "bs58": "^6.0.0"
   },
   "peerDependencies": {
     "@solana/web3.js": ">=1.87.0",

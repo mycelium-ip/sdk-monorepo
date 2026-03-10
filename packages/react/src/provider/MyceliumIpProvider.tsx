@@ -1,10 +1,10 @@
 "use client";
 
 import { MyceliumClient, type MyceliumCluster } from "@mycelium-ip/core-sdk";
+import type { Wallet } from "@wallet-standard/base";
 import type { Commitment, Connection } from "@solana/web3.js";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { type ReactNode, useMemo } from "react";
-import type { MyceliumWallet } from "../types/wallet";
 import { MyceliumContext, type MyceliumContextValue } from "./context";
 
 /**
@@ -31,8 +31,8 @@ export interface MyceliumIpProviderProps {
   /** Solana RPC connection (required) */
   connection: Connection;
 
-  /** Wallet implementing the MyceliumWallet interface (optional; mutations will throw when null/undefined) */
-  wallet?: MyceliumWallet | null;
+  /** Wallet Standard–compliant wallet (optional; mutations will throw when null/undefined) */
+  wallet?: Wallet | null;
 
   /**
    * Existing TanStack Query client.
@@ -91,29 +91,15 @@ export function MyceliumIpProvider({
     [queryClient],
   );
 
-  // Create the core SDK client
+  // Create the core SDK client (and its internal StandardWalletWrapper)
   const client = useMemo(() => {
-    // Only create client if wallet exists and has a public key
-    if (!wallet?.publicKey) {
+    if (!wallet || wallet.accounts.length === 0) {
       return null;
     }
 
     return new MyceliumClient({
       connection,
-      wallet: {
-        publicKey: wallet.publicKey,
-        signTransaction: (tx) => wallet.signTransaction(tx),
-        signAllTransactions:
-          wallet.signAllTransactions ??
-          (async (txs) => {
-            const signed = [];
-            for (const tx of txs) {
-              signed.push(await wallet.signTransaction(tx));
-            }
-            return signed;
-          }),
-        signMessage: wallet.signMessage,
-      },
+      wallet,
       cluster,
     });
   }, [connection, wallet, cluster]);
@@ -123,12 +109,12 @@ export function MyceliumIpProvider({
   const contextValue = useMemo<MyceliumContextValue>(() => {
     return {
       connection,
-      wallet: wallet ?? null,
+      wallet: client?.wallet ?? null,
       client,
       confirmation,
       cluster,
     };
-  }, [connection, wallet, client, confirmation, cluster]);
+  }, [connection, client, confirmation, cluster]);
 
   return (
     <QueryClientProvider client={resolvedQueryClient}>

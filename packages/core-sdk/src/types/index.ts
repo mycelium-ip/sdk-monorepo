@@ -1,34 +1,22 @@
 import type { AnchorProvider } from "@coral-xyz/anchor";
+import type { Wallet } from "@wallet-standard/base";
 import type {
   Commitment,
   ConfirmOptions,
   Connection,
   PublicKey,
   SendOptions,
-  Transaction,
-  VersionedTransaction,
 } from "@solana/web3.js";
 
 export * from "./events";
 
 export type StringOrBytes = string | Uint8Array | number[];
 
-export interface WalletAdapterLike {
-  publicKey: PublicKey | null;
-  signTransaction<T extends Transaction | VersionedTransaction>(
-    transaction: T,
-  ): Promise<T>;
-  signAllTransactions<T extends Transaction | VersionedTransaction>(
-    transactions: T[],
-  ): Promise<T[]>;
-  signMessage?(message: Uint8Array): Promise<Uint8Array>;
-}
-
 export type MyceliumCluster = "devnet" | "mainnet-beta";
 
 export interface MyceliumClientOptions {
   connection: Connection;
-  wallet: WalletAdapterLike;
+  wallet: Wallet;
   commitment?: Commitment;
   confirmOptions?: ConfirmOptions;
   /** Target Solana cluster. Determines which program IDs are used. @default 'devnet' */

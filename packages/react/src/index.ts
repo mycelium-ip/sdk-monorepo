@@ -72,10 +72,14 @@ export {
   type MyceliumIpProviderProps,
 } from "./provider/MyceliumIpProvider";
 // Types
-export type { MyceliumWallet } from "./types/wallet";
+export type {
+  StandardWalletWrapper,
+  UnsupportedFeatureError,
+} from "@mycelium-ip/core-sdk";
 
 // Utilities
 export {
+  clusterToChain,
   executeTransaction,
   executeTransactionWithInstructions,
   type TransactionResult,

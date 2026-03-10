@@ -1,4 +1,5 @@
 import type { MyceliumClient } from "@mycelium-ip/core-sdk";
+import { StandardWalletWrapper } from "@mycelium-ip/core-sdk";
 import type {
   EntityCreated,
   EntityMetadataCreated,
@@ -6,14 +7,15 @@ import type {
   IpMetadataCreated,
   LicenseCreated,
 } from "@mycelium-ip/core-sdk";
+import type { Wallet, WalletAccount } from "@wallet-standard/base";
 import {
   type Connection,
   Keypair,
   type PublicKey,
-  type Transaction,
+  Transaction,
 } from "@solana/web3.js";
+
 import { vi } from "vitest";
-import type { MyceliumWallet } from "../types/wallet";
 
 /**
  * Mock EntityCreated event emitted when an entity is created.
@@ -94,29 +96,66 @@ export function createMockConnection(): Connection {
 }
 
 /**
- * Creates a mock wallet.
+ * Creates a mock Wallet Standard wallet.
+ *
+ * Returns a {@link Wallet} that satisfies the Wallet Standard interface with
+ * `solana:signTransaction` and `solana:signMessage` features.
  */
-export function createMockWallet(publicKey?: PublicKey): MyceliumWallet {
+export function createMockWallet(publicKey?: PublicKey): Wallet {
   const keypair = Keypair.generate();
   const pk = publicKey ?? keypair.publicKey;
 
-  return {
-    publicKey: pk,
-    signTransaction: vi.fn().mockImplementation(async (tx) => {
-      // Return a mock transaction with the required methods
-      const mockTx = Object.create(tx);
-      mockTx.serialize = () => Buffer.from([1, 2, 3]);
-      return mockTx;
-    }),
-    signAllTransactions: vi.fn().mockImplementation(async (txs) => {
-      return txs.map((tx: Transaction) => {
-        const mockTx = Object.create(tx);
-        mockTx.serialize = () => Buffer.from([1, 2, 3]);
-        return mockTx;
-      });
-    }),
-    signMessage: vi.fn().mockResolvedValue(new Uint8Array(64)),
+  const mockSignedTx = new Transaction();
+  (mockSignedTx as unknown as { serialize: () => Buffer }).serialize = () =>
+    Buffer.from([1, 2, 3]);
+
+  const account: WalletAccount = {
+    address: pk.toBase58(),
+    publicKey: pk.toBytes(),
+    chains: ["solana:devnet"],
+    features: ["solana:signTransaction", "solana:signMessage"],
   };
+
+  return {
+    version: "1.0.0" as const,
+    name: "Mock Wallet",
+    icon: "data:image/svg+xml;base64," as `data:image/${
+      | "svg+xml"
+      | "webp"
+      | "png"
+      | "gif"};base64,${string}`,
+    chains: ["solana:devnet"],
+    accounts: [account],
+    features: {
+      "solana:signTransaction": {
+        version: "1.0.0" as const,
+        supportedTransactionVersions: ["legacy" as const, 0 as const],
+        signTransaction: vi.fn().mockResolvedValue([
+          {
+            signedTransaction: new Uint8Array([1, 2, 3]),
+          },
+        ]),
+      },
+      "solana:signMessage": {
+        version: "1.0.0" as const,
+        signMessage: vi.fn().mockResolvedValue([
+          {
+            signedMessage: new Uint8Array(32),
+            signature: new Uint8Array(64),
+          },
+        ]),
+      },
+    },
+  };
+}
+
+/**
+ * Creates a {@link StandardWalletWrapper} from a mock wallet.
+ */
+export function createMockWalletWrapper(
+  publicKey?: PublicKey,
+): StandardWalletWrapper {
+  return new StandardWalletWrapper(createMockWallet(publicKey));
 }
 
 /**

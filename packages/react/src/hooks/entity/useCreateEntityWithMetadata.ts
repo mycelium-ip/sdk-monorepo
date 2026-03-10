@@ -9,7 +9,10 @@ import type {
 import { toFixedBytes } from "@mycelium-ip/core-sdk";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { SystemProgram } from "@solana/web3.js";
-import { executeTransactionWithInstructions } from "../../utils/transaction";
+import {
+  clusterToChain,
+  executeTransactionWithInstructions,
+} from "../../utils/transaction";
 import { useMyceliumContext } from "../internal/useMyceliumContext";
 import { queryKeys } from "../queries/queryKeys";
 
@@ -73,9 +76,10 @@ export interface CreateEntityWithMetadataResult {
  * ```
  */
 export function useCreateEntityWithMetadata() {
-  const { client, connection, wallet, confirmation } = useMyceliumContext();
+  const { client, connection, wallet, confirmation, cluster } =
+    useMyceliumContext();
   const queryClient = useQueryClient();
-  const isWalletConnected = wallet !== null && wallet.publicKey !== null;
+  const isWalletConnected = wallet !== null;
 
   return {
     ...useMutation<
@@ -134,6 +138,7 @@ export function useCreateEntityWithMetadata() {
           wallet,
           [entityIx, metadataIx],
           confirmation,
+          clusterToChain(cluster),
         );
 
         // Parse events and filter by name (more robust than array indexing).

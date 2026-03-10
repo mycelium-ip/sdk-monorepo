@@ -25,6 +25,7 @@ import {
 Main exports include:
 
 - `MyceliumClient`
+- `StandardWalletWrapper`, `isStandardWallet`, `walletSupportsFeature`, `UnsupportedFeatureError`
 - program constants (`PROGRAM_IDS`, `getProgramIds`, `PDA_SEEDS`)
 - `MyceliumCluster` type (`'devnet' | 'mainnet-beta'`)
 - PDA helpers (`deriveEntityPda`, `deriveIpPda`, `deriveMetadataSchemaPda`, etc.)
@@ -51,6 +52,9 @@ The SDK depends on:
 
 - `@coral-xyz/anchor`
 - `@solana/web3.js`
+- `@wallet-standard/base`
+- `@solana/wallet-standard-features`
+- `@solana/wallet-standard-chains`
 
 ---
 
@@ -59,48 +63,75 @@ The SDK depends on:
 You need:
 
 1. A `Connection` to a Solana cluster
-2. A wallet object compatible with the SDK wallet interface:
-   - `publicKey`
-   - `signTransaction(tx)`
-   - `signAllTransactions(txs)`
-   - optional `signMessage(message)`
+2. A [Wallet Standard](https://github.com/wallet-standard/wallet-standard)–compliant `Wallet` object
 
-### Wallet interface shape
+The SDK uses the **Wallet Standard** (`@wallet-standard/base`) as its native wallet interface. Any wallet that implements the standard `Wallet` interface can be passed directly — no adapter layer required.
+
+### Required wallet features
+
+- `solana:signTransaction` — **required**; the SDK throws `UnsupportedFeatureError` at construction time if absent
+- `solana:signAndSendTransaction` — optional; preferred for transaction submission when available
+- `solana:signMessage` — optional
+
+### Wallet Standard interface (from `@wallet-standard/base`)
 
 ```ts
-import type {
-  Transaction,
-  VersionedTransaction,
-  PublicKey,
-} from "@solana/web3.js";
+import type { Wallet } from "@wallet-standard/base";
 
-export interface WalletAdapterLike {
-  publicKey: PublicKey | null;
-  signTransaction<T extends Transaction | VersionedTransaction>(
-    transaction: T,
-  ): Promise<T>;
-  signAllTransactions<T extends Transaction | VersionedTransaction>(
-    transactions: T[],
-  ): Promise<T[]>;
-  signMessage?(message: Uint8Array): Promise<Uint8Array>;
+// The Wallet interface includes:
+interface Wallet {
+  readonly version: "1.0.0";
+  readonly name: string;
+  readonly icon: WalletIcon;
+  readonly chains: readonly IdentifierString[];
+  readonly features: Readonly<Record<string, unknown>>;
+  readonly accounts: readonly WalletAccount[];
 }
 ```
 
-> `wallet.publicKey` must be present when creating `MyceliumClient`.
+> The wallet must have at least one account. `MyceliumClient` derives the signer `PublicKey` from `wallet.accounts[0].publicKey`.
+
+### StandardWalletWrapper
+
+Internally, `MyceliumClient` wraps the `Wallet` in a `StandardWalletWrapper` that provides an SDK-friendly API and satisfies Anchor's provider shape:
+
+```ts
+import { StandardWalletWrapper } from "@mycelium-ip/core-sdk";
+
+// Access the wrapper from the client
+const sdk = new MyceliumClient({ connection, wallet });
+sdk.wallet; // StandardWalletWrapper
+sdk.wallet.publicKey; // PublicKey
+sdk.wallet.signTransaction(tx); // signs via solana:signTransaction
+sdk.wallet.supportsFeature("solana:signAndSendTransaction"); // boolean
+```
+
+### Type guard
+
+```ts
+import { isStandardWallet } from "@mycelium-ip/core-sdk";
+
+if (isStandardWallet(unknownValue)) {
+  // unknownValue is typed as Wallet
+  const sdk = new MyceliumClient({ connection, wallet: unknownValue });
+}
+```
 
 ---
 
 ## Initialize the SDK
 
-### Browser / Next.js (wallet-adapter style)
+### Browser / Next.js
 
 ```ts
 import { Connection } from "@solana/web3.js";
 import { MyceliumClient } from "@mycelium-ip/core-sdk";
+import type { Wallet } from "@wallet-standard/base";
 
 const connection = new Connection("https://api.devnet.solana.com", "confirmed");
 
-// Example: wallet from @solana/wallet-adapter-react or similar
+// `wallet` is any Wallet Standard–compliant wallet
+// (e.g. from @solana/wallet-standard-wallet-adapter, Privy, or a browser extension)
 const sdk = new MyceliumClient({
   connection,
   wallet,
@@ -109,35 +140,43 @@ const sdk = new MyceliumClient({
 });
 ```
 
-### Node.js (custom signer-backed wallet)
+### Node.js (Keypair-backed wallet)
+
+For server-side or testing use, construct a minimal `Wallet` that satisfies the standard:
 
 ```ts
-import {
-  Connection,
-  Keypair,
-  Transaction,
-  VersionedTransaction,
-} from "@solana/web3.js";
-import { MyceliumClient, type WalletAdapterLike } from "@mycelium-ip/core-sdk";
+import { Connection, Keypair, Transaction } from "@solana/web3.js";
+import { MyceliumClient } from "@mycelium-ip/core-sdk";
+import type { Wallet, WalletAccount } from "@wallet-standard/base";
 
 const payer = Keypair.generate();
 const connection = new Connection("https://api.devnet.solana.com", "confirmed");
 
-const wallet: WalletAdapterLike = {
-  publicKey: payer.publicKey,
-  async signTransaction<T extends Transaction | VersionedTransaction>(tx: T) {
-    if (tx instanceof VersionedTransaction) {
-      tx.sign([payer]);
-      return tx;
-    }
+const account: WalletAccount = {
+  address: payer.publicKey.toBase58(),
+  publicKey: payer.publicKey.toBytes(),
+  chains: ["solana:devnet"],
+  features: ["solana:signTransaction"],
+};
 
-    tx.partialSign(payer);
-    return tx;
-  },
-  async signAllTransactions<T extends Transaction | VersionedTransaction>(
-    txs: T[],
-  ) {
-    return Promise.all(txs.map((tx) => wallet.signTransaction(tx)));
+const wallet: Wallet = {
+  version: "1.0.0",
+  name: "Node Keypair Wallet",
+  icon: "data:image/svg+xml;base64," as any,
+  chains: ["solana:devnet"],
+  accounts: [account],
+  features: {
+    "solana:signTransaction": {
+      version: "1.0.0",
+      supportedTransactionVersions: ["legacy", 0],
+      signTransaction: async (...inputs) => {
+        return inputs.map(({ transaction }) => {
+          const tx = Transaction.from(transaction);
+          tx.partialSign(payer);
+          return { signedTransaction: new Uint8Array(tx.serialize()) };
+        });
+      },
+    },
   },
 };
 
@@ -299,8 +338,8 @@ Useful for byte-length constrained protocol fields and integer conversions:
 
 ## Common pitfalls
 
-- `wallet.publicKey` is required at initialization; missing key throws.
-- Sender methods require wallet signing capability (`signTransaction`/`signAllTransactions`).
+- The wallet must have at least one account (`wallet.accounts[0]`); an empty accounts array throws at construction.
+- The `solana:signTransaction` feature is **required**; missing it throws `UnsupportedFeatureError`.
 - Program IDs default from bundled IDLs, with fallback constants if IDL address is absent.
 - `MyceliumClientOptions.commitment` exists in types but is currently not consumed directly by `MyceliumClient`; use `confirmOptions` for provider/send behavior.
 

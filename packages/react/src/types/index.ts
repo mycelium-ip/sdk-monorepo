@@ -1,1 +1,4 @@
-export type { MyceliumWallet } from "./wallet";
+export type {
+  StandardWalletWrapper,
+  UnsupportedFeatureError,
+} from "@mycelium-ip/core-sdk";

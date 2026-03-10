@@ -6,6 +6,7 @@ import type {
 } from "@mycelium-ip/core-sdk";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
+  clusterToChain,
   executeTransaction,
   type TransactionResult,
 } from "../../utils/transaction";
@@ -38,9 +39,10 @@ import { queryKeys } from "../queries/queryKeys";
  * ```
  */
 export function useCreateEntityMetadata() {
-  const { client, connection, wallet, confirmation } = useMyceliumContext();
+  const { client, connection, wallet, confirmation, cluster } =
+    useMyceliumContext();
   const queryClient = useQueryClient();
-  const isWalletConnected = wallet !== null && wallet.publicKey !== null;
+  const isWalletConnected = wallet !== null;
 
   return {
     ...useMutation<
@@ -59,6 +61,7 @@ export function useCreateEntityMetadata() {
           wallet,
           instruction,
           confirmation,
+          clusterToChain(cluster),
           (conn, sig) =>
             client.ipCore.parseEvent<EntityMetadataCreated>(conn, sig),
         );

@@ -4,7 +4,7 @@ React hooks for the Mycelium IP protocol. This package provides a wallet-agnosti
 
 ## Features
 
-- **Wallet-agnostic** — Works with any wallet (Solana Wallet Adapter, Privy, embedded wallets)
+- **Wallet Standard native** — Uses the [Wallet Standard](https://github.com/wallet-standard/wallet-standard) (`@wallet-standard/base`) as its first-class wallet interface
 - **TanStack Query powered** — Built-in caching, loading states, and automatic cache invalidation
 - **Next.js compatible** — Works with client components out of the box
 - **TypeScript first** — Full type safety with comprehensive TypeScript definitions
@@ -36,11 +36,12 @@ npm install @solana/web3.js @tanstack/react-query react
 ```tsx
 import { Connection } from "@solana/web3.js";
 import { MyceliumIpProvider, useCreateEntity } from "@mycelium-ip/react";
+import type { Wallet } from "@wallet-standard/base";
 
 // 1. Wrap your app with the provider
 function App() {
   const connection = new Connection("https://api.devnet.solana.com");
-  const wallet = useYourWalletAdapter(); // See Wallet Integration section
+  const wallet: Wallet = useYourWallet(); // Any Wallet Standard–compliant wallet
 
   return (
     <MyceliumIpProvider connection={connection} wallet={wallet}>
@@ -71,65 +72,42 @@ function CreateEntityButton() {
 
 ## Wallet Integration
 
-The SDK is completely wallet-agnostic. You provide a wallet object implementing the `MyceliumWallet` interface, allowing integration with any wallet provider.
+The SDK uses the **Wallet Standard** (`@wallet-standard/base`) as its native wallet interface. Pass any `Wallet` that implements the standard directly to the provider — no adapter shim required.
 
-### MyceliumWallet Interface
+### Required wallet features
 
-```typescript
-interface MyceliumWallet {
-  /** The public key of the connected wallet (null if not connected) */
-  publicKey: PublicKey | null;
-
-  /** Signs a single transaction */
-  signTransaction<T extends Transaction | VersionedTransaction>(
-    transaction: T,
-  ): Promise<T>;
-
-  /** Signs multiple transactions (optional) */
-  signAllTransactions?<T extends Transaction | VersionedTransaction>(
-    transactions: T[],
-  ): Promise<T[]>;
-
-  /** Signs an arbitrary message (optional) */
-  signMessage?(message: Uint8Array): Promise<Uint8Array>;
-}
-```
+- `solana:signTransaction` — **required**; the SDK throws `UnsupportedFeatureError` if absent
+- `solana:signAndSendTransaction` — optional; preferred for transaction submission when available
+- `solana:signMessage` — optional
 
 ### Solana Wallet Adapter
 
-If you're using [`@solana/wallet-adapter-react`](https://github.com/solana-labs/wallet-adapter):
+If you’re using [`@solana/wallet-adapter-react`](https://github.com/solana-labs/wallet-adapter), the `useWallet()` hook already returns a Wallet Standard–compliant wallet via the `wallet.adapter.wallet` property when the user connects a Standard-compatible browser extension. Use the `@solana/wallet-standard-wallet-adapter-base` package to obtain it:
 
 ```tsx
 "use client";
 
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useConnection } from "@solana/wallet-adapter-react";
-import { MyceliumIpProvider, type MyceliumWallet } from "@mycelium-ip/react";
-import { useMemo } from "react";
+import { MyceliumIpProvider } from "@mycelium-ip/react";
+import { isStandardWallet } from "@mycelium-ip/core-sdk";
 
 function MyceliumProvider({ children }: { children: React.ReactNode }) {
   const { connection } = useConnection();
-  const { publicKey, signTransaction, signAllTransactions, signMessage } =
-    useWallet();
+  const { wallet } = useWallet();
 
-  // Adapt Wallet Adapter to MyceliumWallet interface
-  const wallet = useMemo<MyceliumWallet>(
-    () => ({
-      publicKey,
-      signTransaction: signTransaction!,
-      signAllTransactions,
-      signMessage,
-    }),
-    [publicKey, signTransaction, signAllTransactions, signMessage],
-  );
+  // The adapter’s underlying Wallet Standard wallet
+  const standardWallet =
+    wallet?.adapter && "wallet" in wallet.adapter
+      ? (wallet.adapter as any).wallet
+      : null;
 
-  // Don't render provider until wallet is connected
-  if (!publicKey || !signTransaction) {
+  if (!standardWallet || !isStandardWallet(standardWallet)) {
     return <>{children}</>;
   }
 
   return (
-    <MyceliumIpProvider connection={connection} wallet={wallet}>
+    <MyceliumIpProvider connection={connection} wallet={standardWallet}>
       {children}
     </MyceliumIpProvider>
   );
@@ -138,26 +116,22 @@ function MyceliumProvider({ children }: { children: React.ReactNode }) {
 
 ### Privy Embedded Wallet
 
-If you're using [`@privy-io/react-auth`](https://docs.privy.io/) with Solana embedded wallets:
+If you’re using [`@privy-io/react-auth`](https://docs.privy.io/) with Solana embedded wallets, Privy wallets already implement the Wallet Standard. Pass the wallet directly:
 
 ```tsx
 "use client";
 
 import { useSolanaWallets } from "@privy-io/react-auth/solana";
 import { usePrivy } from "@privy-io/react-auth";
-import { Connection, PublicKey, Transaction } from "@solana/web3.js";
-import { MyceliumIpProvider, type MyceliumWallet } from "@mycelium-ip/react";
+import { Connection } from "@solana/web3.js";
+import { MyceliumIpProvider } from "@mycelium-ip/react";
+import { isStandardWallet } from "@mycelium-ip/core-sdk";
 import { useMemo } from "react";
-
-// Minimal Privy Solana signing types to avoid external type imports
-type PrivySolanaSignTransactionInput = { transaction: Uint8Array };
-type PrivySolanaSignTransactionOutput = { signedTransaction: Uint8Array };
 
 function MyceliumPrivyProvider({ children }: { children: React.ReactNode }) {
   const { ready, authenticated } = usePrivy();
   const { wallets } = useSolanaWallets();
 
-  // Get the embedded wallet (or first available wallet)
   const embeddedWallet = wallets[0];
 
   const connection = useMemo(
@@ -165,73 +139,23 @@ function MyceliumPrivyProvider({ children }: { children: React.ReactNode }) {
     [],
   );
 
-  // Adapt Privy wallet to MyceliumWallet interface
-  const wallet = useMemo<MyceliumWallet | null>(() => {
-    if (!embeddedWallet?.address) return null;
+  // If the Privy wallet exposes a Wallet Standard object, use it directly
+  const standardWallet =
+    embeddedWallet && "wallet" in embeddedWallet
+      ? (embeddedWallet as any).wallet
+      : null;
 
-    const signTransaction = async (tx: Transaction): Promise<Transaction> => {
-      if (!embeddedWallet?.signTransaction) {
-        throw new Error("Wallet does not support signTransaction");
-      }
-      const input: PrivySolanaSignTransactionInput = {
-        transaction: tx.serialize({
-          requireAllSignatures: false,
-          verifySignatures: false,
-        }),
-      };
-      const result:
-        | PrivySolanaSignTransactionOutput
-        | PrivySolanaSignTransactionOutput[] =
-        await embeddedWallet.signTransaction(input);
-      const outputs = Array.isArray(result) ? result : [result];
-      const output = outputs[0];
-      const signedTx = Transaction.from(Buffer.from(output.signedTransaction));
-      return signedTx;
-    };
-
-    const signAllTransactions = async (
-      txs: Transaction[],
-    ): Promise<Transaction[]> => {
-      // Many Privy wallets don't implement batch signing
-      // Prefer batch signing via variadic inputs when available
-      const inputs: PrivySolanaSignTransactionInput[] = txs.map((tx) => ({
-        transaction: tx.serialize() as Uint8Array,
-      }));
-      const batch:
-        | PrivySolanaSignTransactionOutput
-        | PrivySolanaSignTransactionOutput[] =
-        await embeddedWallet.signTransaction(...inputs);
-      const outputs: PrivySolanaSignTransactionOutput[] = Array.isArray(batch)
-        ? batch
-        : [batch];
-      return outputs.map((o) =>
-        Transaction.from(Buffer.from(o.signedTransaction)),
-      );
-    };
-
-    const signMessage = async (message: Uint8Array): Promise<Uint8Array> => {
-      if (!embeddedWallet?.signMessage) {
-        throw new Error("Wallet does not support signMessage");
-      }
-      const result = await embeddedWallet.signMessage({ message });
-      return result.signedMessage;
-    };
-
-    return {
-      publicKey: new PublicKey(embeddedWallet.address),
-      signTransaction,
-      signAllTransactions,
-      signMessage,
-    } as MyceliumWallet;
-  }, [embeddedWallet]);
-
-  // Wait for Privy to be ready and user to be authenticated
-  if (!ready || !authenticated || !wallet) {
+  if (
+    !ready ||
+    !authenticated ||
+    !standardWallet ||
+    !isStandardWallet(standardWallet)
+  ) {
     return <>{children}</>;
   }
 
   return (
-    <MyceliumIpProvider connection={connection} wallet={wallet}>
+    <MyceliumIpProvider connection={connection} wallet={standardWallet}>
       {children}
     </MyceliumIpProvider>
   );
@@ -242,7 +166,7 @@ export default MyceliumPrivyProvider;
 
 #### Complete Privy Setup Example
 
-Here's a complete example showing how to set up Privy with Mycelium in a Next.js App Router application:
+Here’s a complete example showing how to set up Privy with Mycelium in a Next.js App Router application:
 
 ```tsx
 // app/providers.tsx
@@ -301,6 +225,8 @@ export default function RootLayout({
 }
 ```
 
+````
+
 ## Provider
 
 ### MyceliumIpProvider
@@ -318,16 +244,16 @@ The provider initializes the SDK and must wrap your application (or the part tha
 >
   <App />
 </MyceliumIpProvider>
-```
+````
 
 ### Props
 
-| Prop          | Type                        | Required | Description                                                             |
-| ------------- | --------------------------- | -------- | ----------------------------------------------------------------------- |
-| `connection`  | `Connection`                | Yes      | Solana RPC connection                                                   |
-| `wallet`      | `MyceliumWallet`            | Yes      | Wallet implementing the MyceliumWallet interface                        |
-| `queryClient` | `QueryClient`               | No       | Existing TanStack Query client. If omitted, a default client is created |
-| `options`     | `MyceliumIpProviderOptions` | No       | Provider configuration options                                          |
+| Prop          | Type                        | Required | Description                                                                           |
+| ------------- | --------------------------- | -------- | ------------------------------------------------------------------------------------- |
+| `connection`  | `Connection`                | Yes      | Solana RPC connection                                                                 |
+| `wallet`      | `Wallet \| null`            | No       | Wallet Standard–compliant wallet (`@wallet-standard/base`). Mutations throw when null |
+| `queryClient` | `QueryClient`               | No       | Existing TanStack Query client. If omitted, a default client is created               |
+| `options`     | `MyceliumIpProviderOptions` | No       | Provider configuration options                                                        |
 
 ### Options
 
@@ -840,7 +766,7 @@ function MyComponent() {
   // Get the Solana connection
   const connection = useMyceliumConnection();
 
-  // Get the wallet
+  // Get the wallet (StandardWalletWrapper | null)
   const wallet = useMyceliumWallet();
 
   // Get everything at once
@@ -1058,11 +984,15 @@ export type {
   MyceliumContextValue,
 } from "@mycelium-ip/react";
 
-// Wallet type
-export type { MyceliumWallet } from "@mycelium-ip/react";
+// Wallet types (re-exported from @mycelium-ip/core-sdk)
+export type {
+  StandardWalletWrapper,
+  UnsupportedFeatureError,
+} from "@mycelium-ip/react";
 
 // Transaction utilities
 export {
+  clusterToChain,
   executeTransaction,
   executeTransactionWithInstructions,
 } from "@mycelium-ip/react";
