@@ -317,7 +317,7 @@ describe("useCreateIpWithMetadata", () => {
   const baseParams = {
     ip: {
       registrantEntity,
-      content: new Uint8Array([10, 20, 30]),
+      contentHash: new Uint8Array(32).fill(1), // 32-byte mock hash
       treasuryTokenAccount: treasuryAccount,
       payerTokenAccount: payerAccount,
     },

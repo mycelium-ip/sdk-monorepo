@@ -21,9 +21,10 @@ import { queryKeys } from "../queries/queryKeys";
  *   const { mutate, isPending } = useCreateIp();
  *
  *   const handleCreate = () => {
+ *     // Use sha256Hash() from @mycelium-ip/core-sdk to hash your content
  *     mutate({
  *       registrantEntity: entityPubkey,
- *       content: new TextEncoder().encode("ip-content-hash"),
+ *       contentHash: sha256Hash(new TextEncoder().encode("my-content")),
  *     });
  *   };
  *

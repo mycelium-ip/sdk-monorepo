@@ -14,7 +14,7 @@ import type {
   ProtocolConfig,
   StringOrBytes,
 } from "../../types";
-import { sha256Hash, utf8Bytes } from "../../utils/conversions";
+import { utf8Bytes } from "../../utils/conversions";
 import {
   findEventByName,
   parseTransactionEvents,
@@ -116,16 +116,18 @@ export class IpCoreClient {
   }
 
   /**
-   * Derive the IP PDA for the given registrant entity and content.
+   * Derive the IP PDA for the given registrant entity and content hash.
    *
    * Useful when you need the IP address before the IP has been created on-chain,
    * e.g. to populate subsequent instructions in the same transaction.
    *
    * @param registrantEntity - The registrant entity public key
-   * @param content          - The raw IP content (will be hashed internally)
+   * @param contentHash      - SHA-256 hash of the IP content (32 bytes)
    */
-  deriveIpAddress(registrantEntity: PublicKey, content: Uint8Array): PublicKey {
-    const contentHash = sha256Hash(content);
+  deriveIpAddress(
+    registrantEntity: PublicKey,
+    contentHash: Uint8Array,
+  ): PublicKey {
     const [pda] = deriveIpPda(
       registrantEntity,
       contentHash,

@@ -69,7 +69,11 @@ export interface UpdateEntityControllersParams {
 
 export interface CreateIpParams {
   registrantEntity: PublicKey;
-  content: Uint8Array;
+  /**
+   * SHA-256 hash of the IP content (32 bytes).
+   * Use `sha256Hash()` from this package to compute the hash.
+   */
+  contentHash: Uint8Array;
   /**
    * Treasury token account to receive registration fee.
    * If omitted, derived from protocol config.

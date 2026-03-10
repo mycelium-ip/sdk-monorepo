@@ -12,7 +12,7 @@ import type {
   TransferIpParams,
 } from "../../types";
 import { deriveAta } from "../../utils/ata";
-import { sha256Hash, toFixedBytes, utf8Bytes } from "../../utils/conversions";
+import { toFixedBytes, utf8Bytes } from "../../utils/conversions";
 import { sendInstruction } from "../../utils/transactions";
 import type { IpCoreClient } from "./IpCoreClient";
 
@@ -23,10 +23,14 @@ export class IpModule {
 
   async createIx(params: CreateIpParams): Promise<TransactionInstruction> {
     const payer = this.resolveWalletPubkey(params.payer);
-    const contentHash = sha256Hash(params.content);
+    if (params.contentHash.length !== 32) {
+      throw new Error(
+        `contentHash must be exactly 32 bytes (SHA-256 hash), got ${params.contentHash.length}`,
+      );
+    }
     const [ip] = deriveIpPda(
       params.registrantEntity,
-      contentHash,
+      params.contentHash,
       this.client.program.programId,
     );
     const [config] = PublicKey.findProgramAddressSync(
@@ -55,7 +59,7 @@ export class IpModule {
     }
 
     return this.client.program.methods
-      .createIp(toFixedBytes(contentHash, 32, "contentHash"))
+      .createIp(toFixedBytes(params.contentHash, 32, "contentHash"))
       .accounts({
         ip,
         registrantEntity: params.registrantEntity,

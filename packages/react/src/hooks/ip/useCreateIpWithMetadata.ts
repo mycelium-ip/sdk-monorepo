@@ -61,7 +61,7 @@ export interface CreateIpWithMetadataResult {
  *     mutate({
  *       ip: {
  *         registrantEntity: entityPubkey,
- *         content: new TextEncoder().encode("ipfs://QmXxx..."),
+ *         contentHash: sha256Hash(new TextEncoder().encode("my-content")),
  *         treasuryTokenAccount: treasuryAccount,
  *         payerTokenAccount: payerAccount,
  *       },
@@ -102,7 +102,7 @@ export function useCreateIpWithMetadata() {
         // Derive the IP PDA so we can reference it in the metadata IX.
         const ipPda = client.ipCore.deriveIpAddress(
           params.ip.registrantEntity,
-          params.ip.content,
+          params.ip.contentHash,
         );
 
         // Derive the metadata PDA with revision 1 (IP is being created in

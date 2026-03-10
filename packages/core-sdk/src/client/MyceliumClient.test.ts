@@ -48,7 +48,7 @@ describe("MyceliumClient smoke", () => {
     const treasuryTokenAccount = Keypair.generate().publicKey;
     const createIpIx = await client.ipCore.ip.createIx({
       registrantEntity,
-      content: utf8Bytes("ip-content-data"),
+      contentHash: new Uint8Array(32).fill(1), // 32-byte mock hash
       payerTokenAccount,
       treasuryTokenAccount,
     });
