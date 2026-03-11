@@ -8,6 +8,7 @@ React hooks for the Mycelium IP protocol. This package provides a wallet-agnosti
 - **TanStack Query powered** — Built-in caching, loading states, and automatic cache invalidation
 - **Next.js compatible** — Works with client components out of the box
 - **TypeScript first** — Full type safety with comprehensive TypeScript definitions
+- **Multi-sig support** — Pass `controllerSigners` to any mutation for multi-controller entities
 - **Minimal abstraction** — Thin wrapper over `@mycelium-ip/core-sdk`
 
 ## Installation
@@ -346,6 +347,7 @@ function UpdateControllers({ entityPubkey }: { entityPubkey: PublicKey }) {
       entity: entityPubkey,
       newControllers: [controller1, controller2],
       newThreshold: 2,
+      controllerSigners: [existingController], // existing controllers that must co-sign
     });
   };
 
@@ -393,6 +395,7 @@ function TransferIp({ ipPubkey, currentOwner, newOwner }: Props) {
       ip: ipPubkey,
       currentOwnerEntity: currentOwner,
       newOwnerEntity: newOwner,
+      controllerSigners: [controller1], // required when entity has multiple controllers
     });
   };
 
@@ -787,6 +790,52 @@ function MyComponent() {
   const { client, connection, wallet, confirmation } = useMyceliumContext();
 }
 ```
+
+## Multi-sig / Controller Signers
+
+Entities with multiple controllers require additional signers to meet the signature threshold. All mutation hooks accept an optional `controllerSigners` field — an array of `PublicKey`s for the entity controllers that must co-sign the transaction.
+
+The `controllerSigners` field is available on:
+
+- `useUpdateEntityControllers`
+- `useCreateIp`, `useTransferIp`
+- `useCreateEntityMetadata`, `useCreateIpMetadata`
+- `useCreateDerivativeLink`, `useUpdateDerivativeLicense`
+- `useCreateLicense`, `useUpdateLicense`, `useRevokeLicense`
+- `useCreateLicenseGrant`, `useRevokeLicenseGrant`
+- `useCreateEntityWithMetadata` (both `entity` and `metadata` params)
+- `useCreateIpWithMetadata` (both `ip` and `metadata` params)
+
+```tsx
+const { mutate } = useCreateIp();
+
+mutate({
+  registrantEntity: entityPubkey,
+  contentHash: hash,
+  controllerSigners: [controller1, controller2], // additional signers
+});
+```
+
+For composite hooks, pass `controllerSigners` in each sub-params object:
+
+```tsx
+const { mutate } = useCreateEntityWithMetadata();
+
+mutate({
+  entity: {
+    handle: "my-org",
+    controllerSigners: [controller1],
+  },
+  metadata: {
+    schema: schemaPubkey,
+    dataHash: hash,
+    cid: "ipfs://Qm...",
+    controllerSigners: [controller1],
+  },
+});
+```
+
+---
 
 ## Transaction Results
 

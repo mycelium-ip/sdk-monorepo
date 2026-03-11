@@ -30,6 +30,7 @@ Main exports include:
 - `MyceliumCluster` type (`'devnet' | 'mainnet-beta'`)
 - PDA helpers (`deriveEntityPda`, `deriveIpPda`, `deriveMetadataSchemaPda`, etc.)
 - utility helpers (`createProvider`, `sendInstruction`, conversion helpers)
+- account helpers (`buildSignerMetas`)
 - all SDK types (params/interfaces)
 
 ---
@@ -211,6 +212,7 @@ const createIpIx = await sdk.ipCore.ip.createIx({
   treasuryTokenAccount: new PublicKey("..."),
   payerTokenAccount: new PublicKey("..."),
   // payer optional (defaults to wallet.publicKey)
+  // controllerSigners optional — see "Multi-sig / Controller signers" below
 });
 
 // You can compose instructions into your own transaction pipeline.
@@ -286,6 +288,44 @@ const revokeSig = await sdk.license.grant.revoke({
 
 ---
 
+## Multi-sig / Controller signers
+
+Entities in the Mycelium protocol can have multiple controllers and a signature threshold (multi-sig). When an entity requires more than the default signer, pass the `controllerSigners` option to include the additional controller public keys as remaining accounts on the transaction.
+
+The `controllerSigners` field is an optional `PublicKey[]` available on almost every params interface:
+
+- `UpdateEntityControllersParams`
+- `CreateIpParams`
+- `TransferIpParams`
+- `CreateEntityMetadataParams`
+- `CreateIpMetadataParams`
+- `CreateDerivativeLinkParams`
+- `UpdateDerivativeLicenseParams`
+- `CreateLicenseParams`, `UpdateLicenseParams`, `RevokeLicenseParams`
+- `CreateLicenseGrantParams`, `RevokeLicenseGrantParams`
+
+```ts
+const transferIx = await sdk.ipCore.ip.transferIx({
+  ip,
+  currentOwnerEntity,
+  newOwnerEntity,
+  controllerSigners: [controller1, controller2],
+});
+```
+
+### `buildSignerMetas`
+
+If you are building instructions manually (e.g. composing a custom transaction), use the exported `buildSignerMetas` helper to convert an array of controller public keys into the `AccountMeta[]` format expected by Anchor's `remainingAccounts`:
+
+```ts
+import { buildSignerMetas } from "@mycelium-ip/core-sdk";
+
+const metas = buildSignerMetas([controller1, controller2]);
+// [{ pubkey: controller1, isSigner: true, isWritable: false }, ...]
+```
+
+---
+
 ## PDA helpers
 
 The SDK exports PDA helpers so you can derive addresses yourself when needed.
@@ -324,6 +364,10 @@ import { sendInstruction } from "@mycelium-ip/core-sdk";
 const sig = await sendInstruction(provider, instruction);
 ```
 
+### Account helpers
+
+- `buildSignerMetas(signers?)` — converts `PublicKey[]` to readonly-signer `AccountMeta[]` for multi-sig remaining accounts
+
 ### Conversion helpers
 
 Useful for byte-length constrained protocol fields and integer conversions:
@@ -342,6 +386,7 @@ Useful for byte-length constrained protocol fields and integer conversions:
 - The `solana:signTransaction` feature is **required**; missing it throws `UnsupportedFeatureError`.
 - Program IDs default from bundled IDLs, with fallback constants if IDL address is absent.
 - `MyceliumClientOptions.commitment` exists in types but is currently not consumed directly by `MyceliumClient`; use `confirmOptions` for provider/send behavior.
+- When an entity has multiple controllers, you must pass **all** required controller public keys via `controllerSigners` or the on-chain authority check will fail.
 
 ---
 
