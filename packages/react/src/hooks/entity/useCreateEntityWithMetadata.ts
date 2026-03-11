@@ -6,7 +6,7 @@ import type {
   EntityCreated,
   EntityMetadataCreated,
 } from "@mycelium-ip/core-sdk";
-import { toFixedBytes } from "@mycelium-ip/core-sdk";
+import { toFixedBytes, buildSignerMetas } from "@mycelium-ip/core-sdk";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { SystemProgram } from "@solana/web3.js";
 import {
@@ -136,6 +136,9 @@ export function useCreateEntityWithMetadata() {
               payer,
               systemProgram: SystemProgram.programId,
             })
+            .remainingAccounts(
+              buildSignerMetas(params.metadata.controllerSigners),
+            )
             .instruction(),
         ]);
 
