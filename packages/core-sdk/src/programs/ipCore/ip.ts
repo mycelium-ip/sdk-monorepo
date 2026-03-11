@@ -12,6 +12,7 @@ import type {
   TransferIpParams,
 } from "../../types";
 import { deriveAta } from "../../utils/ata";
+import { buildSignerMetas } from "../../utils/accounts";
 import { toFixedBytes, utf8Bytes } from "../../utils/bytes";
 import { sendInstruction } from "../../utils/transactions";
 import type { IpCoreClient } from "./IpCoreClient";
@@ -71,6 +72,7 @@ export class IpModule {
         tokenProgram: new PublicKey(TOKEN_PROGRAM_ID),
         systemProgram: SystemProgram.programId,
       })
+      .remainingAccounts(buildSignerMetas(params.controllerSigners))
       .instruction();
   }
 
@@ -96,6 +98,7 @@ export class IpModule {
         currentOwnerEntity: params.currentOwnerEntity,
         newOwnerEntity: params.newOwnerEntity,
       })
+      .remainingAccounts(buildSignerMetas(params.controllerSigners))
       .instruction();
   }
 

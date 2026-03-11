@@ -11,6 +11,7 @@ import type {
 } from "../../types";
 import { toI64Bn } from "../../utils/bn";
 import { sendInstruction } from "../../utils/transactions";
+import { buildSignerMetas } from "../../utils/accounts";
 import type { LicenseClient } from "./LicenseClient";
 
 export class GrantModule {
@@ -43,6 +44,7 @@ export class GrantModule {
         payer,
         systemProgram: SystemProgram.programId,
       })
+      .remainingAccounts(buildSignerMetas(params.controllerSigners))
       .instruction();
   }
 
@@ -83,6 +85,7 @@ export class GrantModule {
         rentDestination,
         systemProgram: SystemProgram.programId,
       })
+      .remainingAccounts(buildSignerMetas(params.controllerSigners))
       .instruction();
   }
 

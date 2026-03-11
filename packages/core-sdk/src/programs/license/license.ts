@@ -12,6 +12,7 @@ import type {
   UpdateLicenseParams,
 } from "../../types";
 import { sendInstruction } from "../../utils/transactions";
+import { buildSignerMetas } from "../../utils/accounts";
 import type { LicenseClient } from "./LicenseClient";
 
 export class LicenseModule {
@@ -38,6 +39,7 @@ export class LicenseModule {
         payer,
         systemProgram: SystemProgram.programId,
       })
+      .remainingAccounts(buildSignerMetas(params.controllerSigners))
       .instruction();
   }
 
@@ -70,6 +72,7 @@ export class LicenseModule {
         authorityEntity: params.authorityEntity,
         systemProgram: SystemProgram.programId,
       })
+      .remainingAccounts(buildSignerMetas(params.controllerSigners))
       .instruction();
   }
 
@@ -101,6 +104,7 @@ export class LicenseModule {
         rentDestination,
         systemProgram: SystemProgram.programId,
       })
+      .remainingAccounts(buildSignerMetas(params.controllerSigners))
       .instruction();
   }
 

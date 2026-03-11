@@ -8,7 +8,11 @@
     "lib": ["es2017"],
     "strict": true,
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "rootDir": ".",
+    "paths": {
+      "#sdk/*": ["./src/*"]
+    }
   },
-  "include": ["src"]
+  "include": ["src", "tests"]
 }

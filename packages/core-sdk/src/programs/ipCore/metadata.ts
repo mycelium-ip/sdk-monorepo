@@ -16,6 +16,7 @@ import type {
   TransactionResult,
 } from "../../types";
 import { toFixedBytes } from "../../utils/bytes";
+import { buildSignerMetas } from "../../utils/accounts";
 import { sendInstruction } from "../../utils/transactions";
 import type { IpCoreClient } from "./IpCoreClient";
 
@@ -94,6 +95,7 @@ export class MetadataModule {
         payer,
         systemProgram: SystemProgram.programId,
       })
+      .remainingAccounts(buildSignerMetas(params.controllerSigners))
       .instruction();
   }
 
@@ -145,6 +147,7 @@ export class MetadataModule {
         payer,
         systemProgram: SystemProgram.programId,
       })
+      .remainingAccounts(buildSignerMetas(params.controllerSigners))
       .instruction();
   }
 

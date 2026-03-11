@@ -10,6 +10,7 @@ import type {
   UpdateDerivativeLicenseParams,
 } from "../../types";
 import { sendInstruction } from "../../utils/transactions";
+import { buildSignerMetas } from "../../utils/accounts";
 import type { IpCoreClient } from "./IpCoreClient";
 
 export class DerivativeModule {
@@ -39,6 +40,7 @@ export class DerivativeModule {
         payer,
         systemProgram: SystemProgram.programId,
       })
+      .remainingAccounts(buildSignerMetas(params.controllerSigners))
       .instruction();
   }
 
@@ -77,6 +79,7 @@ export class DerivativeModule {
         newLicenseGrant: params.newLicenseGrant,
         newLicense: params.newLicense,
       })
+      .remainingAccounts(buildSignerMetas(params.controllerSigners))
       .instruction();
   }
 

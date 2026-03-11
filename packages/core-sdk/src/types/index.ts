@@ -53,6 +53,8 @@ export interface UpdateEntityControllersParams {
   entity: PublicKey;
   newControllers: PublicKey[];
   newThreshold: number;
+  /** Existing controller public keys that must sign the transaction (passed as remaining accounts). */
+  controllerSigners?: PublicKey[];
 }
 
 export interface CreateIpParams {
@@ -73,6 +75,8 @@ export interface CreateIpParams {
    */
   payerTokenAccount?: PublicKey;
   payer?: PublicKey;
+  /** Entity controller public keys that must sign the transaction (passed as remaining accounts). */
+  controllerSigners?: PublicKey[];
 }
 
 /**
@@ -95,6 +99,8 @@ export interface TransferIpParams {
   ip: PublicKey;
   currentOwnerEntity: PublicKey;
   newOwnerEntity: PublicKey;
+  /** Entity controller public keys that must sign the transaction (passed as remaining accounts). */
+  controllerSigners?: PublicKey[];
 }
 
 export interface CreateMetadataSchemaParams {
@@ -119,6 +125,8 @@ export interface CreateEntityMetadataParams {
   dataHash: Uint8Array;
   cid: StringOrBytes;
   payer?: PublicKey;
+  /** Entity controller public keys that must sign the transaction (passed as remaining accounts). */
+  controllerSigners?: PublicKey[];
 }
 
 export interface CreateIpMetadataParams {
@@ -132,6 +140,8 @@ export interface CreateIpMetadataParams {
   dataHash: Uint8Array;
   cid: StringOrBytes;
   payer?: PublicKey;
+  /** Entity controller public keys that must sign the transaction (passed as remaining accounts). */
+  controllerSigners?: PublicKey[];
 }
 
 export interface CreateDerivativeLinkParams {
@@ -142,6 +152,8 @@ export interface CreateDerivativeLinkParams {
   license: PublicKey;
   payer?: PublicKey;
   licenseProgramId?: PublicKey;
+  /** Entity controller public keys that must sign the transaction (passed as remaining accounts). */
+  controllerSigners?: PublicKey[];
 }
 
 export interface UpdateDerivativeLicenseParams {
@@ -152,6 +164,8 @@ export interface UpdateDerivativeLicenseParams {
   newLicense: PublicKey;
   derivativeLink?: PublicKey;
   licenseProgramId?: PublicKey;
+  /** Entity controller public keys that must sign the transaction (passed as remaining accounts). */
+  controllerSigners?: PublicKey[];
 }
 
 export interface CreateLicenseParams {
@@ -161,6 +175,8 @@ export interface CreateLicenseParams {
   derivativeCheck?: PublicKey;
   payer?: PublicKey;
   ipCoreProgramId?: PublicKey;
+  /** Entity controller public keys that must sign the transaction (passed as remaining accounts). */
+  controllerSigners?: PublicKey[];
 }
 
 export interface UpdateLicenseParams {
@@ -168,6 +184,8 @@ export interface UpdateLicenseParams {
   authorityEntity: PublicKey;
   derivativesAllowed: boolean;
   ipCoreProgramId?: PublicKey;
+  /** Entity controller public keys that must sign the transaction (passed as remaining accounts). */
+  controllerSigners?: PublicKey[];
 }
 
 export interface RevokeLicenseParams {
@@ -175,6 +193,8 @@ export interface RevokeLicenseParams {
   authorityEntity: PublicKey;
   rentDestination?: PublicKey;
   ipCoreProgramId?: PublicKey;
+  /** Entity controller public keys that must sign the transaction (passed as remaining accounts). */
+  controllerSigners?: PublicKey[];
 }
 
 export interface CreateLicenseGrantParams {
@@ -184,6 +204,8 @@ export interface CreateLicenseGrantParams {
   expiration: bigint | number;
   payer?: PublicKey;
   ipCoreProgramId?: PublicKey;
+  /** Entity controller public keys that must sign the transaction (passed as remaining accounts). */
+  controllerSigners?: PublicKey[];
 }
 
 export interface RevokeLicenseGrantParams {
@@ -192,4 +214,6 @@ export interface RevokeLicenseGrantParams {
   granteeEntity: PublicKey;
   rentDestination?: PublicKey;
   ipCoreProgramId?: PublicKey;
+  /** Entity controller public keys that must sign the transaction (passed as remaining accounts). */
+  controllerSigners?: PublicKey[];
 }

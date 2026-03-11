@@ -12,5 +12,5 @@ import type { PublicKey } from "@solana/web3.js";
  * @returns The derived ATA address
  */
 export function deriveAta(mint: PublicKey, owner: PublicKey): PublicKey {
-  return getAssociatedTokenAddressSync(mint, owner);
+  return getAssociatedTokenAddressSync(mint, owner, true);
 }

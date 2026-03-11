@@ -25,6 +25,11 @@ lib/
 .turbo/
 
 # --------------------
+# Test results
+# --------------------
+**/tests/results/
+
+# --------------------
 # TypeScript
 # --------------------
 *.tsbuildinfo

@@ -9,6 +9,7 @@ import type {
   TransactionResult,
   UpdateEntityControllersParams,
 } from "../../types";
+import { buildSignerMetas } from "../../utils/accounts";
 import { toFixedBytes } from "../../utils/bytes";
 import { sendInstruction } from "../../utils/transactions";
 import type { IpCoreClient } from "./IpCoreClient";
@@ -60,6 +61,7 @@ export class EntityModule {
       .accounts({
         entity: params.entity,
       })
+      .remainingAccounts(buildSignerMetas(params.controllerSigners))
       .instruction();
   }
 

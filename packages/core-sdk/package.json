@@ -23,6 +23,7 @@
     "build": "tsc -p tsconfig.build.json",
     "lint": "eslint .",
     "test": "vitest run",
+    "test:devnet": "vitest run --config vitest.devnet.config.ts",
     "typecheck": "tsc --noEmit"
   },
   "keywords": [
