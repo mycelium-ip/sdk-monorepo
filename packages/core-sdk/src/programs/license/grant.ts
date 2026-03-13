@@ -12,6 +12,10 @@ import type {
 import { toI64Bn } from "../../utils/bn";
 import { sendInstruction } from "../../utils/transactions";
 import { buildSignerMetas } from "../../utils/accounts";
+import {
+  validateEntityAuthorityRaw,
+  validateAccountExists,
+} from "../../utils/validation";
 import type { LicenseClient } from "./LicenseClient";
 
 export class GrantModule {
@@ -52,6 +56,18 @@ export class GrantModule {
     params: CreateLicenseGrantParams,
     options?: SendTxOptions,
   ): Promise<TransactionResult<LicenseGrantCreated>> {
+    await Promise.all([
+      validateEntityAuthorityRaw(
+        this.client.ipCoreProgram,
+        params.authorityEntity,
+        params.controllerSigners,
+      ),
+      validateAccountExists(
+        this.client.provider.connection,
+        params.granteeEntity,
+        "Grantee entity",
+      ),
+    ]);
     const instruction = await this.createIx(params);
     return sendInstruction<LicenseGrantCreated>(
       this.client.provider,
@@ -93,6 +109,11 @@ export class GrantModule {
     params: RevokeLicenseGrantParams,
     options?: SendTxOptions,
   ): Promise<TransactionResult<LicenseGrantRevoked>> {
+    await validateEntityAuthorityRaw(
+      this.client.ipCoreProgram,
+      params.authorityEntity,
+      params.controllerSigners,
+    );
     const instruction = await this.revokeIx(params);
     return sendInstruction<LicenseGrantRevoked>(
       this.client.provider,

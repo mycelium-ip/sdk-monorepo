@@ -18,6 +18,7 @@ import type {
 import { toFixedBytes } from "../../utils/bytes";
 import { buildSignerMetas } from "../../utils/accounts";
 import { sendInstruction } from "../../utils/transactions";
+import { validateEntityAuthority } from "../../utils/validation";
 import type { IpCoreClient } from "./IpCoreClient";
 
 export class MetadataModule {
@@ -103,6 +104,11 @@ export class MetadataModule {
     params: CreateEntityMetadataParams,
     options?: SendTxOptions,
   ): Promise<TransactionResult<EntityMetadataCreated>> {
+    await validateEntityAuthority(
+      this.client,
+      params.entity,
+      params.controllerSigners,
+    );
     const instruction = await this.createEntityMetadataIx(params);
     return sendInstruction<EntityMetadataCreated>(
       this.client.provider,
@@ -155,6 +161,11 @@ export class MetadataModule {
     params: CreateIpMetadataParams,
     options?: SendTxOptions,
   ): Promise<TransactionResult<IpMetadataCreated>> {
+    await validateEntityAuthority(
+      this.client,
+      params.ownerEntity,
+      params.controllerSigners,
+    );
     const instruction = await this.createIpMetadataIx(params);
     return sendInstruction<IpMetadataCreated>(
       this.client.provider,

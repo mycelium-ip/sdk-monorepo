@@ -11,6 +11,10 @@ import type {
 } from "../../types";
 import { sendInstruction } from "../../utils/transactions";
 import { buildSignerMetas } from "../../utils/accounts";
+import {
+  validateEntityAuthority,
+  validateAccountExists,
+} from "../../utils/validation";
 import type { IpCoreClient } from "./IpCoreClient";
 
 export class DerivativeModule {
@@ -48,6 +52,18 @@ export class DerivativeModule {
     params: CreateDerivativeLinkParams,
     options?: SendTxOptions,
   ): Promise<TransactionResult<DerivativeLinkCreated>> {
+    const connection = this.client.provider.connection;
+    await Promise.all([
+      validateEntityAuthority(
+        this.client,
+        params.childOwnerEntity,
+        params.controllerSigners,
+      ),
+      validateAccountExists(connection, params.parentIp, "Parent IP"),
+      validateAccountExists(connection, params.childIp, "Child IP"),
+      validateAccountExists(connection, params.licenseGrant, "License grant"),
+      validateAccountExists(connection, params.license, "License"),
+    ]);
     const instruction = await this.createIx(params);
     return sendInstruction<DerivativeLinkCreated>(
       this.client.provider,
@@ -87,6 +103,11 @@ export class DerivativeModule {
     params: UpdateDerivativeLicenseParams,
     options?: SendTxOptions,
   ): Promise<TransactionResult<DerivativeLicenseUpdated>> {
+    await validateEntityAuthority(
+      this.client,
+      params.childOwnerEntity,
+      params.controllerSigners,
+    );
     const instruction = await this.updateLicenseIx(params);
     return sendInstruction<DerivativeLicenseUpdated>(
       this.client.provider,

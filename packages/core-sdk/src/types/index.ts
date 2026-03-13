@@ -95,6 +95,28 @@ export interface ProtocolConfig {
   bump: number;
 }
 
+/**
+ * On-chain entity account data.
+ */
+export interface EntityAccount {
+  /** The original creator of this entity (immutable). */
+  creator: PublicKey;
+  /** Unique handle for this entity (fixed 32 bytes). */
+  handle: number[];
+  /** List of controller public keys that can sign for this entity. */
+  controllers: PublicKey[];
+  /** Number of signatures required to authorise actions. */
+  signatureThreshold: number;
+  /** Current metadata revision number. */
+  currentMetadataRevision: bigint;
+  /** Unix timestamp when this entity was created. */
+  createdAt: bigint;
+  /** Unix timestamp when this entity was last updated. */
+  updatedAt: bigint;
+  /** PDA bump seed. */
+  bump: number;
+}
+
 export interface TransferIpParams {
   ip: PublicKey;
   currentOwnerEntity: PublicKey;

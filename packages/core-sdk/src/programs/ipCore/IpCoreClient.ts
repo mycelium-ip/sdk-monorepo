@@ -10,6 +10,7 @@ import {
   deriveIpMetadataPda,
 } from "../../pda/metadata";
 import type {
+  EntityAccount,
   MyceliumCluster,
   ProtocolConfig,
   StringOrBytes,
@@ -204,5 +205,32 @@ export class IpCoreClient {
       registrationFee: BigInt(account.registrationFee.toString()),
       bump: account.bump,
     };
+  }
+
+  /**
+   * Fetch an entity account from the chain.
+   *
+   * @param entity - The entity PDA address
+   * @returns The on-chain entity data, or `null` if the account does not exist
+   */
+  async fetchEntity(entity: PublicKey): Promise<EntityAccount | null> {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const account = await (this.program.account as any).entity.fetch(entity);
+      return {
+        creator: account.creator,
+        handle: account.handle,
+        controllers: account.controllers,
+        signatureThreshold: account.signatureThreshold,
+        currentMetadataRevision: BigInt(
+          account.currentMetadataRevision.toString(),
+        ),
+        createdAt: BigInt(account.createdAt.toString()),
+        updatedAt: BigInt(account.updatedAt.toString()),
+        bump: account.bump,
+      };
+    } catch {
+      return null;
+    }
   }
 }

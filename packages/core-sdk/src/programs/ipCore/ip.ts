@@ -15,6 +15,11 @@ import { deriveAta } from "../../utils/ata";
 import { buildSignerMetas } from "../../utils/accounts";
 import { toFixedBytes, utf8Bytes } from "../../utils/bytes";
 import { sendInstruction } from "../../utils/transactions";
+import {
+  validateIpRegistration,
+  validateEntityAuthority,
+  type PreflightResult,
+} from "../../utils/validation";
 import type { IpCoreClient } from "./IpCoreClient";
 
 const TOKEN_PROGRAM_ID = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA";
@@ -22,7 +27,11 @@ const TOKEN_PROGRAM_ID = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA";
 export class IpModule {
   constructor(private readonly client: IpCoreClient) {}
 
-  async createIx(params: CreateIpParams): Promise<TransactionInstruction> {
+  async createIx(
+    params: CreateIpParams,
+    /** @internal — pre-fetched data from preflight validation. */
+    _prefetched?: PreflightResult,
+  ): Promise<TransactionInstruction> {
     const payer = this.resolveWalletPubkey(params.payer);
     if (params.contentHash.length !== 32) {
       throw new Error(
@@ -43,12 +52,15 @@ export class IpModule {
       this.client.program.programId,
     );
 
-    // Derive token accounts if not provided
-    let treasuryTokenAccount = params.treasuryTokenAccount;
-    let payerTokenAccount = params.payerTokenAccount;
+    // Use prefetched token accounts when available, otherwise derive them
+    let treasuryTokenAccount =
+      _prefetched?.treasuryTokenAccount ?? params.treasuryTokenAccount;
+    let payerTokenAccount =
+      _prefetched?.payerTokenAccount ?? params.payerTokenAccount;
 
     if (!treasuryTokenAccount || !payerTokenAccount) {
-      const protocolConfig = await this.client.fetchConfig();
+      const protocolConfig =
+        _prefetched?.config ?? (await this.client.fetchConfig());
       const mint = protocolConfig.registrationCurrency;
 
       if (!treasuryTokenAccount) {
@@ -76,11 +88,24 @@ export class IpModule {
       .instruction();
   }
 
+  /**
+   * Validate IP registration parameters against on-chain state.
+   *
+   * Performs read-only RPC checks (entity existence, controller authority,
+   * token account existence, and balance sufficiency) and throws a typed
+   * error if any check fails. Call this before presenting a wallet approval
+   * dialog to give users immediate, actionable feedback.
+   */
+  async validate(params: CreateIpParams): Promise<void> {
+    await validateIpRegistration(this.client, params);
+  }
+
   async create(
     params: CreateIpParams,
     options?: SendTxOptions,
   ): Promise<TransactionResult<IpCreated>> {
-    const instruction = await this.createIx(params);
+    const prefetched = await validateIpRegistration(this.client, params);
+    const instruction = await this.createIx(params, prefetched);
     return sendInstruction<IpCreated>(
       this.client.provider,
       instruction,
@@ -106,6 +131,11 @@ export class IpModule {
     params: TransferIpParams,
     options?: SendTxOptions,
   ): Promise<TransactionResult<IpTransferred>> {
+    await validateEntityAuthority(
+      this.client,
+      params.currentOwnerEntity,
+      params.controllerSigners,
+    );
     const instruction = await this.transferIx(params);
     return sendInstruction<IpTransferred>(
       this.client.provider,

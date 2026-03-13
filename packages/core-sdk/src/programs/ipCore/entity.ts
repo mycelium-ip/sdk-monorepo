@@ -12,6 +12,7 @@ import type {
 import { buildSignerMetas } from "../../utils/accounts";
 import { toFixedBytes } from "../../utils/bytes";
 import { sendInstruction } from "../../utils/transactions";
+import { validateEntityAuthority } from "../../utils/validation";
 import type { IpCoreClient } from "./IpCoreClient";
 
 export class EntityModule {
@@ -69,6 +70,11 @@ export class EntityModule {
     params: UpdateEntityControllersParams,
     options?: SendTxOptions,
   ): Promise<TransactionResult<EntityControllersUpdated>> {
+    await validateEntityAuthority(
+      this.client,
+      params.entity,
+      params.controllerSigners,
+    );
     const instruction = await this.updateControllersIx(params);
     return sendInstruction<EntityControllersUpdated>(
       this.client.provider,

@@ -15,6 +15,8 @@ export class LicenseClient {
   readonly provider: AnchorProvider;
   readonly program: Program;
   readonly ipCoreProgramId: PublicKey;
+  /** @internal ip_core program instance for entity account deserialization. */
+  readonly ipCoreProgram: Program;
 
   readonly license: LicenseModule;
   readonly grant: GrantModule;
@@ -26,6 +28,7 @@ export class LicenseClient {
     this.ipCoreProgramId = programIds.ipCore;
     this.provider = provider;
     this.program = new Program(idls.license, provider);
+    this.ipCoreProgram = new Program(idls.ipCore, provider);
 
     this.license = new LicenseModule(this);
     this.grant = new GrantModule(this);
