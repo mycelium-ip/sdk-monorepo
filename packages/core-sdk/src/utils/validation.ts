@@ -4,7 +4,6 @@ import type { Program } from "@coral-xyz/anchor";
 import {
   AccountNotFoundError,
   EntityNotFoundError,
-  InsufficientSignersError,
   InsufficientTokenBalanceError,
   TokenAccountNotFoundError,
 } from "../errors";
@@ -31,40 +30,21 @@ export interface PreflightResult {
 // ---------------------------------------------------------------------------
 
 /**
- * Fetch an entity account and validate that the provided controller signers
- * meet its multisig threshold.
+ * Fetch an entity account and validate that it exists on-chain.
  *
- * This mirrors the on-chain `validate_multisig_keys` check and is reused
- * by every module that requires entity authority.
+ * The on-chain program validates that the controller signer matches
+ * `entity.controller`; this helper ensures the entity exists before
+ * submitting the transaction.
  *
- * @throws {EntityNotFoundError}      entity PDA does not exist on-chain
- * @throws {InsufficientSignersError} signers don't meet the threshold
+ * @throws {EntityNotFoundError} entity PDA does not exist on-chain
  */
 export async function validateEntityAuthority(
   client: IpCoreClient,
   entityPda: PublicKey,
-  controllerSigners?: PublicKey[],
 ): Promise<EntityAccount> {
   const entityAccount = await client.fetchEntity(entityPda);
   if (!entityAccount) {
     throw new EntityNotFoundError(entityPda);
-  }
-
-  const signerKeys = controllerSigners ?? [];
-  const controllerSet = new Set(
-    entityAccount.controllers.map((c) => c.toBase58()),
-  );
-  let validCount = 0;
-  for (const signer of signerKeys) {
-    if (controllerSet.has(signer.toBase58())) {
-      validCount++;
-    }
-  }
-  if (validCount < entityAccount.signatureThreshold) {
-    throw new InsufficientSignersError(
-      entityAccount.signatureThreshold,
-      validCount,
-    );
   }
 
   return entityAccount;
@@ -91,49 +71,19 @@ export async function validateAccountExists(
  * to fetch the entity account cross-program.
  *
  * The license module doesn't have direct access to `IpCoreClient`, so this
- * helper accepts the raw ip_core program and performs the same fetch+check.
+ * helper accepts the raw ip_core program and validates entity existence.
  *
- * @throws {EntityNotFoundError}      entity PDA does not exist on-chain
- * @throws {InsufficientSignersError} signers don't meet the threshold
+ * @throws {EntityNotFoundError} entity PDA does not exist on-chain
  */
 export async function validateEntityAuthorityRaw(
   ipCoreProgram: Program,
   entityPda: PublicKey,
-  controllerSigners?: PublicKey[],
 ): Promise<void> {
-  let entityAccount: EntityAccount;
   try {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const raw = await (ipCoreProgram.account as any).entity.fetch(entityPda);
-    entityAccount = {
-      creator: raw.creator,
-      handle: raw.handle,
-      controllers: raw.controllers,
-      signatureThreshold: raw.signatureThreshold,
-      currentMetadataRevision: BigInt(raw.currentMetadataRevision.toString()),
-      createdAt: BigInt(raw.createdAt.toString()),
-      updatedAt: BigInt(raw.updatedAt.toString()),
-      bump: raw.bump,
-    };
+    await (ipCoreProgram.account as any).entity.fetch(entityPda);
   } catch {
     throw new EntityNotFoundError(entityPda);
-  }
-
-  const signerKeys = controllerSigners ?? [];
-  const controllerSet = new Set(
-    entityAccount.controllers.map((c) => c.toBase58()),
-  );
-  let validCount = 0;
-  for (const signer of signerKeys) {
-    if (controllerSet.has(signer.toBase58())) {
-      validCount++;
-    }
-  }
-  if (validCount < entityAccount.signatureThreshold) {
-    throw new InsufficientSignersError(
-      entityAccount.signatureThreshold,
-      validCount,
-    );
   }
 }
 
@@ -146,13 +96,11 @@ export async function validateEntityAuthorityRaw(
  *
  * Performs read-only RPC checks for:
  * 1. Entity existence
- * 2. Controller / multisig authority (mirrors on-chain `validate_multisig_keys`)
- * 3. Payer token account existence
- * 4. Payer token balance ≥ registration fee
- * 5. Treasury token account existence
+ * 2. Payer token account existence
+ * 3. Payer token balance ≥ registration fee
+ * 4. Treasury token account existence
  *
  * @throws {EntityNotFoundError}           registrant entity does not exist
- * @throws {InsufficientSignersError}      controller signers don't meet threshold
  * @throws {TokenAccountNotFoundError}     payer or treasury ATA is missing
  * @throws {InsufficientTokenBalanceError} payer balance too low
  */
@@ -163,14 +111,10 @@ export async function validateIpRegistration(
   const connection = client.provider.connection;
   const payer = params.payer ?? client.provider.wallet.publicKey;
 
-  // --- Step 1: fetch config + validate entity authority in parallel ---------
+  // --- Step 1: fetch config + validate entity exists in parallel -----------
   const [config] = await Promise.all([
     client.fetchConfig(),
-    validateEntityAuthority(
-      client,
-      params.registrantEntity,
-      params.controllerSigners,
-    ),
+    validateEntityAuthority(client, params.registrantEntity),
   ]);
 
   // --- Step 2: resolve token accounts ---------------------------------------

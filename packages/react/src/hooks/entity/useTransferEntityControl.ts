@@ -1,8 +1,8 @@
 "use client";
 
 import type {
-  EntityControllersUpdated,
-  UpdateEntityControllersParams,
+  EntityControlTransferred,
+  TransferEntityControlParams,
 } from "@mycelium-ip/core-sdk";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
@@ -14,30 +14,29 @@ import { useMyceliumContext } from "../internal/useMyceliumContext";
 import { queryKeys } from "../queries/queryKeys";
 
 /**
- * Hook to update entity controllers.
+ * Hook to transfer entity control to a new controller.
  *
  * @example
  * ```tsx
- * function UpdateControllersButton({ entityPubkey }: { entityPubkey: PublicKey }) {
- *   const { mutate, isPending } = useUpdateEntityControllers();
+ * function TransferControlButton({ entityPubkey, newController }: Props) {
+ *   const { mutate, isPending } = useTransferEntityControl();
  *
- *   const handleUpdate = () => {
+ *   const handleTransfer = () => {
  *     mutate({
  *       entity: entityPubkey,
- *       newControllers: [controller1, controller2],
- *       newThreshold: 2,
+ *       newController,
  *     });
  *   };
  *
  *   return (
- *     <button onClick={handleUpdate} disabled={isPending}>
- *       Update Controllers
+ *     <button onClick={handleTransfer} disabled={isPending}>
+ *       Transfer Control
  *     </button>
  *   );
  * }
  * ```
  */
-export function useUpdateEntityControllers() {
+export function useTransferEntityControl() {
   const {
     client,
     connection,
@@ -51,16 +50,16 @@ export function useUpdateEntityControllers() {
 
   return {
     ...useMutation<
-      TransactionResult<EntityControllersUpdated>,
+      TransactionResult<EntityControlTransferred>,
       Error,
-      UpdateEntityControllersParams
+      TransferEntityControlParams
     >({
       mutationFn: async (params) => {
         if (!client || !wallet) {
           throw new Error("Wallet not connected");
         }
         const instruction =
-          await client.ipCore.entity.updateControllersIx(params);
+          await client.ipCore.entity.transferControlIx(params);
         return executeTransaction(
           connection,
           wallet,
@@ -68,7 +67,7 @@ export function useUpdateEntityControllers() {
           confirmation,
           clusterToChain(cluster),
           (conn, sig) =>
-            client.ipCore.parseEvent<EntityControllersUpdated>(conn, sig),
+            client.ipCore.parseEvent<EntityControlTransferred>(conn, sig),
           customExecutor,
         );
       },

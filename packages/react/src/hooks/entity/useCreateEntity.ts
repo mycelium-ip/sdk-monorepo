@@ -21,8 +21,6 @@ import { queryKeys } from "../queries/queryKeys";
  *   const handleCreate = () => {
  *     mutate({
  *       handle: "my-entity",
- *       additionalControllers: [],
- *       signatureThreshold: 1,
  *     });
  *   };
  *

@@ -44,17 +44,14 @@ export interface ModuleContext {
 
 export interface CreateEntityParams {
   handle: StringOrBytes;
-  additionalControllers?: PublicKey[];
-  signatureThreshold?: number;
   creator?: PublicKey;
 }
 
-export interface UpdateEntityControllersParams {
+export interface TransferEntityControlParams {
   entity: PublicKey;
-  newControllers: PublicKey[];
-  newThreshold: number;
-  /** Existing controller public keys that must sign the transaction (passed as remaining accounts). */
-  controllerSigners?: PublicKey[];
+  newController: PublicKey;
+  /** Current controller. Defaults to the connected wallet. */
+  controller?: PublicKey;
 }
 
 export interface CreateIpParams {
@@ -75,8 +72,8 @@ export interface CreateIpParams {
    */
   payerTokenAccount?: PublicKey;
   payer?: PublicKey;
-  /** Entity controller public keys that must sign the transaction (passed as remaining accounts). */
-  controllerSigners?: PublicKey[];
+  /** Entity controller that must sign the transaction. Defaults to the connected wallet. */
+  controller?: PublicKey;
 }
 
 /**
@@ -103,10 +100,8 @@ export interface EntityAccount {
   creator: PublicKey;
   /** Unique handle for this entity (fixed 32 bytes). */
   handle: number[];
-  /** List of controller public keys that can sign for this entity. */
-  controllers: PublicKey[];
-  /** Number of signatures required to authorise actions. */
-  signatureThreshold: number;
+  /** The single controller public key authorised to act on behalf of this entity. */
+  controller: PublicKey;
   /** Current metadata revision number. */
   currentMetadataRevision: bigint;
   /** Unix timestamp when this entity was created. */
@@ -121,8 +116,8 @@ export interface TransferIpParams {
   ip: PublicKey;
   currentOwnerEntity: PublicKey;
   newOwnerEntity: PublicKey;
-  /** Entity controller public keys that must sign the transaction (passed as remaining accounts). */
-  controllerSigners?: PublicKey[];
+  /** Entity controller that must sign the transaction. Defaults to the connected wallet. */
+  controller?: PublicKey;
 }
 
 export interface CreateMetadataSchemaParams {
@@ -147,8 +142,8 @@ export interface CreateEntityMetadataParams {
   dataHash: Uint8Array;
   cid: StringOrBytes;
   payer?: PublicKey;
-  /** Entity controller public keys that must sign the transaction (passed as remaining accounts). */
-  controllerSigners?: PublicKey[];
+  /** Entity controller that must sign the transaction. Defaults to the connected wallet. */
+  controller?: PublicKey;
 }
 
 export interface CreateIpMetadataParams {
@@ -162,8 +157,8 @@ export interface CreateIpMetadataParams {
   dataHash: Uint8Array;
   cid: StringOrBytes;
   payer?: PublicKey;
-  /** Entity controller public keys that must sign the transaction (passed as remaining accounts). */
-  controllerSigners?: PublicKey[];
+  /** Entity controller that must sign the transaction. Defaults to the connected wallet. */
+  controller?: PublicKey;
 }
 
 export interface CreateDerivativeLinkParams {
@@ -174,8 +169,8 @@ export interface CreateDerivativeLinkParams {
   license: PublicKey;
   payer?: PublicKey;
   licenseProgramId?: PublicKey;
-  /** Entity controller public keys that must sign the transaction (passed as remaining accounts). */
-  controllerSigners?: PublicKey[];
+  /** Entity controller that must sign the transaction. Defaults to the connected wallet. */
+  controller?: PublicKey;
 }
 
 export interface UpdateDerivativeLicenseParams {
@@ -186,8 +181,8 @@ export interface UpdateDerivativeLicenseParams {
   newLicense: PublicKey;
   derivativeLink?: PublicKey;
   licenseProgramId?: PublicKey;
-  /** Entity controller public keys that must sign the transaction (passed as remaining accounts). */
-  controllerSigners?: PublicKey[];
+  /** Entity controller that must sign the transaction. Defaults to the connected wallet. */
+  controller?: PublicKey;
 }
 
 export interface CreateLicenseParams {
@@ -197,8 +192,8 @@ export interface CreateLicenseParams {
   derivativeCheck?: PublicKey;
   payer?: PublicKey;
   ipCoreProgramId?: PublicKey;
-  /** Entity controller public keys that must sign the transaction (passed as remaining accounts). */
-  controllerSigners?: PublicKey[];
+  /** Entity controller that must sign the transaction. Defaults to the connected wallet. */
+  controller?: PublicKey;
 }
 
 export interface UpdateLicenseParams {
@@ -206,8 +201,8 @@ export interface UpdateLicenseParams {
   authorityEntity: PublicKey;
   derivativesAllowed: boolean;
   ipCoreProgramId?: PublicKey;
-  /** Entity controller public keys that must sign the transaction (passed as remaining accounts). */
-  controllerSigners?: PublicKey[];
+  /** Entity controller that must sign the transaction. Defaults to the connected wallet. */
+  controller?: PublicKey;
 }
 
 export interface RevokeLicenseParams {
@@ -215,8 +210,8 @@ export interface RevokeLicenseParams {
   authorityEntity: PublicKey;
   rentDestination?: PublicKey;
   ipCoreProgramId?: PublicKey;
-  /** Entity controller public keys that must sign the transaction (passed as remaining accounts). */
-  controllerSigners?: PublicKey[];
+  /** Entity controller that must sign the transaction. Defaults to the connected wallet. */
+  controller?: PublicKey;
 }
 
 export interface CreateLicenseGrantParams {
@@ -226,8 +221,8 @@ export interface CreateLicenseGrantParams {
   expiration: bigint | number;
   payer?: PublicKey;
   ipCoreProgramId?: PublicKey;
-  /** Entity controller public keys that must sign the transaction (passed as remaining accounts). */
-  controllerSigners?: PublicKey[];
+  /** Entity controller that must sign the transaction. Defaults to the connected wallet. */
+  controller?: PublicKey;
 }
 
 export interface RevokeLicenseGrantParams {
@@ -236,6 +231,6 @@ export interface RevokeLicenseGrantParams {
   granteeEntity: PublicKey;
   rentDestination?: PublicKey;
   ipCoreProgramId?: PublicKey;
-  /** Entity controller public keys that must sign the transaction (passed as remaining accounts). */
-  controllerSigners?: PublicKey[];
+  /** Entity controller that must sign the transaction. Defaults to the connected wallet. */
+  controller?: PublicKey;
 }

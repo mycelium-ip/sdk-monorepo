@@ -11,7 +11,6 @@ import type {
 } from "../../types";
 import { toI64Bn } from "../../utils/bn";
 import { sendInstruction } from "../../utils/transactions";
-import { buildSignerMetas } from "../../utils/accounts";
 import {
   validateEntityAuthorityRaw,
   validateAccountExists,
@@ -44,11 +43,11 @@ export class GrantModule {
         licenseGrant,
         license,
         authorityEntity: params.authorityEntity,
+        controller: params.controller ?? payer,
         granteeEntity: params.granteeEntity,
         payer,
         systemProgram: SystemProgram.programId,
       })
-      .remainingAccounts(buildSignerMetas(params.controllerSigners))
       .instruction();
   }
 
@@ -60,7 +59,6 @@ export class GrantModule {
       validateEntityAuthorityRaw(
         this.client.ipCoreProgram,
         params.authorityEntity,
-        params.controllerSigners,
       ),
       validateAccountExists(
         this.client.provider.connection,
@@ -98,10 +96,10 @@ export class GrantModule {
         licenseGrant,
         license,
         authorityEntity: params.authorityEntity,
+        controller: params.controller ?? this.client.provider.wallet.publicKey,
         rentDestination,
         systemProgram: SystemProgram.programId,
       })
-      .remainingAccounts(buildSignerMetas(params.controllerSigners))
       .instruction();
   }
 
@@ -112,7 +110,6 @@ export class GrantModule {
     await validateEntityAuthorityRaw(
       this.client.ipCoreProgram,
       params.authorityEntity,
-      params.controllerSigners,
     );
     const instruction = await this.revokeIx(params);
     return sendInstruction<LicenseGrantRevoked>(

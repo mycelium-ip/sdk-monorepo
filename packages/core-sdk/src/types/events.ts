@@ -66,28 +66,20 @@ export interface EntityCreated {
   creator: PublicKey;
   /** The entity handle (32-byte fixed array). */
   handle: number[];
-  /** Number of controllers. */
-  controllerCount: number;
-  /** Required signature threshold. */
-  signatureThreshold: number;
+  /** The initial controller (set to creator). */
+  controller: PublicKey;
   /** Creation timestamp. */
   createdAt: bigint;
 }
 
-/** Emitted when entity controllers are updated. */
-export interface EntityControllersUpdated {
+/** Emitted when entity control is transferred to a new controller. */
+export interface EntityControlTransferred {
   /** The entity PDA. */
   entity: PublicKey;
-  /** The entity (acts as authority). */
-  authority: PublicKey;
-  /** Previous controller count. */
-  oldControllerCount: number;
-  /** New controller count. */
-  newControllerCount: number;
-  /** Previous signature threshold. */
-  oldThreshold: number;
-  /** New signature threshold. */
-  newThreshold: number;
+  /** The previous controller. */
+  oldController: PublicKey;
+  /** The new controller. */
+  newController: PublicKey;
   /** Update timestamp. */
   updatedAt: bigint;
 }
@@ -213,7 +205,7 @@ export type IpCoreEvent =
   | TreasuryInitialized
   | TreasuryWithdrawal
   | EntityCreated
-  | EntityControllersUpdated
+  | EntityControlTransferred
   | MetadataSchemaCreated
   | EntityMetadataCreated
   | IpMetadataCreated

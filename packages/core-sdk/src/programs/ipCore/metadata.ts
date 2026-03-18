@@ -16,7 +16,6 @@ import type {
   TransactionResult,
 } from "../../types";
 import { toFixedBytes } from "../../utils/bytes";
-import { buildSignerMetas } from "../../utils/accounts";
 import { sendInstruction } from "../../utils/transactions";
 import { validateEntityAuthority } from "../../utils/validation";
 import type { IpCoreClient } from "./IpCoreClient";
@@ -38,7 +37,7 @@ export class MetadataModule {
       .createMetadataSchema(
         toFixedBytes(params.id, 32, "id"),
         toFixedBytes(params.version, 16, "version"),
-        toFixedBytes(params.dataHash, 32, "dataHash"),
+        toFixedBytes(params.dataHash, 32, "hash"),
         toFixedBytes(params.cid, 96, "cid"),
       )
       .accounts({
@@ -86,17 +85,17 @@ export class MetadataModule {
 
     return this.client.program.methods
       .createEntityMetadata(
-        toFixedBytes(params.dataHash, 32, "dataHash"),
+        toFixedBytes(params.dataHash, 32, "hash"),
         toFixedBytes(params.cid, 96, "cid"),
       )
       .accounts({
         metadata,
         entity: params.entity,
         schema: params.schema,
+        controller: params.controller ?? payer,
         payer,
         systemProgram: SystemProgram.programId,
       })
-      .remainingAccounts(buildSignerMetas(params.controllerSigners))
       .instruction();
   }
 
@@ -104,11 +103,7 @@ export class MetadataModule {
     params: CreateEntityMetadataParams,
     options?: SendTxOptions,
   ): Promise<TransactionResult<EntityMetadataCreated>> {
-    await validateEntityAuthority(
-      this.client,
-      params.entity,
-      params.controllerSigners,
-    );
+    await validateEntityAuthority(this.client, params.entity);
     const instruction = await this.createEntityMetadataIx(params);
     return sendInstruction<EntityMetadataCreated>(
       this.client.provider,
@@ -142,7 +137,7 @@ export class MetadataModule {
 
     return this.client.program.methods
       .createIpMetadata(
-        toFixedBytes(params.dataHash, 32, "dataHash"),
+        toFixedBytes(params.dataHash, 32, "hash"),
         toFixedBytes(params.cid, 96, "cid"),
       )
       .accounts({
@@ -150,10 +145,10 @@ export class MetadataModule {
         ip: params.ip,
         ownerEntity: params.ownerEntity,
         schema: params.schema,
+        controller: params.controller ?? payer,
         payer,
         systemProgram: SystemProgram.programId,
       })
-      .remainingAccounts(buildSignerMetas(params.controllerSigners))
       .instruction();
   }
 
@@ -161,11 +156,7 @@ export class MetadataModule {
     params: CreateIpMetadataParams,
     options?: SendTxOptions,
   ): Promise<TransactionResult<IpMetadataCreated>> {
-    await validateEntityAuthority(
-      this.client,
-      params.ownerEntity,
-      params.controllerSigners,
-    );
+    await validateEntityAuthority(this.client, params.ownerEntity);
     const instruction = await this.createIpMetadataIx(params);
     return sendInstruction<IpMetadataCreated>(
       this.client.provider,

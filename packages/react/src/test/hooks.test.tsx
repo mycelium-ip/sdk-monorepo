@@ -72,8 +72,6 @@ describe("useCreateEntity", () => {
 
     const params = {
       handle: "test-entity",
-      additionalControllers: [createMockPublicKey()],
-      signatureThreshold: 1,
     };
 
     result.current.mutate(params);
@@ -178,8 +176,6 @@ describe("useCreateEntityWithMetadata", () => {
   const baseParams = {
     entity: {
       handle: "test-entity",
-      additionalControllers: [],
-      signatureThreshold: 1,
     },
     metadata: {
       schema: schemaPubkey,
@@ -441,8 +437,6 @@ describe("custom executeTransaction override", () => {
 
     result.current.mutate({
       handle: "test-entity",
-      additionalControllers: [],
-      signatureThreshold: 1,
     });
 
     await waitFor(
