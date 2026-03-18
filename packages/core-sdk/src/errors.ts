@@ -75,27 +75,6 @@ export class EntityNotFoundError extends MyceliumError {
 }
 
 /**
- * Thrown when the controller signers provided do not meet the entity's
- * multisig signature threshold.
- */
-export class InsufficientSignersError extends MyceliumError {
-  readonly required: number;
-  readonly valid: number;
-
-  constructor(required: number, valid: number) {
-    super(
-      "INSUFFICIENT_SIGNERS",
-      `Insufficient controller signers. ` +
-        `Entity requires ${required} valid signature(s), but only ${valid} of the ` +
-        `provided signers are recognised controllers.`,
-    );
-    this.name = "InsufficientSignersError";
-    this.required = required;
-    this.valid = valid;
-  }
-}
-
-/**
  * Thrown when a required on-chain account (IP, license, license grant, etc.)
  * does not exist.
  */

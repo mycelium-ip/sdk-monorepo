@@ -3,13 +3,12 @@ import { SystemProgram } from "@solana/web3.js";
 import { deriveEntityPda } from "../../pda/entity";
 import type {
   CreateEntityParams,
-  EntityControllersUpdated,
+  EntityControlTransferred,
   EntityCreated,
   SendTxOptions,
   TransactionResult,
-  UpdateEntityControllersParams,
+  TransferEntityControlParams,
 } from "../../types";
-import { buildSignerMetas } from "../../utils/accounts";
 import { toFixedBytes } from "../../utils/bytes";
 import { sendInstruction } from "../../utils/transactions";
 import { validateEntityAuthority } from "../../utils/validation";
@@ -27,11 +26,7 @@ export class EntityModule {
     );
 
     return this.client.program.methods
-      .createEntity(
-        toFixedBytes(params.handle, 32, "handle"),
-        params.additionalControllers ?? [],
-        params.signatureThreshold ?? 1,
-      )
+      .createEntity(toFixedBytes(params.handle, 32, "handle"))
       .accounts({
         entity,
         creator,
@@ -54,29 +49,27 @@ export class EntityModule {
     );
   }
 
-  async updateControllersIx(
-    params: UpdateEntityControllersParams,
+  async transferControlIx(
+    params: TransferEntityControlParams,
   ): Promise<TransactionInstruction> {
+    const controller =
+      params.controller ?? this.client.provider.wallet.publicKey;
     return this.client.program.methods
-      .updateEntityControllers(params.newControllers, params.newThreshold)
+      .transferEntityControl(params.newController)
       .accounts({
         entity: params.entity,
+        controller,
       })
-      .remainingAccounts(buildSignerMetas(params.controllerSigners))
       .instruction();
   }
 
-  async updateControllers(
-    params: UpdateEntityControllersParams,
+  async transferControl(
+    params: TransferEntityControlParams,
     options?: SendTxOptions,
-  ): Promise<TransactionResult<EntityControllersUpdated>> {
-    await validateEntityAuthority(
-      this.client,
-      params.entity,
-      params.controllerSigners,
-    );
-    const instruction = await this.updateControllersIx(params);
-    return sendInstruction<EntityControllersUpdated>(
+  ): Promise<TransactionResult<EntityControlTransferred>> {
+    await validateEntityAuthority(this.client, params.entity);
+    const instruction = await this.transferControlIx(params);
+    return sendInstruction<EntityControlTransferred>(
       this.client.provider,
       instruction,
       this.client.program,

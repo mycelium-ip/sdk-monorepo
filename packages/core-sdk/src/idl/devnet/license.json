@@ -1,5 +1,5 @@
 {
-  "address": "8LcJkHL2RJcijkMwQCVjJMbwmb5Ebbg9UTv3GnxeeofU",
+  "address": "E4mqwDTFiwaq1KsfkepcMRcwWDXoLzEAREZgjQcMZpFj",
   "metadata": {
     "name": "license",
     "version": "0.1.0",
@@ -19,19 +19,38 @@
         "# Requirements",
         "- Origin IP must exist and be owned by ip_core",
         "- Origin IP must NOT be a derivative",
-        "- IP owner entity multisig approval required"
+        "- IP owner entity controller signature required"
       ],
-      "discriminator": [191, 44, 164, 1, 58, 201, 203, 51],
+      "discriminator": [
+        191,
+        44,
+        164,
+        1,
+        58,
+        201,
+        203,
+        51
+      ],
       "accounts": [
         {
           "name": "license",
-          "docs": ["The license account to create (PDA)."],
+          "docs": [
+            "The license account to create (PDA)."
+          ],
           "writable": true,
           "pda": {
             "seeds": [
               {
                 "kind": "const",
-                "value": [108, 105, 99, 101, 110, 115, 101]
+                "value": [
+                  108,
+                  105,
+                  99,
+                  101,
+                  110,
+                  115,
+                  101
+                ]
               },
               {
                 "kind": "account",
@@ -55,6 +74,13 @@
           ]
         },
         {
+          "name": "controller",
+          "docs": [
+            "The entity controller (must match owner_entity.controller)."
+          ],
+          "signer": true
+        },
+        {
           "name": "derivative_check",
           "docs": [
             "Optional: DerivativeLink account to check if this IP is a derivative.",
@@ -64,13 +90,17 @@
         },
         {
           "name": "payer",
-          "docs": ["Payer for account creation."],
+          "docs": [
+            "Payer for account creation."
+          ],
           "writable": true,
           "signer": true
         },
         {
           "name": "system_program",
-          "docs": ["System program for account creation."],
+          "docs": [
+            "System program for account creation."
+          ],
           "address": "11111111111111111111111111111111"
         }
       ],
@@ -97,20 +127,43 @@
         "# Requirements",
         "- License must exist",
         "- Grantee entity must exist and be owned by ip_core",
-        "- License authority entity multisig approval required"
+        "- License authority entity controller signature required"
       ],
-      "discriminator": [220, 12, 111, 39, 146, 113, 120, 82],
+      "discriminator": [
+        220,
+        12,
+        111,
+        39,
+        146,
+        113,
+        120,
+        82
+      ],
       "accounts": [
         {
           "name": "license_grant",
-          "docs": ["The license grant account to create (PDA)."],
+          "docs": [
+            "The license grant account to create (PDA)."
+          ],
           "writable": true,
           "pda": {
             "seeds": [
               {
                 "kind": "const",
                 "value": [
-                  108, 105, 99, 101, 110, 115, 101, 95, 103, 114, 97, 110, 116
+                  108,
+                  105,
+                  99,
+                  101,
+                  110,
+                  115,
+                  101,
+                  95,
+                  103,
+                  114,
+                  97,
+                  110,
+                  116
                 ]
               },
               {
@@ -126,12 +179,22 @@
         },
         {
           "name": "license",
-          "docs": ["The license to grant."],
+          "docs": [
+            "The license to grant."
+          ],
           "pda": {
             "seeds": [
               {
                 "kind": "const",
-                "value": [108, 105, 99, 101, 110, 115, 101]
+                "value": [
+                  108,
+                  105,
+                  99,
+                  101,
+                  110,
+                  115,
+                  101
+                ]
               },
               {
                 "kind": "account",
@@ -149,18 +212,31 @@
           ]
         },
         {
+          "name": "controller",
+          "docs": [
+            "The entity controller (must match authority_entity.controller)."
+          ],
+          "signer": true
+        },
+        {
           "name": "grantee_entity",
-          "docs": ["The grantee entity receiving the license."]
+          "docs": [
+            "The grantee entity receiving the license."
+          ]
         },
         {
           "name": "payer",
-          "docs": ["Payer for account creation."],
+          "docs": [
+            "Payer for account creation."
+          ],
           "writable": true,
           "signer": true
         },
         {
           "name": "system_program",
-          "docs": ["System program for account creation."],
+          "docs": [
+            "System program for account creation."
+          ],
           "address": "11111111111111111111111111111111"
         }
       ],
@@ -186,17 +262,36 @@
         "# Note",
         "This closes the license account and returns rent to the destination."
       ],
-      "discriminator": [97, 10, 143, 67, 35, 212, 153, 8],
+      "discriminator": [
+        97,
+        10,
+        143,
+        67,
+        35,
+        212,
+        153,
+        8
+      ],
       "accounts": [
         {
           "name": "license",
-          "docs": ["The license account to close."],
+          "docs": [
+            "The license account to close."
+          ],
           "writable": true,
           "pda": {
             "seeds": [
               {
                 "kind": "const",
-                "value": [108, 105, 99, 101, 110, 115, 101]
+                "value": [
+                  108,
+                  105,
+                  99,
+                  101,
+                  110,
+                  115,
+                  101
+                ]
               },
               {
                 "kind": "account",
@@ -208,16 +303,29 @@
         },
         {
           "name": "authority_entity",
-          "docs": ["The authority entity (must match license.authority)."]
+          "docs": [
+            "The authority entity (must match license.authority)."
+          ]
+        },
+        {
+          "name": "controller",
+          "docs": [
+            "The entity controller (must match authority_entity.controller)."
+          ],
+          "signer": true
         },
         {
           "name": "rent_destination",
-          "docs": ["Destination for rent refund."],
+          "docs": [
+            "Destination for rent refund."
+          ],
           "writable": true
         },
         {
           "name": "system_program",
-          "docs": ["System program."],
+          "docs": [
+            "System program."
+          ],
           "address": "11111111111111111111111111111111"
         }
       ],
@@ -240,18 +348,41 @@
         "Grantee consent is NOT required. This closes the grant account",
         "and returns rent to the destination."
       ],
-      "discriminator": [79, 187, 74, 159, 83, 60, 87, 58],
+      "discriminator": [
+        79,
+        187,
+        74,
+        159,
+        83,
+        60,
+        87,
+        58
+      ],
       "accounts": [
         {
           "name": "license_grant",
-          "docs": ["The license grant account to close."],
+          "docs": [
+            "The license grant account to close."
+          ],
           "writable": true,
           "pda": {
             "seeds": [
               {
                 "kind": "const",
                 "value": [
-                  108, 105, 99, 101, 110, 115, 101, 95, 103, 114, 97, 110, 116
+                  108,
+                  105,
+                  99,
+                  101,
+                  110,
+                  115,
+                  101,
+                  95,
+                  103,
+                  114,
+                  97,
+                  110,
+                  116
                 ]
               },
               {
@@ -268,12 +399,22 @@
         },
         {
           "name": "license",
-          "docs": ["The license this grant is for."],
+          "docs": [
+            "The license this grant is for."
+          ],
           "pda": {
             "seeds": [
               {
                 "kind": "const",
-                "value": [108, 105, 99, 101, 110, 115, 101]
+                "value": [
+                  108,
+                  105,
+                  99,
+                  101,
+                  110,
+                  115,
+                  101
+                ]
               },
               {
                 "kind": "account",
@@ -285,16 +426,29 @@
         },
         {
           "name": "authority_entity",
-          "docs": ["The authority entity (must match license.authority)."]
+          "docs": [
+            "The authority entity (must match license.authority)."
+          ]
+        },
+        {
+          "name": "controller",
+          "docs": [
+            "The entity controller (must match authority_entity.controller)."
+          ],
+          "signer": true
         },
         {
           "name": "rent_destination",
-          "docs": ["Destination for rent refund."],
+          "docs": [
+            "Destination for rent refund."
+          ],
           "writable": true
         },
         {
           "name": "system_program",
-          "docs": ["System program."],
+          "docs": [
+            "System program."
+          ],
           "address": "11111111111111111111111111111111"
         }
       ],
@@ -317,17 +471,36 @@
         "# Note",
         "Only `derivatives_allowed` may be updated. Origin IP and authority are immutable."
       ],
-      "discriminator": [249, 191, 202, 169, 155, 81, 176, 45],
+      "discriminator": [
+        249,
+        191,
+        202,
+        169,
+        155,
+        81,
+        176,
+        45
+      ],
       "accounts": [
         {
           "name": "license",
-          "docs": ["The license account to update."],
+          "docs": [
+            "The license account to update."
+          ],
           "writable": true,
           "pda": {
             "seeds": [
               {
                 "kind": "const",
-                "value": [108, 105, 99, 101, 110, 115, 101]
+                "value": [
+                  108,
+                  105,
+                  99,
+                  101,
+                  110,
+                  115,
+                  101
+                ]
               },
               {
                 "kind": "account",
@@ -339,7 +512,16 @@
         },
         {
           "name": "authority_entity",
-          "docs": ["The authority entity (must match license.authority)."]
+          "docs": [
+            "The authority entity (must match license.authority)."
+          ]
+        },
+        {
+          "name": "controller",
+          "docs": [
+            "The entity controller (must match authority_entity.controller)."
+          ],
+          "signer": true
         },
         {
           "name": "system_program",
@@ -364,41 +546,122 @@
   "accounts": [
     {
       "name": "Entity",
-      "discriminator": [46, 157, 161, 161, 254, 46, 79, 24]
+      "discriminator": [
+        46,
+        157,
+        161,
+        161,
+        254,
+        46,
+        79,
+        24
+      ]
     },
     {
       "name": "IpAccount",
-      "discriminator": [97, 57, 119, 87, 95, 245, 239, 253]
+      "discriminator": [
+        97,
+        57,
+        119,
+        87,
+        95,
+        245,
+        239,
+        253
+      ]
     },
     {
       "name": "License",
-      "discriminator": [248, 152, 195, 100, 185, 108, 176, 231]
+      "discriminator": [
+        248,
+        152,
+        195,
+        100,
+        185,
+        108,
+        176,
+        231
+      ]
     },
     {
       "name": "LicenseGrant",
-      "discriminator": [19, 253, 88, 68, 201, 150, 58, 227]
+      "discriminator": [
+        19,
+        253,
+        88,
+        68,
+        201,
+        150,
+        58,
+        227
+      ]
     }
   ],
   "events": [
     {
       "name": "LicenseCreated",
-      "discriminator": [105, 38, 238, 189, 101, 241, 12, 157]
+      "discriminator": [
+        105,
+        38,
+        238,
+        189,
+        101,
+        241,
+        12,
+        157
+      ]
     },
     {
       "name": "LicenseGrantCreated",
-      "discriminator": [153, 223, 191, 253, 76, 79, 195, 58]
+      "discriminator": [
+        153,
+        223,
+        191,
+        253,
+        76,
+        79,
+        195,
+        58
+      ]
     },
     {
       "name": "LicenseGrantRevoked",
-      "discriminator": [204, 61, 11, 39, 208, 191, 66, 242]
+      "discriminator": [
+        204,
+        61,
+        11,
+        39,
+        208,
+        191,
+        66,
+        242
+      ]
     },
     {
       "name": "LicenseRevoked",
-      "discriminator": [185, 114, 47, 171, 61, 106, 25, 24]
+      "discriminator": [
+        185,
+        114,
+        47,
+        171,
+        61,
+        106,
+        25,
+        24
+      ]
     },
     {
       "name": "LicenseUpdated",
-      "discriminator": [62, 154, 41, 164, 197, 7, 26, 54]
+      "discriminator": [
+        62,
+        154,
+        41,
+        164,
+        197,
+        7,
+        26,
+        54
+      ]
     }
   ],
   "errors": [
@@ -464,16 +727,11 @@
     },
     {
       "code": 6012,
-      "name": "InsufficientSignatures",
-      "msg": "Insufficient signatures: threshold not met"
-    },
-    {
-      "code": 6013,
       "name": "ArithmeticOverflow",
       "msg": "Arithmetic overflow"
     },
     {
-      "code": 6014,
+      "code": 6013,
       "name": "ActiveGrantsExist",
       "msg": "Cannot revoke license with active grants"
     }
@@ -484,15 +742,17 @@
       "docs": [
         "An on-chain entity that can own IP and sign transactions.",
         "",
-        "Entities use a multisig pattern where multiple controllers can manage",
-        "the entity's assets with a configurable signature threshold."
+        "Entities use a single controller model. For multisig functionality,",
+        "the controller can be set to an external multisig PDA (e.g., Squads)."
       ],
       "type": {
         "kind": "struct",
         "fields": [
           {
             "name": "creator",
-            "docs": ["The original creator of this entity (immutable)."],
+            "docs": [
+              "The original creator of this entity (immutable)."
+            ],
             "type": "pubkey"
           },
           {
@@ -501,26 +761,19 @@
               "Unique handle for this entity (lowercase alphanumeric, immutable)."
             ],
             "type": {
-              "array": ["u8", 32]
+              "array": [
+                "u8",
+                32
+              ]
             }
           },
           {
-            "name": "controllers",
+            "name": "controller",
             "docs": [
-              "List of controller public keys that can sign for this entity.",
-              "Maximum 5 controllers."
+              "The controller public key authorized to act on behalf of this entity.",
+              "Can be an EOA or an external multisig PDA (e.g., Squads)."
             ],
-            "type": {
-              "vec": "pubkey"
-            }
-          },
-          {
-            "name": "signature_threshold",
-            "docs": [
-              "Number of signatures required to authorize actions.",
-              "Must be between 1 and controllers.len()."
-            ],
-            "type": "u8"
+            "type": "pubkey"
           },
           {
             "name": "current_metadata_revision",
@@ -532,17 +785,23 @@
           },
           {
             "name": "created_at",
-            "docs": ["Unix timestamp when this entity was created."],
+            "docs": [
+              "Unix timestamp when this entity was created."
+            ],
             "type": "i64"
           },
           {
             "name": "updated_at",
-            "docs": ["Unix timestamp when this entity was last updated."],
+            "docs": [
+              "Unix timestamp when this entity was last updated."
+            ],
             "type": "i64"
           },
           {
             "name": "bump",
-            "docs": ["PDA bump seed."],
+            "docs": [
+              "PDA bump seed."
+            ],
             "type": "u8"
           }
         ]
@@ -561,9 +820,14 @@
         "fields": [
           {
             "name": "content_hash",
-            "docs": ["SHA-256 hash of the content (immutable)."],
+            "docs": [
+              "SHA-256 hash of the content (immutable)."
+            ],
             "type": {
-              "array": ["u8", 32]
+              "array": [
+                "u8",
+                32
+              ]
             }
           },
           {
@@ -591,17 +855,23 @@
           },
           {
             "name": "created_at",
-            "docs": ["Unix timestamp when this IP was registered."],
+            "docs": [
+              "Unix timestamp when this IP was registered."
+            ],
             "type": "i64"
           },
           {
             "name": "updated_at",
-            "docs": ["Unix timestamp when this IP was last updated."],
+            "docs": [
+              "Unix timestamp when this IP was last updated."
+            ],
             "type": "i64"
           },
           {
             "name": "bump",
-            "docs": ["PDA bump seed."],
+            "docs": [
+              "PDA bump seed."
+            ],
             "type": "u8"
           }
         ]
@@ -620,7 +890,9 @@
         "fields": [
           {
             "name": "origin_ip",
-            "docs": ["The IP this license is attached to (immutable)."],
+            "docs": [
+              "The IP this license is attached to (immutable)."
+            ],
             "type": "pubkey"
           },
           {
@@ -633,17 +905,23 @@
           },
           {
             "name": "derivatives_allowed",
-            "docs": ["Whether derivatives are allowed under this license."],
+            "docs": [
+              "Whether derivatives are allowed under this license."
+            ],
             "type": "bool"
           },
           {
             "name": "created_at",
-            "docs": ["Unix timestamp when this license was created."],
+            "docs": [
+              "Unix timestamp when this license was created."
+            ],
             "type": "i64"
           },
           {
             "name": "bump",
-            "docs": ["PDA bump seed."],
+            "docs": [
+              "PDA bump seed."
+            ],
             "type": "u8"
           }
         ]
@@ -651,33 +929,45 @@
     },
     {
       "name": "LicenseCreated",
-      "docs": ["Emitted when a new license is created."],
+      "docs": [
+        "Emitted when a new license is created."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
           {
             "name": "license",
-            "docs": ["The license PDA."],
+            "docs": [
+              "The license PDA."
+            ],
             "type": "pubkey"
           },
           {
             "name": "origin_ip",
-            "docs": ["The origin IP this license is for."],
+            "docs": [
+              "The origin IP this license is for."
+            ],
             "type": "pubkey"
           },
           {
             "name": "authority",
-            "docs": ["The authority entity (IP owner)."],
+            "docs": [
+              "The authority entity (IP owner)."
+            ],
             "type": "pubkey"
           },
           {
             "name": "derivatives_allowed",
-            "docs": ["Whether derivatives are allowed."],
+            "docs": [
+              "Whether derivatives are allowed."
+            ],
             "type": "bool"
           },
           {
             "name": "created_at",
-            "docs": ["Creation timestamp."],
+            "docs": [
+              "Creation timestamp."
+            ],
             "type": "i64"
           }
         ]
@@ -696,27 +986,37 @@
         "fields": [
           {
             "name": "license",
-            "docs": ["The license this grant is for (immutable)."],
+            "docs": [
+              "The license this grant is for (immutable)."
+            ],
             "type": "pubkey"
           },
           {
             "name": "grantee",
-            "docs": ["The entity that has been granted rights (immutable)."],
+            "docs": [
+              "The entity that has been granted rights (immutable)."
+            ],
             "type": "pubkey"
           },
           {
             "name": "granted_at",
-            "docs": ["Unix timestamp when this grant was created (immutable)."],
+            "docs": [
+              "Unix timestamp when this grant was created (immutable)."
+            ],
             "type": "i64"
           },
           {
             "name": "expiration",
-            "docs": ["Expiration timestamp (0 = no expiration)."],
+            "docs": [
+              "Expiration timestamp (0 = no expiration)."
+            ],
             "type": "i64"
           },
           {
             "name": "bump",
-            "docs": ["PDA bump seed."],
+            "docs": [
+              "PDA bump seed."
+            ],
             "type": "u8"
           }
         ]
@@ -724,33 +1024,45 @@
     },
     {
       "name": "LicenseGrantCreated",
-      "docs": ["Emitted when a new license grant is created."],
+      "docs": [
+        "Emitted when a new license grant is created."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
           {
             "name": "license_grant",
-            "docs": ["The license grant PDA."],
+            "docs": [
+              "The license grant PDA."
+            ],
             "type": "pubkey"
           },
           {
             "name": "license",
-            "docs": ["The license this grant is for."],
+            "docs": [
+              "The license this grant is for."
+            ],
             "type": "pubkey"
           },
           {
             "name": "grantee",
-            "docs": ["The grantee entity."],
+            "docs": [
+              "The grantee entity."
+            ],
             "type": "pubkey"
           },
           {
             "name": "expiration",
-            "docs": ["Grant expiration (0 = no expiration)."],
+            "docs": [
+              "Grant expiration (0 = no expiration)."
+            ],
             "type": "i64"
           },
           {
             "name": "granted_at",
-            "docs": ["Grant timestamp."],
+            "docs": [
+              "Grant timestamp."
+            ],
             "type": "i64"
           }
         ]
@@ -758,33 +1070,45 @@
     },
     {
       "name": "LicenseGrantRevoked",
-      "docs": ["Emitted when a license grant is revoked (closed)."],
+      "docs": [
+        "Emitted when a license grant is revoked (closed)."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
           {
             "name": "license_grant",
-            "docs": ["The license grant PDA."],
+            "docs": [
+              "The license grant PDA."
+            ],
             "type": "pubkey"
           },
           {
             "name": "license",
-            "docs": ["The license this grant was for."],
+            "docs": [
+              "The license this grant was for."
+            ],
             "type": "pubkey"
           },
           {
             "name": "grantee",
-            "docs": ["The grantee entity."],
+            "docs": [
+              "The grantee entity."
+            ],
             "type": "pubkey"
           },
           {
             "name": "authority",
-            "docs": ["The authority entity who revoked."],
+            "docs": [
+              "The authority entity who revoked."
+            ],
             "type": "pubkey"
           },
           {
             "name": "rent_destination",
-            "docs": ["Destination for rent refund."],
+            "docs": [
+              "Destination for rent refund."
+            ],
             "type": "pubkey"
           }
         ]
@@ -792,28 +1116,38 @@
     },
     {
       "name": "LicenseRevoked",
-      "docs": ["Emitted when a license is revoked (closed)."],
+      "docs": [
+        "Emitted when a license is revoked (closed)."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
           {
             "name": "license",
-            "docs": ["The license PDA."],
+            "docs": [
+              "The license PDA."
+            ],
             "type": "pubkey"
           },
           {
             "name": "origin_ip",
-            "docs": ["The origin IP this license was for."],
+            "docs": [
+              "The origin IP this license was for."
+            ],
             "type": "pubkey"
           },
           {
             "name": "authority",
-            "docs": ["The authority entity (IP owner)."],
+            "docs": [
+              "The authority entity (IP owner)."
+            ],
             "type": "pubkey"
           },
           {
             "name": "rent_destination",
-            "docs": ["Destination for rent refund."],
+            "docs": [
+              "Destination for rent refund."
+            ],
             "type": "pubkey"
           }
         ]
@@ -821,33 +1155,45 @@
     },
     {
       "name": "LicenseUpdated",
-      "docs": ["Emitted when a license is updated."],
+      "docs": [
+        "Emitted when a license is updated."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
           {
             "name": "license",
-            "docs": ["The license PDA."],
+            "docs": [
+              "The license PDA."
+            ],
             "type": "pubkey"
           },
           {
             "name": "origin_ip",
-            "docs": ["The origin IP this license is for."],
+            "docs": [
+              "The origin IP this license is for."
+            ],
             "type": "pubkey"
           },
           {
             "name": "authority",
-            "docs": ["The authority entity (IP owner)."],
+            "docs": [
+              "The authority entity (IP owner)."
+            ],
             "type": "pubkey"
           },
           {
             "name": "old_derivatives_allowed",
-            "docs": ["Previous derivatives_allowed value."],
+            "docs": [
+              "Previous derivatives_allowed value."
+            ],
             "type": "bool"
           },
           {
             "name": "new_derivatives_allowed",
-            "docs": ["New derivatives_allowed value."],
+            "docs": [
+              "New derivatives_allowed value."
+            ],
             "type": "bool"
           }
         ]

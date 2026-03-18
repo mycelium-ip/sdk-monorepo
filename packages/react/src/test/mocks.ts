@@ -24,8 +24,7 @@ export const mockEntityCreatedEvent: EntityCreated = {
   entity: Keypair.generate().publicKey,
   creator: Keypair.generate().publicKey,
   handle: new Array(32).fill(0),
-  controllerCount: 1,
-  signatureThreshold: 1,
+  controller: Keypair.generate().publicKey,
   createdAt: 0n,
 };
 
@@ -176,8 +175,8 @@ function createMockEntityModule() {
   return {
     createIx: vi.fn().mockResolvedValue(createMockInstruction()),
     create: vi.fn().mockResolvedValue("mockSignature"),
-    updateControllersIx: vi.fn().mockResolvedValue(createMockInstruction()),
-    updateControllers: vi.fn().mockResolvedValue("mockSignature"),
+    transferControlIx: vi.fn().mockResolvedValue(createMockInstruction()),
+    transferControl: vi.fn().mockResolvedValue("mockSignature"),
   };
 }
 

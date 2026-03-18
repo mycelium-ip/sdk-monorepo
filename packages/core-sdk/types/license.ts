@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/license.json`.
  */
 export type License = {
-  "address": "8LcJkHL2RJcijkMwQCVjJMbwmb5Ebbg9UTv3GnxeeofU",
+  "address": "E4mqwDTFiwaq1KsfkepcMRcwWDXoLzEAREZgjQcMZpFj",
   "metadata": {
     "name": "license",
     "version": "0.1.0",
@@ -25,7 +25,7 @@ export type License = {
         "# Requirements",
         "- Origin IP must exist and be owned by ip_core",
         "- Origin IP must NOT be a derivative",
-        "- IP owner entity multisig approval required"
+        "- IP owner entity controller signature required"
       ],
       "discriminator": [
         191,
@@ -80,6 +80,13 @@ export type License = {
           ]
         },
         {
+          "name": "controller",
+          "docs": [
+            "The entity controller (must match owner_entity.controller)."
+          ],
+          "signer": true
+        },
+        {
           "name": "derivativeCheck",
           "docs": [
             "Optional: DerivativeLink account to check if this IP is a derivative.",
@@ -126,7 +133,7 @@ export type License = {
         "# Requirements",
         "- License must exist",
         "- Grantee entity must exist and be owned by ip_core",
-        "- License authority entity multisig approval required"
+        "- License authority entity controller signature required"
       ],
       "discriminator": [
         220,
@@ -209,6 +216,13 @@ export type License = {
             "The authority entity (must match license.authority).",
             "This is the IP owner who grants licenses."
           ]
+        },
+        {
+          "name": "controller",
+          "docs": [
+            "The entity controller (must match authority_entity.controller)."
+          ],
+          "signer": true
         },
         {
           "name": "granteeEntity",
@@ -298,6 +312,13 @@ export type License = {
           "docs": [
             "The authority entity (must match license.authority)."
           ]
+        },
+        {
+          "name": "controller",
+          "docs": [
+            "The entity controller (must match authority_entity.controller)."
+          ],
+          "signer": true
         },
         {
           "name": "rentDestination",
@@ -416,6 +437,13 @@ export type License = {
           ]
         },
         {
+          "name": "controller",
+          "docs": [
+            "The entity controller (must match authority_entity.controller)."
+          ],
+          "signer": true
+        },
+        {
           "name": "rentDestination",
           "docs": [
             "Destination for rent refund."
@@ -493,6 +521,13 @@ export type License = {
           "docs": [
             "The authority entity (must match license.authority)."
           ]
+        },
+        {
+          "name": "controller",
+          "docs": [
+            "The entity controller (must match authority_entity.controller)."
+          ],
+          "signer": true
         },
         {
           "name": "systemProgram",
@@ -698,16 +733,11 @@ export type License = {
     },
     {
       "code": 6012,
-      "name": "insufficientSignatures",
-      "msg": "Insufficient signatures: threshold not met"
-    },
-    {
-      "code": 6013,
       "name": "arithmeticOverflow",
       "msg": "Arithmetic overflow"
     },
     {
-      "code": 6014,
+      "code": 6013,
       "name": "activeGrantsExist",
       "msg": "Cannot revoke license with active grants"
     }
@@ -718,8 +748,8 @@ export type License = {
       "docs": [
         "An on-chain entity that can own IP and sign transactions.",
         "",
-        "Entities use a multisig pattern where multiple controllers can manage",
-        "the entity's assets with a configurable signature threshold."
+        "Entities use a single controller model. For multisig functionality,",
+        "the controller can be set to an external multisig PDA (e.g., Squads)."
       ],
       "type": {
         "kind": "struct",
@@ -744,22 +774,12 @@ export type License = {
             }
           },
           {
-            "name": "controllers",
+            "name": "controller",
             "docs": [
-              "List of controller public keys that can sign for this entity.",
-              "Maximum 5 controllers."
+              "The controller public key authorized to act on behalf of this entity.",
+              "Can be an EOA or an external multisig PDA (e.g., Squads)."
             ],
-            "type": {
-              "vec": "pubkey"
-            }
-          },
-          {
-            "name": "signatureThreshold",
-            "docs": [
-              "Number of signatures required to authorize actions.",
-              "Must be between 1 and controllers.len()."
-            ],
-            "type": "u8"
+            "type": "pubkey"
           },
           {
             "name": "currentMetadataRevision",

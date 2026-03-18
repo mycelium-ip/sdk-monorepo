@@ -5,7 +5,6 @@ export * from "./errors";
 export * from "./types";
 export * from "./utils/bytes";
 export * from "./utils/bn";
-export * from "./utils/accounts";
 export * from "./utils/events";
 export * from "./utils/provider";
 export * from "./utils/transactions";

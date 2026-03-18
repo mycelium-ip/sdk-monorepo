@@ -31,14 +31,12 @@ function createTestWallet(publicKey?: PublicKey): Wallet {
       },
       "solana:signMessage": {
         version: "1.0.0" as const,
-        signMessage: vi
-          .fn()
-          .mockResolvedValue([
-            {
-              signedMessage: new Uint8Array(32),
-              signature: new Uint8Array(64),
-            },
-          ]),
+        signMessage: vi.fn().mockResolvedValue([
+          {
+            signedMessage: new Uint8Array(32),
+            signature: new Uint8Array(64),
+          },
+        ]),
       },
     },
   };
@@ -55,8 +53,6 @@ describe("MyceliumClient smoke", () => {
 
     const entityIx = await client.ipCore.entity.createIx({
       handle: "entity-1",
-      additionalControllers: [],
-      signatureThreshold: 1,
     });
 
     const schemaIx = await client.ipCore.metadata.createSchemaIx({

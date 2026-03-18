@@ -10,7 +10,6 @@ import type {
   UpdateDerivativeLicenseParams,
 } from "../../types";
 import { sendInstruction } from "../../utils/transactions";
-import { buildSignerMetas } from "../../utils/accounts";
 import {
   validateEntityAuthority,
   validateAccountExists,
@@ -39,12 +38,12 @@ export class DerivativeModule {
         parentIp: params.parentIp,
         childIp: params.childIp,
         childOwnerEntity: params.childOwnerEntity,
+        controller: params.controller ?? payer,
         licenseGrant: params.licenseGrant,
         license: params.license,
         payer,
         systemProgram: SystemProgram.programId,
       })
-      .remainingAccounts(buildSignerMetas(params.controllerSigners))
       .instruction();
   }
 
@@ -54,11 +53,7 @@ export class DerivativeModule {
   ): Promise<TransactionResult<DerivativeLinkCreated>> {
     const connection = this.client.provider.connection;
     await Promise.all([
-      validateEntityAuthority(
-        this.client,
-        params.childOwnerEntity,
-        params.controllerSigners,
-      ),
+      validateEntityAuthority(this.client, params.childOwnerEntity),
       validateAccountExists(connection, params.parentIp, "Parent IP"),
       validateAccountExists(connection, params.childIp, "Child IP"),
       validateAccountExists(connection, params.licenseGrant, "License grant"),
@@ -94,8 +89,8 @@ export class DerivativeModule {
         parentIp: params.parentIp,
         newLicenseGrant: params.newLicenseGrant,
         newLicense: params.newLicense,
+        controller: params.controller ?? this.client.provider.wallet.publicKey,
       })
-      .remainingAccounts(buildSignerMetas(params.controllerSigners))
       .instruction();
   }
 
@@ -103,11 +98,7 @@ export class DerivativeModule {
     params: UpdateDerivativeLicenseParams,
     options?: SendTxOptions,
   ): Promise<TransactionResult<DerivativeLicenseUpdated>> {
-    await validateEntityAuthority(
-      this.client,
-      params.childOwnerEntity,
-      params.controllerSigners,
-    );
+    await validateEntityAuthority(this.client, params.childOwnerEntity);
     const instruction = await this.updateLicenseIx(params);
     return sendInstruction<DerivativeLicenseUpdated>(
       this.client.provider,

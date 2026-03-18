@@ -220,8 +220,7 @@ export class IpCoreClient {
       return {
         creator: account.creator,
         handle: account.handle,
-        controllers: account.controllers,
-        signatureThreshold: account.signatureThreshold,
+        controller: account.controller,
         currentMetadataRevision: BigInt(
           account.currentMetadataRevision.toString(),
         ),

@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/ip_core.json`.
  */
 export type IpCore = {
-  "address": "CSSfTXVfCUmvZCEjPZxFne5EPewzTGCyYAybLNihLQM1",
+  "address": "8Yv28aduM7K63b7HVuXPj6fYW8pLagHm8AuJCYVxvV6G",
   "metadata": {
     "name": "ipCore",
     "version": "0.1.0",
@@ -80,6 +80,13 @@ export type IpCore = {
           "docs": [
             "The owner entity of the child IP."
           ]
+        },
+        {
+          "name": "controller",
+          "docs": [
+            "The child owner entity controller (must sign)."
+          ],
+          "signer": true
         },
         {
           "name": "licenseGrant",
@@ -188,16 +195,6 @@ export type IpCore = {
               32
             ]
           }
-        },
-        {
-          "name": "additionalControllers",
-          "type": {
-            "vec": "pubkey"
-          }
-        },
-        {
-          "name": "signatureThreshold",
-          "type": "u8"
         }
       ]
     },
@@ -236,6 +233,13 @@ export type IpCore = {
           "docs": [
             "The metadata schema this metadata conforms to."
           ]
+        },
+        {
+          "name": "controller",
+          "docs": [
+            "The entity controller (must sign)."
+          ],
+          "signer": true
         },
         {
           "name": "payer",
@@ -381,6 +385,13 @@ export type IpCore = {
           "writable": true
         },
         {
+          "name": "controller",
+          "docs": [
+            "The entity controller (must sign)."
+          ],
+          "signer": true
+        },
+        {
           "name": "payer",
           "docs": [
             "Payer for account creation and registration fee."
@@ -456,6 +467,13 @@ export type IpCore = {
           "docs": [
             "The metadata schema this metadata conforms to."
           ]
+        },
+        {
+          "name": "controller",
+          "docs": [
+            "The owner entity controller (must sign)."
+          ],
+          "signer": true
         },
         {
           "name": "payer",
@@ -759,6 +777,44 @@ export type IpCore = {
       "args": []
     },
     {
+      "name": "transferEntityControl",
+      "docs": [
+        "Transfer entity control to a new controller."
+      ],
+      "discriminator": [
+        1,
+        75,
+        135,
+        215,
+        37,
+        147,
+        111,
+        129
+      ],
+      "accounts": [
+        {
+          "name": "entity",
+          "docs": [
+            "The entity to update."
+          ],
+          "writable": true
+        },
+        {
+          "name": "controller",
+          "docs": [
+            "The current controller (must sign)."
+          ],
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "newController",
+          "type": "pubkey"
+        }
+      ]
+    },
+    {
       "name": "transferIp",
       "docs": [
         "Transfer IP ownership."
@@ -792,6 +848,13 @@ export type IpCore = {
           "docs": [
             "The new owner entity."
           ]
+        },
+        {
+          "name": "controller",
+          "docs": [
+            "The current owner entity controller (must sign)."
+          ],
+          "signer": true
         }
       ],
       "args": []
@@ -937,49 +1000,19 @@ export type IpCore = {
           "docs": [
             "The new license account (owned by external license program)."
           ]
+        },
+        {
+          "name": "controller",
+          "docs": [
+            "The child owner entity controller (must sign)."
+          ],
+          "signer": true
         }
       ],
       "args": [
         {
           "name": "licenseProgramId",
           "type": "pubkey"
-        }
-      ]
-    },
-    {
-      "name": "updateEntityControllers",
-      "docs": [
-        "Update entity controllers by replacing the entire controller list."
-      ],
-      "discriminator": [
-        231,
-        133,
-        236,
-        96,
-        186,
-        46,
-        119,
-        211
-      ],
-      "accounts": [
-        {
-          "name": "entity",
-          "docs": [
-            "The entity to update."
-          ],
-          "writable": true
-        }
-      ],
-      "args": [
-        {
-          "name": "newControllers",
-          "type": {
-            "vec": "pubkey"
-          }
-        },
-        {
-          "name": "newThreshold",
-          "type": "u8"
         }
       ]
     },
@@ -1209,16 +1242,16 @@ export type IpCore = {
       ]
     },
     {
-      "name": "entityControllersUpdated",
+      "name": "entityControlTransferred",
       "discriminator": [
-        222,
-        129,
-        130,
-        23,
-        226,
-        248,
-        216,
-        157
+        45,
+        239,
+        120,
+        115,
+        218,
+        39,
+        118,
+        113
       ]
     },
     {
@@ -1349,138 +1382,103 @@ export type IpCore = {
     },
     {
       "code": 6004,
-      "name": "invalidThreshold",
-      "msg": "Invalid threshold: must be between 1 and number of controllers"
-    },
-    {
-      "code": 6005,
-      "name": "controllerLimitExceeded",
-      "msg": "Controller limit exceeded: maximum is 5 controllers"
-    },
-    {
-      "code": 6006,
-      "name": "controllerNotFound",
-      "msg": "Controller not found in the controller list"
-    },
-    {
-      "code": 6007,
-      "name": "insufficientSignatures",
-      "msg": "Insufficient signatures: threshold not met"
-    },
-    {
-      "code": 6008,
       "name": "entityNotInitialized",
       "msg": "Entity has not been initialized"
     },
     {
-      "code": 6009,
+      "code": 6005,
       "name": "invalidHandle",
       "msg": "Invalid handle: must be lowercase alphanumeric (a-z, 0-9)"
     },
     {
-      "code": 6010,
+      "code": 6006,
       "name": "handleTooLong",
       "msg": "Handle too long: maximum length is 32 characters"
     },
     {
-      "code": 6011,
+      "code": 6007,
       "name": "handleAlreadyExists",
       "msg": "Handle already exists for this creator"
     },
     {
-      "code": 6012,
+      "code": 6008,
       "name": "metadataSchemaNotFound",
       "msg": "Metadata schema not found"
     },
     {
-      "code": 6013,
+      "code": 6009,
       "name": "invalidMetadataRevision",
       "msg": "Invalid metadata revision: must be exactly current revision + 1"
     },
     {
-      "code": 6014,
+      "code": 6010,
       "name": "ipAlreadyExists",
       "msg": "IP already exists for this registrant and content hash"
     },
     {
-      "code": 6015,
+      "code": 6011,
       "name": "invalidOwnership",
       "msg": "Invalid ownership: signer is not the owner"
     },
     {
-      "code": 6016,
+      "code": 6012,
       "name": "derivativeAlreadyExists",
       "msg": "Derivative link already exists between parent and child IP"
     },
     {
-      "code": 6017,
+      "code": 6013,
       "name": "arithmeticOverflow",
       "msg": "Arithmetic overflow"
     },
     {
-      "code": 6018,
+      "code": 6014,
       "name": "emptyCid",
       "msg": "CID cannot be empty"
     },
     {
-      "code": 6019,
+      "code": 6015,
       "name": "emptyHandle",
       "msg": "Handle cannot be empty"
     },
     {
-      "code": 6020,
-      "name": "cannotRemoveLastController",
-      "msg": "Cannot remove the last controller: entity must have at least one controller"
-    },
-    {
-      "code": 6021,
+      "code": 6016,
       "name": "invalidLicenseOwner",
       "msg": "Invalid license: account not owned by license program"
     },
     {
-      "code": 6022,
+      "code": 6017,
       "name": "invalidLicenseOrigin",
       "msg": "Invalid license: does not reference the parent IP"
     },
     {
-      "code": 6023,
+      "code": 6018,
       "name": "derivativesNotAllowed",
       "msg": "License does not allow derivatives"
     },
     {
-      "code": 6024,
+      "code": 6019,
       "name": "licenseExpired",
       "msg": "License has expired"
     },
     {
-      "code": 6025,
+      "code": 6020,
       "name": "invalidTokenMint",
       "msg": "Invalid token mint: does not match registration currency"
     },
     {
-      "code": 6026,
+      "code": 6021,
       "name": "invalidTreasuryAuthority",
       "msg": "Invalid treasury token account authority"
     },
     {
-      "code": 6027,
+      "code": 6022,
       "name": "licenseGrantMismatch",
       "msg": "License grant does not reference the expected license"
     },
     {
-      "code": 6028,
+      "code": 6023,
       "name": "invalidGrantee",
       "msg": "Grantee does not match the child owner entity"
-    },
-    {
-      "code": 6029,
-      "name": "duplicateController",
-      "msg": "Duplicate controller: each controller must be unique"
-    },
-    {
-      "code": 6030,
-      "name": "emptyControllerList",
-      "msg": "Controller list cannot be empty: entity must have at least one controller"
     }
   ],
   "types": [
@@ -1744,8 +1742,8 @@ export type IpCore = {
       "docs": [
         "An on-chain entity that can own IP and sign transactions.",
         "",
-        "Entities use a multisig pattern where multiple controllers can manage",
-        "the entity's assets with a configurable signature threshold."
+        "Entities use a single controller model. For multisig functionality,",
+        "the controller can be set to an external multisig PDA (e.g., Squads)."
       ],
       "type": {
         "kind": "struct",
@@ -1770,22 +1768,12 @@ export type IpCore = {
             }
           },
           {
-            "name": "controllers",
+            "name": "controller",
             "docs": [
-              "List of controller public keys that can sign for this entity.",
-              "Maximum 5 controllers."
+              "The controller public key authorized to act on behalf of this entity.",
+              "Can be an EOA or an external multisig PDA (e.g., Squads)."
             ],
-            "type": {
-              "vec": "pubkey"
-            }
-          },
-          {
-            "name": "signatureThreshold",
-            "docs": [
-              "Number of signatures required to authorize actions.",
-              "Must be between 1 and controllers.len()."
-            ],
-            "type": "u8"
+            "type": "pubkey"
           },
           {
             "name": "currentMetadataRevision",
@@ -1820,9 +1808,9 @@ export type IpCore = {
       }
     },
     {
-      "name": "entityControllersUpdated",
+      "name": "entityControlTransferred",
       "docs": [
-        "Emitted when entity controllers are updated."
+        "Emitted when entity control is transferred."
       ],
       "type": {
         "kind": "struct",
@@ -1835,39 +1823,18 @@ export type IpCore = {
             "type": "pubkey"
           },
           {
-            "name": "authority",
+            "name": "oldController",
             "docs": [
-              "The entity (acts as authority)."
+              "The previous controller."
             ],
             "type": "pubkey"
           },
           {
-            "name": "oldControllerCount",
+            "name": "newController",
             "docs": [
-              "Previous controller count."
+              "The new controller."
             ],
-            "type": "u8"
-          },
-          {
-            "name": "newControllerCount",
-            "docs": [
-              "New controller count."
-            ],
-            "type": "u8"
-          },
-          {
-            "name": "oldThreshold",
-            "docs": [
-              "Previous signature threshold."
-            ],
-            "type": "u8"
-          },
-          {
-            "name": "newThreshold",
-            "docs": [
-              "New signature threshold."
-            ],
-            "type": "u8"
+            "type": "pubkey"
           },
           {
             "name": "updatedAt",
@@ -1914,18 +1881,11 @@ export type IpCore = {
             }
           },
           {
-            "name": "controllerCount",
+            "name": "controller",
             "docs": [
-              "Number of controllers."
+              "The initial controller."
             ],
-            "type": "u8"
-          },
-          {
-            "name": "signatureThreshold",
-            "docs": [
-              "Required signature threshold."
-            ],
-            "type": "u8"
+            "type": "pubkey"
           },
           {
             "name": "createdAt",

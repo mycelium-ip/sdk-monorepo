@@ -12,7 +12,6 @@ import type {
   UpdateLicenseParams,
 } from "../../types";
 import { sendInstruction } from "../../utils/transactions";
-import { buildSignerMetas } from "../../utils/accounts";
 import {
   validateEntityAuthorityRaw,
   validateAccountExists,
@@ -38,12 +37,12 @@ export class LicenseModule {
         license,
         originIp: params.originIp,
         ownerEntity: params.ownerEntity,
+        controller: params.controller ?? payer,
         derivativeCheck:
           params.derivativeCheck ?? this.client.program.programId,
         payer,
         systemProgram: SystemProgram.programId,
       })
-      .remainingAccounts(buildSignerMetas(params.controllerSigners))
       .instruction();
   }
 
@@ -52,11 +51,7 @@ export class LicenseModule {
     options?: SendTxOptions,
   ): Promise<TransactionResult<LicenseCreated>> {
     await Promise.all([
-      validateEntityAuthorityRaw(
-        this.client.ipCoreProgram,
-        params.ownerEntity,
-        params.controllerSigners,
-      ),
+      validateEntityAuthorityRaw(this.client.ipCoreProgram, params.ownerEntity),
       validateAccountExists(
         this.client.provider.connection,
         params.originIp,
@@ -86,9 +81,9 @@ export class LicenseModule {
       .accounts({
         license,
         authorityEntity: params.authorityEntity,
+        controller: params.controller ?? this.client.provider.wallet.publicKey,
         systemProgram: SystemProgram.programId,
       })
-      .remainingAccounts(buildSignerMetas(params.controllerSigners))
       .instruction();
   }
 
@@ -99,7 +94,6 @@ export class LicenseModule {
     await validateEntityAuthorityRaw(
       this.client.ipCoreProgram,
       params.authorityEntity,
-      params.controllerSigners,
     );
     const instruction = await this.updateIx(params);
     return sendInstruction<LicenseUpdated>(
@@ -122,10 +116,10 @@ export class LicenseModule {
       .accounts({
         license,
         authorityEntity: params.authorityEntity,
+        controller: params.controller ?? this.client.provider.wallet.publicKey,
         rentDestination,
         systemProgram: SystemProgram.programId,
       })
-      .remainingAccounts(buildSignerMetas(params.controllerSigners))
       .instruction();
   }
 
@@ -136,7 +130,6 @@ export class LicenseModule {
     await validateEntityAuthorityRaw(
       this.client.ipCoreProgram,
       params.authorityEntity,
-      params.controllerSigners,
     );
     const instruction = await this.revokeIx(params);
     return sendInstruction<LicenseRevoked>(

@@ -9,7 +9,7 @@ export type {
   ConfigUpdated,
   DerivativeLicenseUpdated,
   DerivativeLinkCreated,
-  EntityControllersUpdated,
+  EntityControlTransferred,
   EntityCreated,
   EntityMetadataCreated,
   IpCoreEvent,
@@ -37,7 +37,7 @@ export {
   type CreateEntityWithMetadataParams,
   type CreateEntityWithMetadataResult,
 } from "./hooks/entity/useCreateEntityWithMetadata";
-export { useUpdateEntityControllers } from "./hooks/entity/useUpdateEntityControllers";
+export { useTransferEntityControl } from "./hooks/entity/useTransferEntityControl";
 // Grant mutation hooks
 export { useCreateLicenseGrant } from "./hooks/grant/useCreateLicenseGrant";
 export { useRevokeLicenseGrant } from "./hooks/grant/useRevokeLicenseGrant";

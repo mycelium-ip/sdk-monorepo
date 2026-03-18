@@ -6,7 +6,7 @@ import type {
   EntityCreated,
   EntityMetadataCreated,
 } from "@mycelium-ip/core-sdk";
-import { toFixedBytes, buildSignerMetas } from "@mycelium-ip/core-sdk";
+import { toFixedBytes } from "@mycelium-ip/core-sdk";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { SystemProgram } from "@solana/web3.js";
 import {
@@ -55,8 +55,6 @@ export interface CreateEntityWithMetadataResult {
  *     mutate({
  *       entity: {
  *         handle: "my-organization",
- *         additionalControllers: [],
- *         signatureThreshold: 1,
  *       },
  *       metadata: {
  *         schema: schemaPubkey,
@@ -126,19 +124,17 @@ export function useCreateEntityWithMetadata() {
           client.ipCore.entity.createIx(params.entity),
           client.ipCore.program.methods
             .createEntityMetadata(
-              toFixedBytes(params.metadata.dataHash, 32, "dataHash"),
+              toFixedBytes(params.metadata.dataHash, 32, "hash"),
               toFixedBytes(params.metadata.cid, 96, "cid"),
             )
             .accounts({
               metadata,
               entity: entityPda,
               schema: params.metadata.schema,
+              controller: params.metadata.controller ?? payer,
               payer,
               systemProgram: SystemProgram.programId,
             })
-            .remainingAccounts(
-              buildSignerMetas(params.metadata.controllerSigners),
-            )
             .instruction(),
         ]);
 

@@ -12,7 +12,6 @@ import type {
   TransferIpParams,
 } from "../../types";
 import { deriveAta } from "../../utils/ata";
-import { buildSignerMetas } from "../../utils/accounts";
 import { toFixedBytes, utf8Bytes } from "../../utils/bytes";
 import { sendInstruction } from "../../utils/transactions";
 import {
@@ -80,11 +79,11 @@ export class IpModule {
         treasury,
         treasuryTokenAccount,
         payerTokenAccount,
+        controller: params.controller ?? payer,
         payer,
         tokenProgram: new PublicKey(TOKEN_PROGRAM_ID),
         systemProgram: SystemProgram.programId,
       })
-      .remainingAccounts(buildSignerMetas(params.controllerSigners))
       .instruction();
   }
 
@@ -116,14 +115,16 @@ export class IpModule {
   }
 
   async transferIx(params: TransferIpParams): Promise<TransactionInstruction> {
+    const controller =
+      params.controller ?? this.client.provider.wallet.publicKey;
     return this.client.program.methods
       .transferIp()
       .accounts({
         ip: params.ip,
         currentOwnerEntity: params.currentOwnerEntity,
         newOwnerEntity: params.newOwnerEntity,
+        controller,
       })
-      .remainingAccounts(buildSignerMetas(params.controllerSigners))
       .instruction();
   }
 
@@ -131,11 +132,7 @@ export class IpModule {
     params: TransferIpParams,
     options?: SendTxOptions,
   ): Promise<TransactionResult<IpTransferred>> {
-    await validateEntityAuthority(
-      this.client,
-      params.currentOwnerEntity,
-      params.controllerSigners,
-    );
+    await validateEntityAuthority(this.client, params.currentOwnerEntity);
     const instruction = await this.transferIx(params);
     return sendInstruction<IpTransferred>(
       this.client.provider,
