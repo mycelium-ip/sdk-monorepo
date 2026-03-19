@@ -10,8 +10,19 @@ import {
   deriveIpMetadataPda,
 } from "../../pda/metadata";
 import type {
+  AccountWithPublicKey,
+  DerivativeLinkAccount,
+  DerivativeLinkFilter,
   EntityAccount,
+  EntityFilter,
+  IpAccount,
+  IpFilter,
+  MetadataAccount,
+  MetadataFilter,
+  MetadataSchemaAccount,
   MyceliumCluster,
+  PaginatedResult,
+  PaginationOptions,
   ProtocolConfig,
   StringOrBytes,
 } from "../../types";
@@ -21,6 +32,13 @@ import {
   parseTransactionEvents,
   type ParsedEvent,
 } from "../../utils/events";
+import {
+  buildDerivativeLinkFilters,
+  buildEntityFilters,
+  buildIpFilters,
+  buildMetadataFilters,
+  paginate,
+} from "../../utils/filters";
 import { DerivativeModule } from "./derivative";
 import { EntityModule } from "./entity";
 import { IpModule } from "./ip";
@@ -231,5 +249,247 @@ export class IpCoreClient {
     } catch {
       return null;
     }
+  }
+
+  /**
+   * Fetch an IP account from the chain.
+   *
+   * @param ip - The IP PDA address
+   * @returns The on-chain IP data, or `null` if the account does not exist
+   */
+  async fetchIp(ip: PublicKey): Promise<IpAccount | null> {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const account = await (this.program.account as any).ipAccount.fetch(ip);
+      return {
+        contentHash: account.contentHash,
+        registrantEntity: account.registrantEntity,
+        currentOwnerEntity: account.currentOwnerEntity,
+        currentMetadataRevision: BigInt(
+          account.currentMetadataRevision.toString(),
+        ),
+        createdAt: BigInt(account.createdAt.toString()),
+        updatedAt: BigInt(account.updatedAt.toString()),
+        bump: account.bump,
+      };
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Fetch a derivative link account from the chain.
+   *
+   * @param derivativeLink - The derivative link PDA address
+   * @returns The on-chain derivative link data, or `null` if the account does not exist
+   */
+  async fetchDerivativeLink(
+    derivativeLink: PublicKey,
+  ): Promise<DerivativeLinkAccount | null> {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const account = await (this.program.account as any).derivativeLink.fetch(
+        derivativeLink,
+      );
+      return {
+        parentIp: account.parentIp,
+        childIp: account.childIp,
+        license: account.license,
+        createdAt: BigInt(account.createdAt.toString()),
+        bump: account.bump,
+      };
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Fetch a metadata account from the chain.
+   *
+   * @param metadata - The metadata PDA address
+   * @returns The on-chain metadata data, or `null` if the account does not exist
+   */
+  async fetchMetadata(metadata: PublicKey): Promise<MetadataAccount | null> {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const account = await (this.program.account as any).metadataAccount.fetch(
+        metadata,
+      );
+      return {
+        schema: account.schema,
+        hash: account.hash,
+        cid: account.cid,
+        parentType: account.parentType,
+        parent: account.parent,
+        revision: BigInt(account.revision.toString()),
+        createdAt: BigInt(account.createdAt.toString()),
+        bump: account.bump,
+      };
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Fetch a metadata schema account from the chain.
+   *
+   * @param schema - The metadata schema PDA address
+   * @returns The on-chain schema data, or `null` if the account does not exist
+   */
+  async fetchMetadataSchema(
+    schema: PublicKey,
+  ): Promise<MetadataSchemaAccount | null> {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const account = await (this.program.account as any).metadataSchema.fetch(
+        schema,
+      );
+      return {
+        id: account.id,
+        version: account.version,
+        hash: account.hash,
+        cid: account.cid,
+        creator: account.creator,
+        createdAt: BigInt(account.createdAt.toString()),
+        bump: account.bump,
+      };
+    } catch {
+      return null;
+    }
+  }
+
+  // -----------------------------------------------------------------------
+  // Multi-account queries with filtering and pagination
+  // -----------------------------------------------------------------------
+
+  /**
+   * Find all entity accounts matching the given filter.
+   *
+   * @param filter     - Optional filter by `creator`, `handle`, and/or `controller`
+   * @param pagination - Optional pagination (`limit` and `offset`)
+   */
+  async findEntities(
+    filter?: EntityFilter,
+    pagination?: PaginationOptions,
+  ): Promise<PaginatedResult<AccountWithPublicKey<EntityAccount>>> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const raw = await (this.program.account as any).entity.all(
+      buildEntityFilters(filter),
+    );
+    const mapped = raw.map(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (item: any) => ({
+        publicKey: item.publicKey,
+        account: {
+          creator: item.account.creator,
+          handle: item.account.handle,
+          controller: item.account.controller,
+          currentMetadataRevision: BigInt(
+            item.account.currentMetadataRevision.toString(),
+          ),
+          createdAt: BigInt(item.account.createdAt.toString()),
+          updatedAt: BigInt(item.account.updatedAt.toString()),
+          bump: item.account.bump,
+        } as EntityAccount,
+      }),
+    );
+    return paginate(mapped, pagination);
+  }
+
+  /**
+   * Find all IP accounts matching the given filter.
+   *
+   * @param filter     - Optional filter by `contentHash`, `registrantEntity`, and/or `currentOwnerEntity`
+   * @param pagination - Optional pagination (`limit` and `offset`)
+   */
+  async findIps(
+    filter?: IpFilter,
+    pagination?: PaginationOptions,
+  ): Promise<PaginatedResult<AccountWithPublicKey<IpAccount>>> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const raw = await (this.program.account as any).ipAccount.all(
+      buildIpFilters(filter),
+    );
+    const mapped = raw.map(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (item: any) => ({
+        publicKey: item.publicKey,
+        account: {
+          contentHash: item.account.contentHash,
+          registrantEntity: item.account.registrantEntity,
+          currentOwnerEntity: item.account.currentOwnerEntity,
+          currentMetadataRevision: BigInt(
+            item.account.currentMetadataRevision.toString(),
+          ),
+          createdAt: BigInt(item.account.createdAt.toString()),
+          updatedAt: BigInt(item.account.updatedAt.toString()),
+          bump: item.account.bump,
+        } as IpAccount,
+      }),
+    );
+    return paginate(mapped, pagination);
+  }
+
+  /**
+   * Find all derivative link accounts matching the given filter.
+   *
+   * @param filter     - Optional filter by `parentIp`, `childIp`, and/or `license`
+   * @param pagination - Optional pagination (`limit` and `offset`)
+   */
+  async findDerivativeLinks(
+    filter?: DerivativeLinkFilter,
+    pagination?: PaginationOptions,
+  ): Promise<PaginatedResult<AccountWithPublicKey<DerivativeLinkAccount>>> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const raw = await (this.program.account as any).derivativeLink.all(
+      buildDerivativeLinkFilters(filter),
+    );
+    const mapped = raw.map(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (item: any) => ({
+        publicKey: item.publicKey,
+        account: {
+          parentIp: item.account.parentIp,
+          childIp: item.account.childIp,
+          license: item.account.license,
+          createdAt: BigInt(item.account.createdAt.toString()),
+          bump: item.account.bump,
+        } as DerivativeLinkAccount,
+      }),
+    );
+    return paginate(mapped, pagination);
+  }
+
+  /**
+   * Find all metadata accounts matching the given filter.
+   *
+   * @param filter     - Optional filter by `parent` and/or `parentType`
+   * @param pagination - Optional pagination (`limit` and `offset`)
+   */
+  async findMetadata(
+    filter?: MetadataFilter,
+    pagination?: PaginationOptions,
+  ): Promise<PaginatedResult<AccountWithPublicKey<MetadataAccount>>> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const raw = await (this.program.account as any).metadataAccount.all(
+      buildMetadataFilters(filter),
+    );
+    const mapped = raw.map(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (item: any) => ({
+        publicKey: item.publicKey,
+        account: {
+          schema: item.account.schema,
+          hash: item.account.hash,
+          cid: item.account.cid,
+          parentType: item.account.parentType,
+          parent: item.account.parent,
+          revision: BigInt(item.account.revision.toString()),
+          createdAt: BigInt(item.account.createdAt.toString()),
+          bump: item.account.bump,
+        } as MetadataAccount,
+      }),
+    );
+    return paginate(mapped, pagination);
   }
 }

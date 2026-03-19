@@ -6,6 +6,7 @@ export * from "./types";
 export * from "./utils/bytes";
 export * from "./utils/bn";
 export * from "./utils/events";
+export * from "./utils/filters";
 export * from "./utils/provider";
 export * from "./utils/transactions";
 export * from "./utils/validation";

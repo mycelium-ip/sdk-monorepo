@@ -47,6 +47,9 @@ export const queryKeys = {
   /** Key for all metadata queries */
   metadata: () => [...queryKeys.all, "metadata"] as const,
 
+  /** Key for a specific metadata account */
+  metadataAccount: (id: string) => [...queryKeys.metadata(), id] as const,
+
   /** Key for all derivative queries */
   derivatives: () => [...queryKeys.all, "derivatives"] as const,
 

@@ -2,12 +2,26 @@ import type { AnchorProvider } from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import type { Connection, PublicKey } from "@solana/web3.js";
 import { getIdls, getProgramIds } from "../../constants/programs";
-import type { MyceliumCluster } from "../../types";
+import type {
+  AccountWithPublicKey,
+  LicenseAccount,
+  LicenseFilter,
+  LicenseGrantAccount,
+  LicenseGrantFilter,
+  MyceliumCluster,
+  PaginatedResult,
+  PaginationOptions,
+} from "../../types";
 import {
   findEventByName,
   parseTransactionEvents,
   type ParsedEvent,
 } from "../../utils/events";
+import {
+  buildLicenseFilters,
+  buildLicenseGrantFilters,
+  paginate,
+} from "../../utils/filters";
 import { GrantModule } from "./grant";
 import { LicenseModule } from "./license";
 
@@ -84,5 +98,123 @@ export class LicenseClient {
    */
   findEventByName<E>(events: ParsedEvent[], name: string): E | undefined {
     return findEventByName<E>(events, name);
+  }
+
+  // -----------------------------------------------------------------------
+  // Single-account fetches
+  // -----------------------------------------------------------------------
+
+  /**
+   * Fetch a license account from the chain.
+   *
+   * @param license - The license PDA address
+   * @returns The on-chain license data, or `null` if the account does not exist
+   */
+  async fetchLicense(license: PublicKey): Promise<LicenseAccount | null> {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const account = await (this.program.account as any).license.fetch(
+        license,
+      );
+      return {
+        originIp: account.originIp,
+        authority: account.authority,
+        derivativesAllowed: account.derivativesAllowed,
+        createdAt: BigInt(account.createdAt.toString()),
+        bump: account.bump,
+      };
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Fetch a license grant account from the chain.
+   *
+   * @param grant - The license grant PDA address
+   * @returns The on-chain grant data, or `null` if the account does not exist
+   */
+  async fetchLicenseGrant(
+    grant: PublicKey,
+  ): Promise<LicenseGrantAccount | null> {
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const account = await (this.program.account as any).licenseGrant.fetch(
+        grant,
+      );
+      return {
+        license: account.license,
+        grantee: account.grantee,
+        grantedAt: BigInt(account.grantedAt.toString()),
+        expiration: BigInt(account.expiration.toString()),
+        bump: account.bump,
+      };
+    } catch {
+      return null;
+    }
+  }
+
+  // -----------------------------------------------------------------------
+  // Multi-account queries with filtering and pagination
+  // -----------------------------------------------------------------------
+
+  /**
+   * Find all license accounts matching the given filter.
+   *
+   * @param filter     - Optional filter by `originIp` and/or `authority`
+   * @param pagination - Optional pagination (`limit` and `offset`)
+   */
+  async findLicenses(
+    filter?: LicenseFilter,
+    pagination?: PaginationOptions,
+  ): Promise<PaginatedResult<AccountWithPublicKey<LicenseAccount>>> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const raw = await (this.program.account as any).license.all(
+      buildLicenseFilters(filter),
+    );
+    const mapped = raw.map(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (item: any) => ({
+        publicKey: item.publicKey,
+        account: {
+          originIp: item.account.originIp,
+          authority: item.account.authority,
+          derivativesAllowed: item.account.derivativesAllowed,
+          createdAt: BigInt(item.account.createdAt.toString()),
+          bump: item.account.bump,
+        } as LicenseAccount,
+      }),
+    );
+    return paginate(mapped, pagination);
+  }
+
+  /**
+   * Find all license grant accounts matching the given filter.
+   *
+   * @param filter     - Optional filter by `license` and/or `grantee`
+   * @param pagination - Optional pagination (`limit` and `offset`)
+   */
+  async findLicenseGrants(
+    filter?: LicenseGrantFilter,
+    pagination?: PaginationOptions,
+  ): Promise<PaginatedResult<AccountWithPublicKey<LicenseGrantAccount>>> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const raw = await (this.program.account as any).licenseGrant.all(
+      buildLicenseGrantFilters(filter),
+    );
+    const mapped = raw.map(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (item: any) => ({
+        publicKey: item.publicKey,
+        account: {
+          license: item.account.license,
+          grantee: item.account.grantee,
+          grantedAt: BigInt(item.account.grantedAt.toString()),
+          expiration: BigInt(item.account.expiration.toString()),
+          bump: item.account.bump,
+        } as LicenseGrantAccount,
+      }),
+    );
+    return paginate(mapped, pagination);
   }
 }

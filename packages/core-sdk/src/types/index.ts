@@ -234,3 +234,188 @@ export interface RevokeLicenseGrantParams {
   /** Entity controller that must sign the transaction. Defaults to the connected wallet. */
   controller?: PublicKey;
 }
+
+// ---------------------------------------------------------------------------
+// On-chain account data types
+// ---------------------------------------------------------------------------
+
+/**
+ * On-chain IP account data.
+ */
+export interface IpAccount {
+  /** SHA-256 content hash (fixed 32 bytes). */
+  contentHash: number[];
+  /** The entity that originally registered this IP. */
+  registrantEntity: PublicKey;
+  /** The entity that currently owns this IP. */
+  currentOwnerEntity: PublicKey;
+  /** Current metadata revision number. */
+  currentMetadataRevision: bigint;
+  /** Unix timestamp when this IP was created. */
+  createdAt: bigint;
+  /** Unix timestamp when this IP was last updated. */
+  updatedAt: bigint;
+  /** PDA bump seed. */
+  bump: number;
+}
+
+/**
+ * On-chain derivative link account data.
+ */
+export interface DerivativeLinkAccount {
+  /** The parent IP in the derivative relationship. */
+  parentIp: PublicKey;
+  /** The child (derived) IP. */
+  childIp: PublicKey;
+  /** The license governing this derivative relationship. */
+  license: PublicKey;
+  /** Unix timestamp when this link was created. */
+  createdAt: bigint;
+  /** PDA bump seed. */
+  bump: number;
+}
+
+/**
+ * On-chain metadata account data.
+ */
+export interface MetadataAccount {
+  /** The metadata schema used. */
+  schema: PublicKey;
+  /** SHA-256 hash of the metadata content (fixed 32 bytes). */
+  hash: number[];
+  /** Content identifier (fixed 96 bytes). */
+  cid: number[];
+  /** The type of parent account (entity or IP). */
+  parentType: { entity: Record<string, never> } | { ip: Record<string, never> };
+  /** The parent entity or IP account address. */
+  parent: PublicKey;
+  /** Revision number for this metadata entry. */
+  revision: bigint;
+  /** Unix timestamp when this metadata was created. */
+  createdAt: bigint;
+  /** PDA bump seed. */
+  bump: number;
+}
+
+/**
+ * On-chain metadata schema account data.
+ */
+export interface MetadataSchemaAccount {
+  /** Schema identifier (fixed 32 bytes). */
+  id: number[];
+  /** Schema version (fixed 16 bytes). */
+  version: number[];
+  /** SHA-256 hash of the schema data (fixed 32 bytes). */
+  hash: number[];
+  /** Content identifier (fixed 96 bytes). */
+  cid: number[];
+  /** The creator of this schema. */
+  creator: PublicKey;
+  /** Unix timestamp when this schema was created. */
+  createdAt: bigint;
+  /** PDA bump seed. */
+  bump: number;
+}
+
+/**
+ * On-chain license account data.
+ */
+export interface LicenseAccount {
+  /** The IP this license applies to. */
+  originIp: PublicKey;
+  /** The entity that controls this license. */
+  authority: PublicKey;
+  /** Whether derivatives are allowed under this license. */
+  derivativesAllowed: boolean;
+  /** Unix timestamp when this license was created. */
+  createdAt: bigint;
+  /** PDA bump seed. */
+  bump: number;
+}
+
+/**
+ * On-chain license grant account data.
+ */
+export interface LicenseGrantAccount {
+  /** The license this grant is issued under. */
+  license: PublicKey;
+  /** The entity receiving this license grant. */
+  grantee: PublicKey;
+  /** Unix timestamp when this grant was issued. */
+  grantedAt: bigint;
+  /** Unix timestamp when this grant expires. */
+  expiration: bigint;
+  /** PDA bump seed. */
+  bump: number;
+}
+
+// ---------------------------------------------------------------------------
+// Filter types for multi-account queries
+// ---------------------------------------------------------------------------
+
+/** Filter options for querying entity accounts. */
+export interface EntityFilter {
+  creator?: PublicKey;
+  handle?: StringOrBytes;
+  controller?: PublicKey;
+}
+
+/** Filter options for querying IP accounts. */
+export interface IpFilter {
+  contentHash?: Uint8Array;
+  registrantEntity?: PublicKey;
+  currentOwnerEntity?: PublicKey;
+}
+
+/** Filter options for querying derivative link accounts. */
+export interface DerivativeLinkFilter {
+  parentIp?: PublicKey;
+  childIp?: PublicKey;
+  license?: PublicKey;
+}
+
+/** Filter options for querying metadata accounts. */
+export interface MetadataFilter {
+  parent?: PublicKey;
+  parentType?: "entity" | "ip";
+}
+
+/** Filter options for querying license accounts. */
+export interface LicenseFilter {
+  originIp?: PublicKey;
+  authority?: PublicKey;
+}
+
+/** Filter options for querying license grant accounts. */
+export interface LicenseGrantFilter {
+  license?: PublicKey;
+  grantee?: PublicKey;
+}
+
+// ---------------------------------------------------------------------------
+// Pagination
+// ---------------------------------------------------------------------------
+
+/** Options for paginating multi-account queries. */
+export interface PaginationOptions {
+  /** Maximum number of items to return. @default 20 */
+  limit?: number;
+  /** Number of items to skip before returning results. @default 0 */
+  offset?: number;
+}
+
+/**
+ * A page of results from a multi-account query.
+ */
+export interface PaginatedResult<T> {
+  /** The items in this page. */
+  items: T[];
+  /** Whether more items may exist beyond this page. */
+  hasMore: boolean;
+}
+
+/** An account fetched via `getProgramAccounts`, with its on-chain address. */
+export interface AccountWithPublicKey<T> {
+  publicKey: PublicKey;
+  account: T;
+}
