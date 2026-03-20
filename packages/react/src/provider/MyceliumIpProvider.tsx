@@ -153,7 +153,7 @@ export function MyceliumIpProvider({
       builtWithRef.current = { connection, cluster };
     } else {
       // Same connection + cluster — swap the wallet in-place.
-      clientRef.current.setWallet(wallet);
+      clientRef.current!.setWallet(wallet);
     }
 
     return clientRef.current;

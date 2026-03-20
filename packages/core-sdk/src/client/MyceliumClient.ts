@@ -1,5 +1,6 @@
 import type { AnchorProvider } from "@coral-xyz/anchor";
 import type { Wallet } from "@wallet-standard/base";
+import type { PublicKey } from "@solana/web3.js";
 import { IpCoreClient } from "../programs/ipCore/IpCoreClient";
 import { LicenseClient } from "../programs/license/LicenseClient";
 import type { MyceliumClientOptions } from "../types";
@@ -37,8 +38,7 @@ export class MyceliumClient {
     this.wallet.setWallet(wallet, accountIndex);
 
     // AnchorProvider caches `publicKey` at construction; force-sync it.
-    (
-      this.provider as unknown as { publicKey: typeof this.wallet.publicKey }
-    ).publicKey = this.wallet.publicKey;
+    (this.provider as unknown as { publicKey: PublicKey }).publicKey =
+      this.wallet.publicKey;
   }
 }
