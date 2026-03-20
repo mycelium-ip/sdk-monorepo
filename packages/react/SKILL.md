@@ -1,5 +1,5 @@
 ---
-name: mycelium-react-sdk
+name: react
 description: >
   **INTEGRATION SKILL** — Use `@mycelium-ip/react` to integrate the Mycelium IP
   protocol into React/Next.js apps. USE FOR: provider setup, entity/IP/license/
@@ -7,7 +7,6 @@ description: >
   Standard, Solana Wallet Adapter, Privy), TanStack Query cache management,
   multi-sig transactions in UI components. DO NOT USE FOR: server-side or
   non-React usage (use the @mycelium-ip/core-sdk skill instead).
-applyTo: "**/*.{tsx,jsx}"
 ---
 
 # @mycelium-ip/react Integration Guide

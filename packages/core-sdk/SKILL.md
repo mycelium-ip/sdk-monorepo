@@ -1,12 +1,11 @@
 ---
-name: mycelium-core-sdk
+name: core-sdk
 description: >
   **INTEGRATION SKILL** — Use `@mycelium-ip/core-sdk` to interact with the
   Mycelium IP protocol on Solana. USE FOR: creating entities, registering IP,
   licensing, derivatives, metadata, PDA derivation, multi-sig transactions,
   building custom instruction pipelines on Solana. DO NOT USE FOR: React
   component integration (use the @mycelium-ip/react skill instead).
-applyTo: "**/*.{ts,tsx,js,jsx}"
 ---
 
 # @mycelium-ip/core-sdk Integration Guide
