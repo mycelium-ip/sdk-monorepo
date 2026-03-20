@@ -107,6 +107,27 @@ sdk.wallet.signTransaction(tx); // signs via solana:signTransaction
 sdk.wallet.supportsFeature("solana:signAndSendTransaction"); // boolean
 ```
 
+### Switching wallets
+
+You can switch the active wallet at any time without reconstructing the client:
+
+```ts
+// Initial setup
+const sdk = new MyceliumClient({ connection, wallet: walletA });
+console.log(sdk.wallet.publicKey); // walletA's public key
+
+// Later — user switches wallets
+sdk.setWallet(walletB);
+console.log(sdk.wallet.publicKey); // walletB's public key
+
+// All subsequent operations use walletB for signing
+const ix = await sdk.ipCore.entity.createIx({ handle: "my-entity" });
+```
+
+`setWallet()` swaps the wallet in-place — the `AnchorProvider`, `Program` instances, and all modules are reused. This is more efficient than creating a new `MyceliumClient` when only the wallet changes.
+
+The new wallet must meet the same requirements as the constructor: `solana:signTransaction` feature and at least one account.
+
 ### Type guard
 
 ```ts

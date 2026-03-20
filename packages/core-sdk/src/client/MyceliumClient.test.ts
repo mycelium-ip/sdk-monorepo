@@ -2,6 +2,7 @@ import { Connection, Keypair, PublicKey } from "@solana/web3.js";
 import type { Wallet, WalletAccount } from "@wallet-standard/base";
 import { describe, expect, it, vi } from "vitest";
 import { getProgramIds } from "../constants/programs";
+import { UnsupportedFeatureError } from "../wallet/errors";
 import { sha256Hash, utf8Bytes } from "../utils/bytes";
 import { MyceliumClient } from "./MyceliumClient";
 
@@ -137,6 +138,116 @@ describe("MyceliumClient cluster", () => {
     );
     expect(client.license.program.programId.toBase58()).toBe(
       mainnetIds.license.toBase58(),
+    );
+  });
+});
+
+describe("MyceliumClient.setWallet", () => {
+  it("updates wallet.publicKey to match the new wallet", () => {
+    const wallet1 = createTestWallet();
+    const client = new MyceliumClient({
+      connection: new Connection("http://localhost:8899", "processed"),
+      wallet: wallet1,
+    });
+    const originalPk = client.wallet.publicKey;
+
+    const newPk = Keypair.generate().publicKey;
+    const wallet2 = createTestWallet(newPk);
+    client.setWallet(wallet2);
+
+    expect(client.wallet.publicKey.toBase58()).toBe(newPk.toBase58());
+    expect(client.wallet.publicKey.toBase58()).not.toBe(originalPk.toBase58());
+  });
+
+  it("propagates through provider.wallet to modules", () => {
+    const wallet1 = createTestWallet();
+    const client = new MyceliumClient({
+      connection: new Connection("http://localhost:8899", "processed"),
+      wallet: wallet1,
+    });
+
+    const newPk = Keypair.generate().publicKey;
+    client.setWallet(createTestWallet(newPk));
+
+    // The provider's wallet reference is the same StandardWalletWrapper object,
+    // so its publicKey should reflect the new wallet.
+    expect(client.ipCore.provider.wallet.publicKey.toBase58()).toBe(
+      newPk.toBase58(),
+    );
+    expect(client.license.provider.wallet.publicKey.toBase58()).toBe(
+      newPk.toBase58(),
+    );
+  });
+
+  it("uses the new wallet as default signer for createIx", async () => {
+    const wallet1 = createTestWallet();
+    const client = new MyceliumClient({
+      connection: new Connection("http://localhost:8899", "processed"),
+      wallet: wallet1,
+    });
+
+    const newPk = Keypair.generate().publicKey;
+    client.setWallet(createTestWallet(newPk));
+
+    const entityIx = await client.ipCore.entity.createIx({
+      handle: "entity-after-switch",
+    });
+
+    // The creator account (first writable signer) should be the new pubkey
+    const signerKey = entityIx.keys.find((k) => k.isSigner);
+    expect(signerKey?.pubkey.toBase58()).toBe(newPk.toBase58());
+  });
+
+  it("throws UnsupportedFeatureError for wallet without signTransaction", () => {
+    const wallet1 = createTestWallet();
+    const client = new MyceliumClient({
+      connection: new Connection("http://localhost:8899", "processed"),
+      wallet: wallet1,
+    });
+
+    const badWallet: Wallet = {
+      version: "1.0.0" as const,
+      name: "Bad Wallet",
+      icon: "data:image/svg+xml;base64," as `data:image/${"svg+xml" | "webp" | "png" | "gif"};base64,${string}`,
+      chains: ["solana:devnet"],
+      accounts: [
+        {
+          address: Keypair.generate().publicKey.toBase58(),
+          publicKey: Keypair.generate().publicKey.toBytes(),
+          chains: ["solana:devnet"],
+          features: [],
+        },
+      ],
+      features: {},
+    };
+
+    expect(() => client.setWallet(badWallet)).toThrow(UnsupportedFeatureError);
+  });
+
+  it("throws when wallet has no accounts", () => {
+    const wallet1 = createTestWallet();
+    const client = new MyceliumClient({
+      connection: new Connection("http://localhost:8899", "processed"),
+      wallet: wallet1,
+    });
+
+    const emptyWallet: Wallet = {
+      version: "1.0.0" as const,
+      name: "Empty Wallet",
+      icon: "data:image/svg+xml;base64," as `data:image/${"svg+xml" | "webp" | "png" | "gif"};base64,${string}`,
+      chains: ["solana:devnet"],
+      accounts: [],
+      features: {
+        "solana:signTransaction": {
+          version: "1.0.0" as const,
+          supportedTransactionVersions: ["legacy" as const],
+          signTransaction: vi.fn(),
+        },
+      },
+    };
+
+    expect(() => client.setWallet(emptyWallet)).toThrow(
+      /no account at index 0/,
     );
   });
 });

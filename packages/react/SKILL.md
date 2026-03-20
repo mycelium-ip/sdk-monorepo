@@ -68,6 +68,20 @@ function App() {
 
 The provider is marked `"use client"` — safe for Next.js App Router.
 
+### Wallet Switching
+
+When the `wallet` prop changes (but `connection` and `cluster` stay the same),
+the provider calls `client.setWallet()` internally — the SDK client,
+`AnchorProvider`, and `Program` instances are reused. Pass a new wallet prop
+and all hooks automatically use the new signing identity:
+
+```tsx
+const wallet = useActiveWallet(); // reactive — changes on wallet switch
+<MyceliumIpProvider connection={connection} wallet={wallet}>
+```
+
+If `connection` or `cluster` changes, the provider creates a fresh client.
+
 ---
 
 ## Wallet Integration Patterns

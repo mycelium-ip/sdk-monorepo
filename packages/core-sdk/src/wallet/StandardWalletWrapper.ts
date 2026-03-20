@@ -29,15 +29,40 @@ type WalletWithSignTransaction = Wallet & {
  */
 export class StandardWalletWrapper {
   /** The underlying Wallet Standard wallet. */
-  readonly wallet: WalletWithSignTransaction;
+  wallet: WalletWithSignTransaction;
 
   /** The active account used for signing. */
-  readonly account: WalletAccount;
+  account: WalletAccount;
 
   /** The public key derived from the active account. */
-  readonly publicKey: PublicKey;
+  publicKey: PublicKey;
 
   constructor(wallet: Wallet, accountIndex = 0) {
+    if (!walletSupportsFeature(wallet, SolanaSignTransaction)) {
+      throw new UnsupportedFeatureError(SolanaSignTransaction);
+    }
+
+    const account = wallet.accounts[accountIndex];
+    if (!account) {
+      throw new Error(
+        `Wallet has no account at index ${accountIndex}. ` +
+          `Available accounts: ${wallet.accounts.length}`,
+      );
+    }
+
+    this.wallet = wallet as WalletWithSignTransaction;
+    this.account = account;
+    this.publicKey = new PublicKey(account.publicKey);
+  }
+
+  /**
+   * Replace the active wallet in-place.
+   *
+   * Because `AnchorProvider` holds a reference to this wrapper, mutating
+   * the internals here propagates through the entire provider → program →
+   * module chain without reconstruction.
+   */
+  setWallet(wallet: Wallet, accountIndex = 0): void {
     if (!walletSupportsFeature(wallet, SolanaSignTransaction)) {
       throw new UnsupportedFeatureError(SolanaSignTransaction);
     }

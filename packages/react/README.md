@@ -276,6 +276,24 @@ The provider initializes the SDK and must wrap your application (or the part tha
 | -------------- | ------------ | ------------- | ---------------------------------------------------------------------------- |
 | `confirmation` | `Commitment` | `"confirmed"` | Transaction confirmation level (`"processed"`, `"confirmed"`, `"finalized"`) |
 
+### Wallet Switching
+
+When the `wallet` prop changes but `connection` and `cluster` stay the same, the provider efficiently swaps the wallet in-place via `client.setWallet()` — the SDK client, `AnchorProvider`, and `Program` instances are reused rather than reconstructed. This means wallet switching in your app "just works":
+
+```tsx
+function App() {
+  const wallet = useActiveWallet(); // changes when user switches wallets
+
+  return (
+    <MyceliumIpProvider connection={connection} wallet={wallet}>
+      <YourApp />
+    </MyceliumIpProvider>
+  );
+}
+```
+
+If `connection` or `cluster` changes, the provider creates a fresh client automatically.
+
 ### Adding React Query Devtools
 
 To enable React Query devtools for debugging, install the devtools package and add it to your app:

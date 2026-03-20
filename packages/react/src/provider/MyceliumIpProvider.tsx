@@ -4,7 +4,7 @@ import { MyceliumClient, type MyceliumCluster } from "@mycelium-ip/core-sdk";
 import type { Wallet } from "@wallet-standard/base";
 import type { Commitment, Connection } from "@solana/web3.js";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { type ReactNode, useMemo } from "react";
+import { type ReactNode, useMemo, useRef } from "react";
 import type { TransactionExecutor } from "../types";
 import { MyceliumContext, type MyceliumContextValue } from "./context";
 
@@ -120,17 +120,43 @@ export function MyceliumIpProvider({
     [queryClient],
   );
 
-  // Create the core SDK client (and its internal StandardWalletWrapper)
+  // Stable client ref — avoids full reconstruction on wallet-only changes.
+  // Tracks the connection + cluster the client was built with so we know when
+  // a full rebuild (vs. a wallet swap) is needed.
+  const clientRef = useRef<MyceliumClient | null>(null);
+  const builtWithRef = useRef<{
+    connection: Connection;
+    cluster: MyceliumCluster;
+  } | null>(null);
+
+  // Reconcile: rebuild only when connection/cluster change; otherwise swap wallet in-place.
   const client = useMemo(() => {
-    if (!wallet || wallet.accounts.length === 0) {
+    const hasWallet = wallet && wallet.accounts.length > 0;
+
+    if (!hasWallet) {
+      clientRef.current = null;
+      builtWithRef.current = null;
       return null;
     }
 
-    return new MyceliumClient({
-      connection,
-      wallet,
-      cluster,
-    });
+    const needsRebuild =
+      !clientRef.current ||
+      builtWithRef.current?.connection !== connection ||
+      builtWithRef.current?.cluster !== cluster;
+
+    if (needsRebuild) {
+      clientRef.current = new MyceliumClient({
+        connection,
+        wallet,
+        cluster,
+      });
+      builtWithRef.current = { connection, cluster };
+    } else {
+      // Same connection + cluster — swap the wallet in-place.
+      clientRef.current.setWallet(wallet);
+    }
+
+    return clientRef.current;
   }, [connection, wallet, cluster]);
 
   // Create context value — always non-null inside the provider;

@@ -104,6 +104,20 @@ if (isStandardWallet(unknownValue)) {
 }
 ```
 
+### Switching Wallets
+
+Swap the active wallet without reconstructing the client:
+
+```ts
+sdk.setWallet(newWallet);
+// All modules immediately use the new wallet for signing.
+```
+
+`setWallet(wallet, accountIndex?)` validates the new wallet (requires
+`solana:signTransaction` and at least one account), then mutates the internal
+`StandardWalletWrapper` in-place. The `AnchorProvider` and `Program` instances
+are reused — only the signing identity changes.
+
 ---
 
 ## Client Hierarchy
