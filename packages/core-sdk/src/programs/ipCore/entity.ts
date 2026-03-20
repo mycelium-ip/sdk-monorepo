@@ -1,6 +1,9 @@
 import type { PublicKey, TransactionInstruction } from "@solana/web3.js";
 import { SystemProgram } from "@solana/web3.js";
-import { deriveEntityPda } from "../../pda/entity";
+import {
+  deriveCreatorEntityCounterPda,
+  deriveEntityPda,
+} from "../../pda/entity";
 import type {
   CreateEntityParams,
   EntityControlTransferred,
@@ -9,7 +12,6 @@ import type {
   TransactionResult,
   TransferEntityControlParams,
 } from "../../types";
-import { toFixedBytes } from "../../utils/bytes";
 import { sendInstruction } from "../../utils/transactions";
 import { validateEntityAuthority } from "../../utils/validation";
 import type { IpCoreClient } from "./IpCoreClient";
@@ -19,15 +21,22 @@ export class EntityModule {
 
   async createIx(params: CreateEntityParams): Promise<TransactionInstruction> {
     const creator = this.resolveWalletPubkey(params.creator);
+    const entityCount = await this.client.fetchEntityCount(creator);
+
+    const [counter] = deriveCreatorEntityCounterPda(
+      creator,
+      this.client.program.programId,
+    );
     const [entity] = deriveEntityPda(
       creator,
-      params.handle,
+      entityCount,
       this.client.program.programId,
     );
 
     return this.client.program.methods
-      .createEntity(toFixedBytes(params.handle, 32, "handle"))
+      .createEntity()
       .accounts({
+        counter,
         entity,
         creator,
         systemProgram: SystemProgram.programId,

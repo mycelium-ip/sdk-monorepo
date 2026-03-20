@@ -10,7 +10,6 @@ import {
   ensureTokenAccounts,
   loadKeypair,
   randomContentHash,
-  randomHandle,
   saveResult,
 } from "./helpers/setup";
 import { state } from "./helpers/state";
@@ -43,7 +42,6 @@ describe("IP", () => {
       const ix = await client.ipCore.ip.createIx({
         registrantEntity: state.entity,
         contentHash,
-        controllerSigners: [keypair.publicKey],
         treasuryTokenAccount,
         payerTokenAccount,
       });
@@ -75,7 +73,6 @@ describe("IP", () => {
       const result = await client.ipCore.ip.create({
         registrantEntity: state.entity,
         contentHash,
-        controllerSigners: [keypair.publicKey],
         treasuryTokenAccount,
         payerTokenAccount,
       });
@@ -103,17 +100,12 @@ describe("IP", () => {
       expect(state.entity).toBeDefined();
 
       // Create second entity for transfer destination
-      const handle2 = randomHandle();
-      const createResult = await client.ipCore.entity.create({
-        handle: handle2,
-        additionalControllers: [],
-        signatureThreshold: 1,
-      });
+      const createResult = await client.ipCore.entity.create({});
       expect(createResult.signature).toBeTruthy();
 
       const [entity2] = deriveEntityPda(
         keypair.publicKey,
-        handle2,
+        createResult.event!.index,
         client.ipCore.program.programId,
       );
       state.secondEntity = entity2;
@@ -124,7 +116,7 @@ describe("IP", () => {
         ip: state.ip,
         currentOwnerEntity: state.entity,
         newOwnerEntity: state.secondEntity,
-        controllerSigners: [keypair.publicKey],
+        controller: keypair.publicKey,
       });
 
       expect(ix.keys.length).toBeGreaterThan(0);
@@ -147,7 +139,7 @@ describe("IP", () => {
         ip: state.ip,
         currentOwnerEntity: state.entity,
         newOwnerEntity: state.secondEntity,
-        controllerSigners: [keypair.publicKey],
+        controller: keypair.publicKey,
       });
 
       expect(result.signature).toBeTruthy();
@@ -161,7 +153,7 @@ describe("IP", () => {
         ip: state.ip,
         currentOwnerEntity: state.secondEntity,
         newOwnerEntity: state.entity,
-        controllerSigners: [keypair.publicKey],
+        controller: keypair.publicKey,
       });
     });
   });

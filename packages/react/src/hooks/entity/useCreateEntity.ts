@@ -19,9 +19,7 @@ import { queryKeys } from "../queries/queryKeys";
  *   const { mutate, isPending, error } = useCreateEntity();
  *
  *   const handleCreate = () => {
- *     mutate({
- *       handle: "my-entity",
- *     });
+ *     mutate({});
  *   };
  *
  *   return (

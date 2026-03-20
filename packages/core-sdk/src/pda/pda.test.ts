@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import { getProgramIds } from "../constants/programs";
 import { sha256Hash, utf8Bytes } from "../utils/bytes";
 import {
+  deriveCreatorEntityCounterPda,
   deriveDerivativeLinkPda,
   deriveEntityMetadataPda,
   deriveEntityPda,
@@ -23,9 +24,17 @@ describe("pda helpers", () => {
     const childIp = Keypair.generate().publicKey;
     const grantee = Keypair.generate().publicKey;
 
-    const [entityA] = deriveEntityPda(creator, "my-handle", ipCoreProgramId);
-    const [entityB] = deriveEntityPda(creator, "my-handle", ipCoreProgramId);
+    const [entityA] = deriveEntityPda(creator, 0, ipCoreProgramId);
+    const [entityB] = deriveEntityPda(creator, 0, ipCoreProgramId);
     expect(entityA.toBase58()).toBe(entityB.toBase58());
+
+    // Different indices produce different PDAs
+    const [entityC] = deriveEntityPda(creator, 1, ipCoreProgramId);
+    expect(entityA.toBase58()).not.toBe(entityC.toBase58());
+
+    const [counterA] = deriveCreatorEntityCounterPda(creator, ipCoreProgramId);
+    const [counterB] = deriveCreatorEntityCounterPda(creator, ipCoreProgramId);
+    expect(counterA.toBase58()).toBe(counterB.toBase58());
 
     const contentHash = sha256Hash(utf8Bytes("my-content"));
     const [ipA] = deriveIpPda(registrant, contentHash, ipCoreProgramId);

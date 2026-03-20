@@ -181,31 +181,25 @@ On success, `data` is a `TransactionResult` with `{ signature: string }`.
 import { useCreateEntity } from "@mycelium-ip/react";
 
 const { mutate, isPending } = useCreateEntity();
-mutate({
-  handle: new TextEncoder().encode("my-entity"), // string or Uint8Array
-  additionalControllers: [], // PublicKey[]
-  signatureThreshold: 1,
-});
+mutate({}); // entity index is auto-assigned from the on-chain counter
 ```
 
-#### `useUpdateEntityControllers`
+#### `useTransferEntityControl`
 
 ```tsx
-import { useUpdateEntityControllers } from "@mycelium-ip/react";
+import { useTransferEntityControl } from "@mycelium-ip/react";
 
-const { mutate } = useUpdateEntityControllers();
+const { mutate } = useTransferEntityControl();
 mutate({
   entity: entityPubkey,
-  newControllers: [controller1, controller2],
-  newThreshold: 2,
-  controllerSigners: [existingController],
+  newController: newControllerPubkey,
 });
 ```
 
 #### `useCreateEntityWithMetadata` (composite — single atomic transaction)
 
 Creates entity + attaches metadata in **one atomic transaction**. Entity PDA is
-derived automatically from the caller's wallet and the provided handle.
+derived automatically from the caller's wallet and the on-chain entity counter.
 
 ```tsx
 import { useCreateEntityWithMetadata } from "@mycelium-ip/react";
@@ -213,11 +207,7 @@ import { sha256Hash } from "@mycelium-ip/core-sdk";
 
 const { mutate, data } = useCreateEntityWithMetadata();
 mutate({
-  entity: {
-    handle: "my-organization",
-    additionalControllers: [],
-    signatureThreshold: 1,
-  },
+  entity: {},
   metadata: {
     schema: schemaPubkey,
     revision: 1n,

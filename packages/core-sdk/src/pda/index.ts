@@ -1,5 +1,5 @@
 export { deriveDerivativeLinkPda } from "./derivative";
-export { deriveEntityPda } from "./entity";
+export { deriveCreatorEntityCounterPda, deriveEntityPda } from "./entity";
 export { deriveIpPda } from "./ip";
 export { deriveLicenseGrantPda, deriveLicensePda } from "./license";
 export {

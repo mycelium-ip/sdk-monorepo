@@ -75,6 +75,7 @@ export function getIdls(cluster: MyceliumCluster): {
 
 export const PDA_SEEDS = {
   entity: "entity",
+  entityCounter: "entity_counter",
   ip: "ip",
   metadata: "metadata",
   entityKind: "entity",

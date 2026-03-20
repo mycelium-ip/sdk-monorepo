@@ -9,7 +9,7 @@ import type {
   PaginatedResult,
   PaginationOptions,
 } from "../types";
-import { toFixedBytes } from "./bytes";
+import { u64SeedBytes } from "./bytes";
 
 // ---------------------------------------------------------------------------
 // Anchor memcmp filter types
@@ -29,8 +29,8 @@ export interface MemcmpFilter {
 /** Byte offsets for Entity account fields. */
 export const ENTITY_OFFSETS = {
   creator: 8, // pubkey 32
-  handle: 40, // [u8;32]
-  controller: 72, // pubkey 32
+  index: 40, // u64 8
+  controller: 48, // pubkey 32
 } as const;
 
 /** Byte offsets for IpAccount fields. */
@@ -130,9 +130,9 @@ export function buildEntityFilters(filter?: EntityFilter): MemcmpFilter[] {
   if (filter.creator) {
     filters.push(pubkeyFilter(ENTITY_OFFSETS.creator, filter.creator));
   }
-  if (filter.handle) {
-    const bytes = Uint8Array.from(toFixedBytes(filter.handle, 32, "handle"));
-    filters.push(bytesFilter(ENTITY_OFFSETS.handle, bytes));
+  if (filter.index != null) {
+    const bytes = u64SeedBytes(filter.index);
+    filters.push(bytesFilter(ENTITY_OFFSETS.index, bytes));
   }
   if (filter.controller) {
     filters.push(pubkeyFilter(ENTITY_OFFSETS.controller, filter.controller));

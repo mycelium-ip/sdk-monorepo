@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/ip_core.json`.
  */
 export type IpCore = {
-  "address": "8Yv28aduM7K63b7HVuXPj6fYW8pLagHm8AuJCYVxvV6G",
+  "address": "ARoG6DV6Mx4w44tM9QGYoMaqXUBM6zCwyMBRDLt5vAap",
   "metadata": {
     "name": "ipCore",
     "version": "0.1.0",
@@ -79,7 +79,32 @@ export type IpCore = {
           "name": "childOwnerEntity",
           "docs": [
             "The owner entity of the child IP."
-          ]
+          ],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  110,
+                  116,
+                  105,
+                  116,
+                  121
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "child_owner_entity.creator",
+                "account": "entity"
+              },
+              {
+                "kind": "account",
+                "path": "child_owner_entity.index",
+                "account": "entity"
+              }
+            ]
+          }
         },
         {
           "name": "controller",
@@ -140,9 +165,44 @@ export type IpCore = {
       ],
       "accounts": [
         {
+          "name": "counter",
+          "docs": [
+            "The per-creator entity counter (initialized on first entity creation)."
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  110,
+                  116,
+                  105,
+                  116,
+                  121,
+                  95,
+                  99,
+                  111,
+                  117,
+                  110,
+                  116,
+                  101,
+                  114
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "creator"
+              }
+            ]
+          }
+        },
+        {
           "name": "entity",
           "docs": [
-            "The entity account to create (PDA)."
+            "The entity account to create (PDA).",
+            "Seeds use the current counter value as the entity index."
           ],
           "writable": true,
           "pda": {
@@ -163,8 +223,9 @@ export type IpCore = {
                 "path": "creator"
               },
               {
-                "kind": "arg",
-                "path": "handle"
+                "kind": "account",
+                "path": "counter.entity_count",
+                "account": "creatorEntityCounter"
               }
             ]
           }
@@ -186,17 +247,7 @@ export type IpCore = {
           "address": "11111111111111111111111111111111"
         }
       ],
-      "args": [
-        {
-          "name": "handle",
-          "type": {
-            "array": [
-              "u8",
-              32
-            ]
-          }
-        }
-      ]
+      "args": []
     },
     {
       "name": "createEntityMetadata",
@@ -226,7 +277,32 @@ export type IpCore = {
           "docs": [
             "The entity to attach metadata to."
           ],
-          "writable": true
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  110,
+                  116,
+                  105,
+                  116,
+                  121
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "entity.creator",
+                "account": "entity"
+              },
+              {
+                "kind": "account",
+                "path": "entity.index",
+                "account": "entity"
+              }
+            ]
+          }
         },
         {
           "name": "schema",
@@ -324,7 +400,32 @@ export type IpCore = {
           "name": "registrantEntity",
           "docs": [
             "The entity registering this IP."
-          ]
+          ],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  110,
+                  116,
+                  105,
+                  116,
+                  121
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "registrant_entity.creator",
+                "account": "entity"
+              },
+              {
+                "kind": "account",
+                "path": "registrant_entity.index",
+                "account": "entity"
+              }
+            ]
+          }
         },
         {
           "name": "config",
@@ -460,7 +561,32 @@ export type IpCore = {
           "name": "ownerEntity",
           "docs": [
             "The current owner entity of the IP."
-          ]
+          ],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  110,
+                  116,
+                  105,
+                  116,
+                  121
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "owner_entity.creator",
+                "account": "entity"
+              },
+              {
+                "kind": "account",
+                "path": "owner_entity.index",
+                "account": "entity"
+              }
+            ]
+          }
         },
         {
           "name": "schema",
@@ -797,7 +923,32 @@ export type IpCore = {
           "docs": [
             "The entity to update."
           ],
-          "writable": true
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  110,
+                  116,
+                  105,
+                  116,
+                  121
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "entity.creator",
+                "account": "entity"
+              },
+              {
+                "kind": "account",
+                "path": "entity.index",
+                "account": "entity"
+              }
+            ]
+          }
         },
         {
           "name": "controller",
@@ -841,13 +992,63 @@ export type IpCore = {
           "name": "currentOwnerEntity",
           "docs": [
             "The current owner entity."
-          ]
+          ],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  110,
+                  116,
+                  105,
+                  116,
+                  121
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "current_owner_entity.creator",
+                "account": "entity"
+              },
+              {
+                "kind": "account",
+                "path": "current_owner_entity.index",
+                "account": "entity"
+              }
+            ]
+          }
         },
         {
           "name": "newOwnerEntity",
           "docs": [
             "The new owner entity."
-          ]
+          ],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  110,
+                  116,
+                  105,
+                  116,
+                  121
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "new_owner_entity.creator",
+                "account": "entity"
+              },
+              {
+                "kind": "account",
+                "path": "new_owner_entity.index",
+                "account": "entity"
+              }
+            ]
+          }
         },
         {
           "name": "controller",
@@ -981,7 +1182,32 @@ export type IpCore = {
           "name": "childOwnerEntity",
           "docs": [
             "The owner entity of the child IP."
-          ]
+          ],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  110,
+                  116,
+                  105,
+                  116,
+                  121
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "child_owner_entity.creator",
+                "account": "entity"
+              },
+              {
+                "kind": "account",
+                "path": "child_owner_entity.index",
+                "account": "entity"
+              }
+            ]
+          }
         },
         {
           "name": "parentIp",
@@ -1096,6 +1322,19 @@ export type IpCore = {
     }
   ],
   "accounts": [
+    {
+      "name": "creatorEntityCounter",
+      "discriminator": [
+        22,
+        204,
+        152,
+        81,
+        10,
+        240,
+        219,
+        140
+      ]
+    },
     {
       "name": "derivativeLink",
       "discriminator": [
@@ -1387,96 +1626,76 @@ export type IpCore = {
     },
     {
       "code": 6005,
-      "name": "invalidHandle",
-      "msg": "Invalid handle: must be lowercase alphanumeric (a-z, 0-9)"
-    },
-    {
-      "code": 6006,
-      "name": "handleTooLong",
-      "msg": "Handle too long: maximum length is 32 characters"
-    },
-    {
-      "code": 6007,
-      "name": "handleAlreadyExists",
-      "msg": "Handle already exists for this creator"
-    },
-    {
-      "code": 6008,
       "name": "metadataSchemaNotFound",
       "msg": "Metadata schema not found"
     },
     {
-      "code": 6009,
+      "code": 6006,
       "name": "invalidMetadataRevision",
       "msg": "Invalid metadata revision: must be exactly current revision + 1"
     },
     {
-      "code": 6010,
+      "code": 6007,
       "name": "ipAlreadyExists",
       "msg": "IP already exists for this registrant and content hash"
     },
     {
-      "code": 6011,
+      "code": 6008,
       "name": "invalidOwnership",
       "msg": "Invalid ownership: signer is not the owner"
     },
     {
-      "code": 6012,
+      "code": 6009,
       "name": "derivativeAlreadyExists",
       "msg": "Derivative link already exists between parent and child IP"
     },
     {
-      "code": 6013,
+      "code": 6010,
       "name": "arithmeticOverflow",
       "msg": "Arithmetic overflow"
     },
     {
-      "code": 6014,
+      "code": 6011,
       "name": "emptyCid",
       "msg": "CID cannot be empty"
     },
     {
-      "code": 6015,
-      "name": "emptyHandle",
-      "msg": "Handle cannot be empty"
-    },
-    {
-      "code": 6016,
+      "code": 6012,
       "name": "invalidLicenseOwner",
       "msg": "Invalid license: account not owned by license program"
     },
     {
-      "code": 6017,
+      "code": 6013,
       "name": "invalidLicenseOrigin",
       "msg": "Invalid license: does not reference the parent IP"
     },
     {
-      "code": 6018,
+      "code": 6014,
       "name": "derivativesNotAllowed",
       "msg": "License does not allow derivatives"
     },
     {
-      "code": 6019,
+      "code": 6015,
       "name": "licenseExpired",
       "msg": "License has expired"
     },
     {
-      "code": 6020,
+      "code": 6016,
       "name": "invalidTokenMint",
       "msg": "Invalid token mint: does not match registration currency"
     },
     {
-      "code": 6021,
+      "code": 6017,
       "name": "invalidTreasuryAuthority",
       "msg": "Invalid treasury token account authority"
     },
     {
-      "code": 6022,
+      "code": 6018,
       "name": "licenseGrantMismatch",
       "msg": "License grant does not reference the expected license"
     },
     {
-      "code": 6023,
+      "code": 6019,
       "name": "invalidGrantee",
       "msg": "Grantee does not match the child owner entity"
     }
@@ -1585,6 +1804,42 @@ export type IpCore = {
             "type": {
               "option": "u64"
             }
+          }
+        ]
+      }
+    },
+    {
+      "name": "creatorEntityCounter",
+      "docs": [
+        "Tracks the number of entities created by a given wallet.",
+        "",
+        "Used to derive deterministic, sequential entity PDA seeds.",
+        "Initialized on first entity creation via `init_if_needed`."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "creator",
+            "docs": [
+              "The creator wallet this counter belongs to."
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "entityCount",
+            "docs": [
+              "Total number of entities created by this creator.",
+              "The next entity will receive this value as its index."
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "docs": [
+              "PDA bump seed."
+            ],
+            "type": "u8"
           }
         ]
       }
@@ -1756,16 +2011,12 @@ export type IpCore = {
             "type": "pubkey"
           },
           {
-            "name": "handle",
+            "name": "index",
             "docs": [
-              "Unique handle for this entity (lowercase alphanumeric, immutable)."
+              "Sequential index for this entity within the creator's wallet (immutable).",
+              "Used as part of the PDA seed derivation."
             ],
-            "type": {
-              "array": [
-                "u8",
-                32
-              ]
-            }
+            "type": "u64"
           },
           {
             "name": "controller",
@@ -1869,16 +2120,11 @@ export type IpCore = {
             "type": "pubkey"
           },
           {
-            "name": "handle",
+            "name": "index",
             "docs": [
-              "The entity handle."
+              "The entity index within the creator's wallet."
             ],
-            "type": {
-              "array": [
-                "u8",
-                32
-              ]
-            }
+            "type": "u64"
           },
           {
             "name": "controller",

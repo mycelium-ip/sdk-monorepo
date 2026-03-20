@@ -75,9 +75,7 @@ describe("useCreateEntity", () => {
 
     const { result } = renderHook(() => useCreateEntity(), { wrapper });
 
-    const params = {
-      handle: "test-entity",
-    };
+    const params = {};
 
     result.current.mutate(params);
 
@@ -92,7 +90,7 @@ describe("useCreateEntity", () => {
 
     const { result } = renderHook(() => useCreateEntity(), { wrapper });
 
-    result.current.mutate({ handle: "test-entity" });
+    result.current.mutate({});
 
     // Wait for either success or error to complete the mutation
     await waitFor(
@@ -116,7 +114,7 @@ describe("useCreateEntity", () => {
 
     const { result } = renderHook(() => useCreateEntity(), { wrapper });
 
-    result.current.mutate({ handle: "test-entity" });
+    result.current.mutate({});
 
     await waitFor(
       () => {
@@ -152,7 +150,7 @@ describe("useCreateEntity", () => {
 
     const { result } = renderHook(() => useCreateEntity(), { wrapper });
 
-    result.current.mutate({ handle: "test-entity" });
+    result.current.mutate({});
 
     await waitFor(() => {
       expect(result.current.isError).toBe(true);
@@ -179,9 +177,7 @@ describe("queryKeys", () => {
 describe("useCreateEntityWithMetadata", () => {
   const schemaPubkey = createMockPublicKey();
   const baseParams = {
-    entity: {
-      handle: "test-entity",
-    },
+    entity: {},
     metadata: {
       schema: schemaPubkey,
       dataHash: new Uint8Array([1, 2, 3]),
@@ -440,9 +436,7 @@ describe("custom executeTransaction override", () => {
 
     const { result } = renderHook(() => useCreateEntity(), { wrapper });
 
-    result.current.mutate({
-      handle: "test-entity",
-    });
+    result.current.mutate({});
 
     await waitFor(
       () => {
@@ -472,7 +466,7 @@ describe("custom executeTransaction override", () => {
 
     const { result } = renderHook(() => useCreateEntity(), { wrapper });
 
-    result.current.mutate({ handle: "test-entity" });
+    result.current.mutate({});
 
     await waitFor(
       () => {

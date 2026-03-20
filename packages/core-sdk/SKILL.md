@@ -145,11 +145,7 @@ Every module method comes in two flavours:
 Returns a `TransactionInstruction` you can compose into your own transaction.
 
 ```ts
-const ix = await sdk.ipCore.entity.createIx({
-  handle: "my-entity",
-  additionalControllers: [],
-  signatureThreshold: 1,
-});
+const ix = await sdk.ipCore.entity.createIx({});
 // Add ix to a custom Transaction
 ```
 
@@ -158,11 +154,10 @@ const ix = await sdk.ipCore.entity.createIx({
 Builds, signs, sends, confirms, and returns a `TransactionResult<Event>`.
 
 ```ts
-const result = await sdk.ipCore.entity.create({
-  handle: "my-entity",
-});
+const result = await sdk.ipCore.entity.create({});
 console.log(result.signature); // tx sig
 console.log(result.event); // decoded EntityCreated event
+console.log(result.event.index); // sequential entity index (bigint)
 ```
 
 ---
@@ -172,21 +167,39 @@ console.log(result.event); // decoded EntityCreated event
 ### Entity (`sdk.ipCore.entity`)
 
 ```ts
-// Create
-await sdk.ipCore.entity.create({
-  handle: "my-entity", // string | Uint8Array (max 32 bytes)
-  additionalControllers: [pubkeyA], // PublicKey[] (optional, default [])
-  signatureThreshold: 1, // number (optional, default 1)
+// Create — entity index is auto-assigned from the on-chain counter
+const result = await sdk.ipCore.entity.create({
   creator: walletPubkey, // optional, defaults to wallet
 });
+// result.event.index — the assigned entity index (bigint)
 
-// Update controllers
-await sdk.ipCore.entity.updateControllers({
+// Transfer entity control
+await sdk.ipCore.entity.transferControl({
   entity: entityPda,
-  newControllers: [pubkeyA, pubkeyB],
-  newThreshold: 2,
-  controllerSigners: [existingController], // existing controllers that co-sign
+  newController: newControllerPubkey,
+  controller: existingController, // optional, defaults to wallet
 });
+```
+
+#### Entity counter & PDA derivation
+
+Each creator has a `CreatorEntityCounter` PDA tracking how many entities
+they have created. The SDK fetches this counter automatically during entity
+creation. You can also query it directly:
+
+```ts
+// Get the current entity count (next index that will be assigned)
+const count = await sdk.ipCore.fetchEntityCount(creatorPubkey);
+
+// Derive the entity PDA for a specific index
+const entityAddress = sdk.ipCore.deriveEntityAddress(creatorPubkey, count);
+
+// Derive the counter PDA
+const counterAddress = sdk.ipCore.deriveCounterAddress(creatorPubkey);
+
+// Fetch the full counter account
+const counter = await sdk.ipCore.fetchCreatorEntityCounter(creatorPubkey);
+// counter?.entityCount — bigint
 ```
 
 ### IP (`sdk.ipCore.ip`)
@@ -317,6 +330,7 @@ Derive on-chain addresses deterministically without making RPC calls:
 ```ts
 import {
   deriveEntityPda,
+  deriveCreatorEntityCounterPda,
   deriveIpPda,
   deriveMetadataSchemaPda,
   deriveEntityMetadataPda,
@@ -398,7 +412,7 @@ import type {
   TransactionResult, // { signature: string; event: E }
   StringOrBytes,
   CreateEntityParams,
-  UpdateEntityControllersParams,
+  TransferEntityControlParams,
   CreateIpParams,
   TransferIpParams,
   CreateMetadataSchemaParams,
@@ -413,6 +427,7 @@ import type {
   RevokeLicenseGrantParams,
   ProtocolConfig,
   EntityAccount,
+  CreatorEntityCounterAccount,
   SendTxOptions,
 } from "@mycelium-ip/core-sdk";
 ```
@@ -456,11 +471,8 @@ import { MyceliumClient, sha256Hash } from "@mycelium-ip/core-sdk";
 const sdk = new MyceliumClient({ connection, wallet, cluster: "devnet" });
 
 // 1. Create entity
-const entityResult = await sdk.ipCore.entity.create({
-  handle: "my-studio",
-  additionalControllers: [],
-  signatureThreshold: 1,
-});
+const entityResult = await sdk.ipCore.entity.create({});
+// entityResult.event.index — the auto-assigned entity index
 
 // 2. Create metadata schema
 const schemaResult = await sdk.ipCore.metadata.createSchema({

@@ -1,19 +1,24 @@
 import { PublicKey } from "@solana/web3.js";
 import { PDA_SEEDS } from "../constants/programs";
-import type { StringOrBytes } from "../types";
-import { toFixedBytes, utf8Bytes } from "../utils/bytes";
+import { u64SeedBytes, utf8Bytes } from "../utils/bytes";
 
 export function deriveEntityPda(
   creator: PublicKey,
-  handle: StringOrBytes,
+  index: bigint | number,
   programId: PublicKey,
 ): [PublicKey, number] {
   return PublicKey.findProgramAddressSync(
-    [
-      utf8Bytes(PDA_SEEDS.entity),
-      creator.toBytes(),
-      Uint8Array.from(toFixedBytes(handle, 32, "handle")),
-    ],
+    [utf8Bytes(PDA_SEEDS.entity), creator.toBytes(), u64SeedBytes(index)],
+    programId,
+  );
+}
+
+export function deriveCreatorEntityCounterPda(
+  creator: PublicKey,
+  programId: PublicKey,
+): [PublicKey, number] {
+  return PublicKey.findProgramAddressSync(
+    [utf8Bytes(PDA_SEEDS.entityCounter), creator.toBytes()],
     programId,
   );
 }

@@ -56,11 +56,7 @@ function CreateEntityButton() {
   const { mutate, isPending, isSuccess } = useCreateEntity();
 
   const handleCreate = () => {
-    mutate({
-      handle: new TextEncoder().encode("my-entity"),
-      additionalControllers: [],
-      signatureThreshold: 1,
-    });
+    mutate({});
   };
 
   return (
@@ -330,7 +326,8 @@ All mutation hooks return TanStack Query's `UseMutationResult`, providing:
 
 #### useCreateEntity
 
-Creates a new entity in the protocol.
+Creates a new entity in the protocol. Entity index is auto-assigned from the
+on-chain counter.
 
 ```tsx
 import { useCreateEntity } from "@mycelium-ip/react";
@@ -339,37 +336,31 @@ function CreateEntity() {
   const { mutate, isPending } = useCreateEntity();
 
   const handleCreate = () => {
-    mutate({
-      handle: new TextEncoder().encode("my-organization"),
-      additionalControllers: [], // Additional PublicKeys that can control this entity
-      signatureThreshold: 1, // Required signatures for multi-sig
-    });
+    mutate({});
   };
 
   return <button onClick={handleCreate}>Create Entity</button>;
 }
 ```
 
-#### useUpdateEntityControllers
+#### useTransferEntityControl
 
-Updates the controllers and signature threshold of an entity.
+Transfers control of an entity to a new controller.
 
 ```tsx
-import { useUpdateEntityControllers } from "@mycelium-ip/react";
+import { useTransferEntityControl } from "@mycelium-ip/react";
 
-function UpdateControllers({ entityPubkey }: { entityPubkey: PublicKey }) {
-  const { mutate } = useUpdateEntityControllers();
+function TransferControl({ entityPubkey }: { entityPubkey: PublicKey }) {
+  const { mutate } = useTransferEntityControl();
 
-  const handleUpdate = () => {
+  const handleTransfer = () => {
     mutate({
       entity: entityPubkey,
-      newControllers: [controller1, controller2],
-      newThreshold: 2,
-      controllerSigners: [existingController], // existing controllers that must co-sign
+      newController: newControllerPubkey,
     });
   };
 
-  return <button onClick={handleUpdate}>Update Controllers</button>;
+  return <button onClick={handleTransfer}>Transfer Control</button>;
 }
 ```
 

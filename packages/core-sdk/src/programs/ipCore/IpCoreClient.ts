@@ -3,7 +3,10 @@ import { Program } from "@coral-xyz/anchor";
 import type { Connection } from "@solana/web3.js";
 import { PublicKey } from "@solana/web3.js";
 import { getIdls, getProgramIds, PDA_SEEDS } from "../../constants/programs";
-import { deriveEntityPda } from "../../pda/entity";
+import {
+  deriveCreatorEntityCounterPda,
+  deriveEntityPda,
+} from "../../pda/entity";
 import { deriveIpPda } from "../../pda/ip";
 import {
   deriveEntityMetadataPda,
@@ -11,6 +14,7 @@ import {
 } from "../../pda/metadata";
 import type {
   AccountWithPublicKey,
+  CreatorEntityCounterAccount,
   DerivativeLinkAccount,
   DerivativeLinkFilter,
   EntityAccount,
@@ -24,7 +28,6 @@ import type {
   PaginatedResult,
   PaginationOptions,
   ProtocolConfig,
-  StringOrBytes,
 } from "../../types";
 import { utf8Bytes } from "../../utils/bytes";
 import {
@@ -121,16 +124,29 @@ export class IpCoreClient {
   }
 
   /**
-   * Derive the entity PDA for the given creator and handle.
+   * Derive the entity PDA for the given creator and index.
    *
    * Useful when you need the entity address before the entity has been created
    * on-chain, e.g. to populate subsequent instructions in the same transaction.
    *
    * @param creator - The creator public key
-   * @param handle  - The entity handle (string or bytes)
+   * @param index   - The entity index (sequential per-creator)
    */
-  deriveEntityAddress(creator: PublicKey, handle: StringOrBytes): PublicKey {
-    const [pda] = deriveEntityPda(creator, handle, this.program.programId);
+  deriveEntityAddress(creator: PublicKey, index: bigint | number): PublicKey {
+    const [pda] = deriveEntityPda(creator, index, this.program.programId);
+    return pda;
+  }
+
+  /**
+   * Derive the creator entity counter PDA for the given creator.
+   *
+   * @param creator - The creator public key
+   */
+  deriveCounterAddress(creator: PublicKey): PublicKey {
+    const [pda] = deriveCreatorEntityCounterPda(
+      creator,
+      this.program.programId,
+    );
     return pda;
   }
 
@@ -226,6 +242,49 @@ export class IpCoreClient {
   }
 
   /**
+   * Fetch the current entity count for a creator.
+   *
+   * Returns the next index that will be used when creating a new entity.
+   * Returns `0` if the creator has not yet created any entities (counter
+   * PDA does not exist on-chain).
+   *
+   * @param creator - The creator public key
+   */
+  async fetchEntityCount(creator: PublicKey): Promise<number> {
+    const counterAddress = this.deriveCounterAddress(creator);
+    try {
+      const account = await (this.program.account as any).creatorEntityCounter // eslint-disable-line @typescript-eslint/no-explicit-any
+        .fetch(counterAddress);
+      return Number(account.entityCount.toString());
+    } catch {
+      return 0;
+    }
+  }
+
+  /**
+   * Fetch a creator entity counter account from the chain.
+   *
+   * @param creator - The creator public key
+   * @returns The counter data, or `null` if it hasn't been initialized
+   */
+  async fetchCreatorEntityCounter(
+    creator: PublicKey,
+  ): Promise<CreatorEntityCounterAccount | null> {
+    const counterAddress = this.deriveCounterAddress(creator);
+    try {
+      const account = await (this.program.account as any).creatorEntityCounter // eslint-disable-line @typescript-eslint/no-explicit-any
+        .fetch(counterAddress);
+      return {
+        creator: account.creator,
+        entityCount: BigInt(account.entityCount.toString()),
+        bump: account.bump,
+      };
+    } catch {
+      return null;
+    }
+  }
+
+  /**
    * Fetch an entity account from the chain.
    *
    * @param entity - The entity PDA address
@@ -237,7 +296,7 @@ export class IpCoreClient {
       const account = await (this.program.account as any).entity.fetch(entity);
       return {
         creator: account.creator,
-        handle: account.handle,
+        index: BigInt(account.index.toString()),
         controller: account.controller,
         currentMetadataRevision: BigInt(
           account.currentMetadataRevision.toString(),
@@ -365,7 +424,7 @@ export class IpCoreClient {
   /**
    * Find all entity accounts matching the given filter.
    *
-   * @param filter     - Optional filter by `creator`, `handle`, and/or `controller`
+   * @param filter     - Optional filter by `creator`, `index`, and/or `controller`
    * @param pagination - Optional pagination (`limit` and `offset`)
    */
   async findEntities(
@@ -382,7 +441,7 @@ export class IpCoreClient {
         publicKey: item.publicKey,
         account: {
           creator: item.account.creator,
-          handle: item.account.handle,
+          index: BigInt(item.account.index.toString()),
           controller: item.account.controller,
           currentMetadataRevision: BigInt(
             item.account.currentMetadataRevision.toString(),

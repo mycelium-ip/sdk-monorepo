@@ -11,7 +11,6 @@ import {
   ensureTokenAccounts,
   loadKeypair,
   randomContentHash,
-  randomHandle,
   saveResult,
 } from "./helpers/setup";
 import { state } from "./helpers/state";
@@ -30,15 +29,10 @@ describe("License Revoke", () => {
 
     // Create a separate entity + IP + license specifically for revocation.
     // This avoids interfering with the license used by derivative tests.
-    const handle = randomHandle();
-    await client.ipCore.entity.create({
-      handle,
-      additionalControllers: [],
-      signatureThreshold: 1,
-    });
+    const entityCreateResult = await client.ipCore.entity.create({});
     const [entityPda] = deriveEntityPda(
       keypair.publicKey,
-      handle,
+      entityCreateResult.event!.index,
       client.ipCore.program.programId,
     );
     revokeEntity = entityPda;

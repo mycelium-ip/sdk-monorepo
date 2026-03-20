@@ -43,7 +43,6 @@ export interface ModuleContext {
 }
 
 export interface CreateEntityParams {
-  handle: StringOrBytes;
   creator?: PublicKey;
 }
 
@@ -98,8 +97,8 @@ export interface ProtocolConfig {
 export interface EntityAccount {
   /** The original creator of this entity (immutable). */
   creator: PublicKey;
-  /** Unique handle for this entity (fixed 32 bytes). */
-  handle: number[];
+  /** Sequential index for this entity within the creator's wallet (immutable). */
+  index: bigint;
   /** The single controller public key authorised to act on behalf of this entity. */
   controller: PublicKey;
   /** Current metadata revision number. */
@@ -108,6 +107,19 @@ export interface EntityAccount {
   createdAt: bigint;
   /** Unix timestamp when this entity was last updated. */
   updatedAt: bigint;
+  /** PDA bump seed. */
+  bump: number;
+}
+
+/**
+ * On-chain creator entity counter account data.
+ * Tracks the number of entities created by a given wallet.
+ */
+export interface CreatorEntityCounterAccount {
+  /** The creator wallet this counter belongs to. */
+  creator: PublicKey;
+  /** Total number of entities created by this creator. */
+  entityCount: bigint;
   /** PDA bump seed. */
   bump: number;
 }
@@ -356,7 +368,7 @@ export interface LicenseGrantAccount {
 /** Filter options for querying entity accounts. */
 export interface EntityFilter {
   creator?: PublicKey;
-  handle?: StringOrBytes;
+  index?: bigint | number;
   controller?: PublicKey;
 }
 

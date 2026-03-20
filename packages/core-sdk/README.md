@@ -121,7 +121,7 @@ sdk.setWallet(walletB);
 console.log(sdk.wallet.publicKey); // walletB's public key
 
 // All subsequent operations use walletB for signing
-const ix = await sdk.ipCore.entity.createIx({ handle: "my-entity" });
+const ix = await sdk.ipCore.entity.createIx({});
 ```
 
 `setWallet()` swaps the wallet in-place — the `AnchorProvider`, `Program` instances, and all modules are reused. This is more efficient than creating a new `MyceliumClient` when only the wallet changes.
@@ -220,9 +220,6 @@ Each module supports two styles:
 import { PublicKey } from "@solana/web3.js";
 
 const createEntityIx = await sdk.ipCore.entity.createIx({
-  handle: "marvel",
-  additionalControllers: [],
-  signatureThreshold: 1,
   // creator optional (defaults to wallet.publicKey)
 });
 
@@ -242,9 +239,7 @@ const createIpIx = await sdk.ipCore.ip.createIx({
 ### Pattern B: Send transaction directly (`create`, `update`, `revoke`, ...)
 
 ```ts
-const entityTx = await sdk.ipCore.entity.create({
-  handle: "marvel",
-});
+const entityTx = await sdk.ipCore.entity.create({});
 
 const ipTx = await sdk.ipCore.ip.create({
   registrantEntity,
@@ -270,7 +265,7 @@ console.log({ entityTx, ipTx, transferTx });
 
 - `sdk.ipCore.entity`
   - `createIx`, `create`
-  - `updateControllersIx`, `updateControllers`
+  - `transferControlIx`, `transferControl`
 - `sdk.ipCore.ip`
   - `createIx`, `create`
   - `transferIx`, `transfer`
@@ -354,6 +349,7 @@ The SDK exports PDA helpers so you can derive addresses yourself when needed.
 ```ts
 import {
   deriveEntityPda,
+  deriveCreatorEntityCounterPda,
   deriveIpPda,
   deriveMetadataSchemaPda,
   deriveLicensePda,

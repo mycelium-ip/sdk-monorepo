@@ -52,9 +52,7 @@ describe("MyceliumClient smoke", () => {
       wallet,
     });
 
-    const entityIx = await client.ipCore.entity.createIx({
-      handle: "entity-1",
-    });
+    const entityIx = await client.ipCore.entity.createIx({});
 
     const schemaIx = await client.ipCore.metadata.createSchemaIx({
       id: "default-schema",
@@ -189,9 +187,7 @@ describe("MyceliumClient.setWallet", () => {
     const newPk = Keypair.generate().publicKey;
     client.setWallet(createTestWallet(newPk));
 
-    const entityIx = await client.ipCore.entity.createIx({
-      handle: "entity-after-switch",
-    });
+    const entityIx = await client.ipCore.entity.createIx({});
 
     // The creator account (first writable signer) should be the new pubkey
     const signerKey = entityIx.keys.find((k) => k.isSigner);

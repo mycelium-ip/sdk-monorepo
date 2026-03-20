@@ -43,7 +43,7 @@ export interface CreateEntityWithMetadataResult {
  * on-chain transaction.
  *
  * The entity PDA is derived internally from the caller's wallet public key and
- * the supplied `handle`, so you do not need to compute it yourself before
+ * the current entity count, so you do not need to compute it yourself before
  * calling `mutate`.
  *
  * @example
@@ -53,9 +53,7 @@ export interface CreateEntityWithMetadataResult {
  *
  *   const handleCreate = () => {
  *     mutate({
- *       entity: {
- *         handle: "my-organization",
- *       },
+ *       entity: {},
  *       metadata: {
  *         schema: schemaPubkey,
  *         revision: 1n,
@@ -96,15 +94,16 @@ export function useCreateEntityWithMetadata() {
           throw new Error("Wallet not connected");
         }
 
-        // Derive the entity PDA so we can reference it in the metadata IX.
+        // Derive the entity PDA from the current entity count.
         const creator = params.entity.creator ?? wallet.publicKey;
         if (!creator) {
           throw new Error("Wallet not connected");
         }
 
+        const entityCount = await client.ipCore.fetchEntityCount(creator);
         const entityPda = client.ipCore.deriveEntityAddress(
           creator,
-          params.entity.handle,
+          entityCount,
         );
 
         // Derive the metadata PDA with revision 1 (entity is being created in

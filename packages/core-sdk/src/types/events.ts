@@ -64,8 +64,8 @@ export interface EntityCreated {
   entity: PublicKey;
   /** The entity creator. */
   creator: PublicKey;
-  /** The entity handle (32-byte fixed array). */
-  handle: number[];
+  /** The entity index within the creator's wallet. */
+  index: bigint;
   /** The initial controller (set to creator). */
   controller: PublicKey;
   /** Creation timestamp. */

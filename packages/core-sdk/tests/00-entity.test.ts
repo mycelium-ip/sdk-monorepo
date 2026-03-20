@@ -7,7 +7,6 @@ import {
   createTestClient,
   delay,
   loadKeypair,
-  randomHandle,
   saveResult,
 } from "./helpers/setup";
 import { state } from "./helpers/state";
@@ -28,12 +27,12 @@ describe("Entity", () => {
   // -------------------------------------------------------------------------
   describe("entity.createIx", () => {
     it("builds a valid create-entity instruction", async () => {
-      const handle = randomHandle();
-      const ix = await client.ipCore.entity.createIx({
-        handle,
-        additionalControllers: [],
-        signatureThreshold: 1,
-      });
+      // Fetch the current entity count so we can predict the PDA
+      const entityCount = await client.ipCore.fetchEntityCount(
+        keypair.publicKey,
+      );
+
+      const ix = await client.ipCore.entity.createIx({});
 
       expect(ix.keys.length).toBeGreaterThan(0);
       expect(ix.programId.toBase58()).toBe(
@@ -43,7 +42,7 @@ describe("Entity", () => {
       // entity PDA should be present in the instruction accounts
       const [entityPda] = deriveEntityPda(
         keypair.publicKey,
-        handle,
+        entityCount,
         client.ipCore.program.programId,
       );
       const entityKey = ix.keys.find(
@@ -58,20 +57,15 @@ describe("Entity", () => {
   // -------------------------------------------------------------------------
   describe("entity.create", () => {
     it("creates an entity on devnet", async () => {
-      const handle = randomHandle();
-      const result = await client.ipCore.entity.create({
-        handle,
-        additionalControllers: [],
-        signatureThreshold: 1,
-      });
+      const result = await client.ipCore.entity.create({});
 
       expect(result.signature).toBeTruthy();
       expect(result.event).toBeDefined();
 
-      // Persist the entity PDA for downstream tests
+      // Derive the entity PDA from the index in the emitted event
       const [entityPda] = deriveEntityPda(
         keypair.publicKey,
-        handle,
+        result.event!.index,
         client.ipCore.program.programId,
       );
       state.entity = entityPda;
@@ -81,17 +75,16 @@ describe("Entity", () => {
   });
 
   // -------------------------------------------------------------------------
-  // updateControllersIx
+  // transferControlIx
   // -------------------------------------------------------------------------
-  describe("entity.updateControllersIx", () => {
-    it("builds a valid update-controllers instruction", async () => {
+  describe("entity.transferControlIx", () => {
+    it("builds a valid transfer-entity-control instruction", async () => {
       expect(state.entity).toBeDefined();
 
-      const ix = await client.ipCore.entity.updateControllersIx({
+      const newController = Keypair.generate().publicKey;
+      const ix = await client.ipCore.entity.transferControlIx({
         entity: state.entity,
-        newControllers: [keypair.publicKey],
-        newThreshold: 1,
-        controllerSigners: [keypair.publicKey],
+        newController,
       });
 
       expect(ix.keys.length).toBeGreaterThan(0);
@@ -102,33 +95,22 @@ describe("Entity", () => {
   });
 
   // -------------------------------------------------------------------------
-  // updateControllers  (sends tx to devnet)
+  // transferControl  (sends tx to devnet)
   // -------------------------------------------------------------------------
-  describe("entity.updateControllers", () => {
-    it("updates entity controllers on devnet", async () => {
+  describe("entity.transferControl", () => {
+    it("transfers entity control on devnet", async () => {
       expect(state.entity).toBeDefined();
 
-      const newController = Keypair.generate().publicKey;
-      const result = await client.ipCore.entity.updateControllers({
+      // Transfer control to self (no-op but validates the instruction works)
+      const result = await client.ipCore.entity.transferControl({
         entity: state.entity,
-        newControllers: [keypair.publicKey, newController],
-        newThreshold: 1,
-        controllerSigners: [keypair.publicKey],
+        newController: keypair.publicKey,
       });
 
       expect(result.signature).toBeTruthy();
       expect(result.event).toBeDefined();
 
-      saveResult("entity-update-controllers", result);
-
-      // Revert controllers back to just the keypair for subsequent tests
-      await delay();
-      await client.ipCore.entity.updateControllers({
-        entity: state.entity,
-        newControllers: [keypair.publicKey],
-        newThreshold: 1,
-        controllerSigners: [keypair.publicKey],
-      });
+      saveResult("entity-transfer-control", result);
     });
   });
 });

@@ -8,7 +8,6 @@ import {
   createTestClient,
   delay,
   loadKeypair,
-  randomHandle,
   saveResult,
 } from "./helpers/setup";
 import { state } from "./helpers/state";
@@ -22,17 +21,12 @@ describe("License Grant", () => {
     client = createTestClient(keypair);
 
     // Create a grantee entity for the grant tests
-    const granteeHandle = randomHandle();
-    const createResult = await client.ipCore.entity.create({
-      handle: granteeHandle,
-      additionalControllers: [],
-      signatureThreshold: 1,
-    });
+    const createResult = await client.ipCore.entity.create({});
     expect(createResult.signature).toBeTruthy();
 
     const [granteePda] = deriveEntityPda(
       keypair.publicKey,
-      granteeHandle,
+      createResult.event!.index,
       client.ipCore.program.programId,
     );
     state.granteeEntity = granteePda;
@@ -107,15 +101,10 @@ describe("License Grant", () => {
       expect(state.entity).toBeDefined();
 
       // Create a second grantee + grant specifically for revocation testing
-      const revokeGranteeHandle = randomHandle();
-      await client.ipCore.entity.create({
-        handle: revokeGranteeHandle,
-        additionalControllers: [],
-        signatureThreshold: 1,
-      });
+      const revokeCreateResult = await client.ipCore.entity.create({});
       const [revokeGranteePda] = deriveEntityPda(
         keypair.publicKey,
-        revokeGranteeHandle,
+        revokeCreateResult.event!.index,
         client.ipCore.program.programId,
       );
 
@@ -163,15 +152,10 @@ describe("License Grant", () => {
       expect(state.entity).toBeDefined();
 
       // Create a fresh grantee + grant for this revoke test
-      const revokeHandle = randomHandle();
-      await client.ipCore.entity.create({
-        handle: revokeHandle,
-        additionalControllers: [],
-        signatureThreshold: 1,
-      });
+      const revokeCreateResult = await client.ipCore.entity.create({});
       const [revokeGranteePda] = deriveEntityPda(
         keypair.publicKey,
-        revokeHandle,
+        revokeCreateResult.event!.index,
         client.ipCore.program.programId,
       );
 

@@ -23,7 +23,7 @@ import { vi } from "vitest";
 export const mockEntityCreatedEvent: EntityCreated = {
   entity: Keypair.generate().publicKey,
   creator: Keypair.generate().publicKey,
-  handle: new Array(32).fill(0),
+  index: 0n,
   controller: Keypair.generate().publicKey,
   createdAt: 0n,
 };
@@ -291,6 +291,10 @@ export function createMockMyceliumClient(): MyceliumClient {
       deriveEntityAddress: vi
         .fn()
         .mockReturnValue(Keypair.generate().publicKey),
+      deriveCounterAddress: vi
+        .fn()
+        .mockReturnValue(Keypair.generate().publicKey),
+      fetchEntityCount: vi.fn().mockResolvedValue(0),
       deriveIpAddress: vi.fn().mockReturnValue(Keypair.generate().publicKey),
       deriveEntityMetadataAddress: vi
         .fn()

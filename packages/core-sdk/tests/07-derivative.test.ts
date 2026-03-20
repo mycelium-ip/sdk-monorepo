@@ -12,7 +12,6 @@ import {
   ensureTokenAccounts,
   loadKeypair,
   randomContentHash,
-  randomHandle,
   saveResult,
 } from "./helpers/setup";
 import { state } from "./helpers/state";
@@ -28,15 +27,10 @@ describe("Derivative", () => {
       await ensureTokenAccounts(client, keypair);
 
     // Create a child-owner entity and a child IP for derivative linking
-    const childHandle = randomHandle();
-    await client.ipCore.entity.create({
-      handle: childHandle,
-      additionalControllers: [],
-      signatureThreshold: 1,
-    });
+    const childCreateResult = await client.ipCore.entity.create({});
     const [childOwnerPda] = deriveEntityPda(
       keypair.publicKey,
-      childHandle,
+      childCreateResult.event!.index,
       client.ipCore.program.programId,
     );
     state.childOwnerEntity = childOwnerPda;
