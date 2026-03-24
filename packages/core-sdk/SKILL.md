@@ -125,13 +125,24 @@ are reused — only the signing identity changes.
 MyceliumClient
 ├── wallet: StandardWalletWrapper
 ├── ipCore: IpCoreClient
-│   ├── entity     → create, updateControllers
+│   ├── entity     → create, transferControl
 │   ├── ip         → create, transfer
 │   ├── metadata   → createSchema, createEntityMetadata, createIpMetadata
-│   └── derivative → create, updateLicense
+│   ├── derivative → create, updateLicense
+│   ├── fetch*     → fetchConfig, fetchEntity, fetchEntityCount,
+│   │                fetchCreatorEntityCounter, fetchIp,
+│   │                fetchDerivativeLink, fetchMetadata, fetchMetadataSchema
+│   ├── find*      → findEntities, findIps, findDerivativeLinks, findMetadata
+│   ├── derive*    → deriveEntityAddress, deriveCounterAddress, deriveIpAddress,
+│   │                deriveEntityMetadataAddress, deriveIpMetadataAddress,
+│   │                deriveConfigAddress
+│   └── events     → parseEvent, parseEvents, findEventByName
 └── license: LicenseClient
     ├── license    → create, update, revoke
-    └── grant      → create, revoke
+    ├── grant      → create, revoke
+    ├── fetch*     → fetchLicense, fetchLicenseGrant
+    ├── find*      → findLicenses, findLicenseGrants
+    └── events     → parseEvent, parseEvents, findEventByName
 ```
 
 ---
@@ -323,6 +334,134 @@ await sdk.license.grant.revoke({
 
 ---
 
+## Account Fetching
+
+Fetch a single on-chain account by its PDA. Every method returns
+`null` when the account does not exist.
+
+### `sdk.ipCore` fetchers
+
+```ts
+// Protocol config (treasury, registration fee, etc.)
+const config = await sdk.ipCore.fetchConfig();
+// config.authority, config.treasury, config.registrationCurrency, …
+
+// Entity
+const entity = await sdk.ipCore.fetchEntity(entityPda);
+// entity?.creator, entity?.index (bigint), entity?.controller, …
+
+// IP
+const ip = await sdk.ipCore.fetchIp(ipPda);
+// ip?.contentHash, ip?.currentOwnerEntity, …
+
+// Derivative link
+const link = await sdk.ipCore.fetchDerivativeLink(derivativeLinkPda);
+// link?.parentIp, link?.childIp, link?.license, …
+
+// Metadata
+const meta = await sdk.ipCore.fetchMetadata(metadataPda);
+// meta?.schema, meta?.hash, meta?.cid, meta?.parent, …
+
+// Metadata schema
+const schema = await sdk.ipCore.fetchMetadataSchema(schemaPda);
+// schema?.id, schema?.version, schema?.hash, schema?.cid, …
+```
+
+`fetchEntityCount` and `fetchCreatorEntityCounter` are documented in the
+Entity section above.
+
+### `sdk.license` fetchers
+
+```ts
+const license = await sdk.license.fetchLicense(licensePda);
+// license?.originIp, license?.authority, license?.derivativesAllowed, …
+
+const grant = await sdk.license.fetchLicenseGrant(grantPda);
+// grant?.license, grant?.grantee, grant?.expiration (bigint), …
+```
+
+---
+
+## Account Queries
+
+Query multiple accounts with optional filtering and pagination.
+All `find*` methods return `PaginatedResult<AccountWithPublicKey<T>>`:
+
+```ts
+// { items: [{ publicKey: PublicKey, account: T }, …], hasMore: boolean }
+```
+
+Pagination defaults: `limit = 20`, `offset = 0`.
+
+### `sdk.ipCore` queries
+
+```ts
+// Find entities — filter by creator, index, or controller
+const entities = await sdk.ipCore.findEntities(
+  { creator: walletPubkey }, // EntityFilter (all fields optional)
+  { limit: 10, offset: 0 }, // PaginationOptions (optional)
+);
+
+// Find IPs — filter by contentHash, registrantEntity, or currentOwnerEntity
+const ips = await sdk.ipCore.findIps(
+  { currentOwnerEntity: entityPda }, // IpFilter
+);
+
+// Find derivative links — filter by parentIp, childIp, or license
+const links = await sdk.ipCore.findDerivativeLinks(
+  { parentIp: ipPda }, // DerivativeLinkFilter
+);
+
+// Find metadata — filter by parent or parentType ("entity" | "ip")
+const metadata = await sdk.ipCore.findMetadata(
+  { parent: entityPda, parentType: "entity" }, // MetadataFilter
+);
+```
+
+### `sdk.license` queries
+
+```ts
+// Find licenses — filter by originIp or authority
+const licenses = await sdk.license.findLicenses(
+  { originIp: ipPda }, // LicenseFilter
+);
+
+// Find license grants — filter by license or grantee
+const grants = await sdk.license.findLicenseGrants(
+  { license: licensePda }, // LicenseGrantFilter
+);
+```
+
+---
+
+## Event Parsing
+
+Both `sdk.ipCore` and `sdk.license` expose event-parsing helpers for
+extracting decoded Anchor events from confirmed transactions.
+
+```ts
+// Parse the first event (convenience for single-event transactions)
+const event = await sdk.ipCore.parseEvent<EntityCreated>(connection, signature);
+
+// Parse all events from a transaction
+const events = await sdk.ipCore.parseEvents(connection, signature);
+
+// Find a specific event by camelCase name
+const created = sdk.ipCore.findEventByName<EntityCreated>(
+  events,
+  "entityCreated",
+);
+
+// Works identically on the license client
+const licenseEvents = await sdk.license.parseEvents(connection, signature);
+const revoked = sdk.license.findEventByName<LicenseRevoked>(
+  licenseEvents,
+  "licenseRevoked",
+);
+```
+
+---
+
 ## PDA Helpers
 
 Derive on-chain addresses deterministically without making RPC calls:
@@ -339,6 +478,25 @@ import {
   deriveLicenseGrantPda,
   deriveDerivativeLinkPda,
 } from "@mycelium-ip/core-sdk";
+```
+
+`IpCoreClient` also exposes convenience instance methods so you don't need
+to pass the `programId` manually:
+
+```ts
+// Entity / counter (also shown in the Entity section)
+sdk.ipCore.deriveEntityAddress(creator, index); // → PublicKey
+sdk.ipCore.deriveCounterAddress(creator); // → PublicKey
+
+// IP
+sdk.ipCore.deriveIpAddress(registrantEntity, contentHash); // → PublicKey
+
+// Metadata
+sdk.ipCore.deriveEntityMetadataAddress(entity, revision); // → PublicKey
+sdk.ipCore.deriveIpMetadataAddress(ip, revision); // → PublicKey
+
+// Protocol config
+sdk.ipCore.deriveConfigAddress(); // → PublicKey
 ```
 
 ---
@@ -407,10 +565,14 @@ try {
 
 ```ts
 import type {
+  // Client
   MyceliumClientOptions,
   MyceliumCluster, // "devnet" | "mainnet-beta"
   TransactionResult, // { signature: string; event: E }
+  SendTxOptions,
   StringOrBytes,
+
+  // Transaction params
   CreateEntityParams,
   TransferEntityControlParams,
   CreateIpParams,
@@ -425,10 +587,31 @@ import type {
   RevokeLicenseParams,
   CreateLicenseGrantParams,
   RevokeLicenseGrantParams,
+
+  // On-chain account types
   ProtocolConfig,
   EntityAccount,
   CreatorEntityCounterAccount,
-  SendTxOptions,
+  IpAccount,
+  DerivativeLinkAccount,
+  MetadataAccount,
+  MetadataSchemaAccount,
+  LicenseAccount,
+  LicenseGrantAccount,
+
+  // Query types
+  EntityFilter,
+  IpFilter,
+  DerivativeLinkFilter,
+  MetadataFilter,
+  LicenseFilter,
+  LicenseGrantFilter,
+  PaginationOptions, // { limit?: number; offset?: number }
+  PaginatedResult, // { items: T[]; hasMore: boolean }
+  AccountWithPublicKey, // { publicKey: PublicKey; account: T }
+
+  // Event parsing
+  ParsedEvent,
 } from "@mycelium-ip/core-sdk";
 ```
 
