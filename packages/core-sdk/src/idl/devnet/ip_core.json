@@ -9,42 +9,18 @@
   "instructions": [
     {
       "name": "create_derivative_link",
-      "docs": [
-        "Create a derivative link between IPs."
-      ],
-      "discriminator": [
-        145,
-        37,
-        194,
-        127,
-        5,
-        135,
-        125,
-        122
-      ],
+      "docs": ["Create a derivative link between IPs."],
+      "discriminator": [145, 37, 194, 127, 5, 135, 125, 122],
       "accounts": [
         {
           "name": "derivative_link",
-          "docs": [
-            "The derivative link account to create (PDA)."
-          ],
+          "docs": ["The derivative link account to create (PDA)."],
           "writable": true,
           "pda": {
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  100,
-                  101,
-                  114,
-                  105,
-                  118,
-                  97,
-                  116,
-                  105,
-                  118,
-                  101
-                ]
+                "value": [100, 101, 114, 105, 118, 97, 116, 105, 118, 101]
               },
               {
                 "kind": "account",
@@ -59,33 +35,20 @@
         },
         {
           "name": "parent_ip",
-          "docs": [
-            "The parent IP."
-          ]
+          "docs": ["The parent IP."]
         },
         {
           "name": "child_ip",
-          "docs": [
-            "The child IP (derivative)."
-          ]
+          "docs": ["The child IP (derivative)."]
         },
         {
           "name": "child_owner_entity",
-          "docs": [
-            "The owner entity of the child IP."
-          ],
+          "docs": ["The owner entity of the child IP."],
           "pda": {
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  101,
-                  110,
-                  116,
-                  105,
-                  116,
-                  121
-                ]
+                "value": [101, 110, 116, 105, 116, 121]
               },
               {
                 "kind": "account",
@@ -102,9 +65,7 @@
         },
         {
           "name": "controller",
-          "docs": [
-            "The child owner entity controller (must sign)."
-          ],
+          "docs": ["The child owner entity controller (must sign)."],
           "signer": true
         },
         {
@@ -115,23 +76,17 @@
         },
         {
           "name": "license",
-          "docs": [
-            "The license account (owned by external license program)."
-          ]
+          "docs": ["The license account (owned by external license program)."]
         },
         {
           "name": "payer",
-          "docs": [
-            "Payer for account creation."
-          ],
+          "docs": ["Payer for account creation."],
           "writable": true,
           "signer": true
         },
         {
           "name": "system_program",
-          "docs": [
-            "System program for account creation."
-          ],
+          "docs": ["System program for account creation."],
           "address": "11111111111111111111111111111111"
         }
       ],
@@ -144,19 +99,8 @@
     },
     {
       "name": "create_entity",
-      "docs": [
-        "Create a new entity."
-      ],
-      "discriminator": [
-        231,
-        148,
-        76,
-        9,
-        52,
-        190,
-        122,
-        31
-      ],
+      "docs": ["Create a new entity."],
+      "discriminator": [231, 148, 76, 9, 52, 190, 122, 31],
       "accounts": [
         {
           "name": "counter",
@@ -169,19 +113,7 @@
               {
                 "kind": "const",
                 "value": [
-                  101,
-                  110,
-                  116,
-                  105,
-                  116,
-                  121,
-                  95,
-                  99,
-                  111,
-                  117,
-                  110,
-                  116,
-                  101,
+                  101, 110, 116, 105, 116, 121, 95, 99, 111, 117, 110, 116, 101,
                   114
                 ]
               },
@@ -203,14 +135,7 @@
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  101,
-                  110,
-                  116,
-                  105,
-                  116,
-                  121
-                ]
+                "value": [101, 110, 116, 105, 116, 121]
               },
               {
                 "kind": "account",
@@ -235,9 +160,7 @@
         },
         {
           "name": "system_program",
-          "docs": [
-            "System program for account creation."
-          ],
+          "docs": ["System program for account creation."],
           "address": "11111111111111111111111111111111"
         }
       ],
@@ -245,45 +168,23 @@
     },
     {
       "name": "create_entity_metadata",
-      "docs": [
-        "Create metadata for an entity."
-      ],
-      "discriminator": [
-        206,
-        211,
-        171,
-        106,
-        161,
-        192,
-        50,
-        7
-      ],
+      "docs": ["Create metadata for an entity."],
+      "discriminator": [206, 211, 171, 106, 161, 192, 50, 7],
       "accounts": [
         {
           "name": "metadata",
-          "docs": [
-            "The metadata account to create (PDA)."
-          ],
+          "docs": ["The metadata account to create (PDA)."],
           "writable": true
         },
         {
           "name": "entity",
-          "docs": [
-            "The entity to attach metadata to."
-          ],
+          "docs": ["The entity to attach metadata to."],
           "writable": true,
           "pda": {
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  101,
-                  110,
-                  116,
-                  105,
-                  116,
-                  121
-                ]
+                "value": [101, 110, 116, 105, 116, 121]
               },
               {
                 "kind": "account",
@@ -300,30 +201,22 @@
         },
         {
           "name": "schema",
-          "docs": [
-            "The metadata schema this metadata conforms to."
-          ]
+          "docs": ["The metadata schema this metadata conforms to."]
         },
         {
           "name": "controller",
-          "docs": [
-            "The entity controller (must sign)."
-          ],
+          "docs": ["The entity controller (must sign)."],
           "signer": true
         },
         {
           "name": "payer",
-          "docs": [
-            "Payer for account creation."
-          ],
+          "docs": ["Payer for account creation."],
           "writable": true,
           "signer": true
         },
         {
           "name": "system_program",
-          "docs": [
-            "System program for account creation."
-          ],
+          "docs": ["System program for account creation."],
           "address": "11111111111111111111111111111111"
         }
       ],
@@ -331,53 +224,31 @@
         {
           "name": "hash",
           "type": {
-            "array": [
-              "u8",
-              32
-            ]
+            "array": ["u8", 32]
           }
         },
         {
           "name": "cid",
           "type": {
-            "array": [
-              "u8",
-              96
-            ]
+            "array": ["u8", 96]
           }
         }
       ]
     },
     {
       "name": "create_ip",
-      "docs": [
-        "Register a new IP."
-      ],
-      "discriminator": [
-        241,
-        108,
-        234,
-        46,
-        78,
-        41,
-        127,
-        27
-      ],
+      "docs": ["Register a new IP."],
+      "discriminator": [241, 108, 234, 46, 78, 41, 127, 27],
       "accounts": [
         {
           "name": "ip",
-          "docs": [
-            "The IP account to create (PDA)."
-          ],
+          "docs": ["The IP account to create (PDA)."],
           "writable": true,
           "pda": {
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  105,
-                  112
-                ]
+                "value": [105, 112]
               },
               {
                 "kind": "account",
@@ -392,21 +263,12 @@
         },
         {
           "name": "registrant_entity",
-          "docs": [
-            "The entity registering this IP."
-          ],
+          "docs": ["The entity registering this IP."],
           "pda": {
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  101,
-                  110,
-                  116,
-                  105,
-                  116,
-                  121
-                ]
+                "value": [101, 110, 116, 105, 116, 121]
               },
               {
                 "kind": "account",
@@ -423,44 +285,24 @@
         },
         {
           "name": "config",
-          "docs": [
-            "Protocol configuration."
-          ],
+          "docs": ["Protocol configuration."],
           "pda": {
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  99,
-                  111,
-                  110,
-                  102,
-                  105,
-                  103
-                ]
+                "value": [99, 111, 110, 102, 105, 103]
               }
             ]
           }
         },
         {
           "name": "treasury",
-          "docs": [
-            "Protocol treasury."
-          ],
+          "docs": ["Protocol treasury."],
           "pda": {
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  116,
-                  114,
-                  101,
-                  97,
-                  115,
-                  117,
-                  114,
-                  121
-                ]
+                "value": [116, 114, 101, 97, 115, 117, 114, 121]
               }
             ]
           }
@@ -485,16 +327,12 @@
         },
         {
           "name": "controller",
-          "docs": [
-            "The entity controller (must sign)."
-          ],
+          "docs": ["The entity controller (must sign)."],
           "signer": true
         },
         {
           "name": "payer",
-          "docs": [
-            "Payer for account creation and registration fee."
-          ],
+          "docs": ["Payer for account creation and registration fee."],
           "writable": true,
           "signer": true
         },
@@ -509,9 +347,7 @@
         },
         {
           "name": "system_program",
-          "docs": [
-            "System program for account creation."
-          ],
+          "docs": ["System program for account creation."],
           "address": "11111111111111111111111111111111"
         }
       ],
@@ -519,61 +355,34 @@
         {
           "name": "content_hash",
           "type": {
-            "array": [
-              "u8",
-              32
-            ]
+            "array": ["u8", 32]
           }
         }
       ]
     },
     {
       "name": "create_ip_metadata",
-      "docs": [
-        "Create metadata for an IP."
-      ],
-      "discriminator": [
-        170,
-        218,
-        79,
-        21,
-        199,
-        157,
-        101,
-        42
-      ],
+      "docs": ["Create metadata for an IP."],
+      "discriminator": [170, 218, 79, 21, 199, 157, 101, 42],
       "accounts": [
         {
           "name": "metadata",
-          "docs": [
-            "The metadata account to create (PDA)."
-          ],
+          "docs": ["The metadata account to create (PDA)."],
           "writable": true
         },
         {
           "name": "ip",
-          "docs": [
-            "The IP to attach metadata to."
-          ],
+          "docs": ["The IP to attach metadata to."],
           "writable": true
         },
         {
           "name": "owner_entity",
-          "docs": [
-            "The current owner entity of the IP."
-          ],
+          "docs": ["The current owner entity of the IP."],
           "pda": {
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  101,
-                  110,
-                  116,
-                  105,
-                  116,
-                  121
-                ]
+                "value": [101, 110, 116, 105, 116, 121]
               },
               {
                 "kind": "account",
@@ -590,30 +399,22 @@
         },
         {
           "name": "schema",
-          "docs": [
-            "The metadata schema this metadata conforms to."
-          ]
+          "docs": ["The metadata schema this metadata conforms to."]
         },
         {
           "name": "controller",
-          "docs": [
-            "The owner entity controller (must sign)."
-          ],
+          "docs": ["The owner entity controller (must sign)."],
           "signer": true
         },
         {
           "name": "payer",
-          "docs": [
-            "Payer for account creation."
-          ],
+          "docs": ["Payer for account creation."],
           "writable": true,
           "signer": true
         },
         {
           "name": "system_program",
-          "docs": [
-            "System program for account creation."
-          ],
+          "docs": ["System program for account creation."],
           "address": "11111111111111111111111111111111"
         }
       ],
@@ -621,65 +422,33 @@
         {
           "name": "hash",
           "type": {
-            "array": [
-              "u8",
-              32
-            ]
+            "array": ["u8", 32]
           }
         },
         {
           "name": "cid",
           "type": {
-            "array": [
-              "u8",
-              96
-            ]
+            "array": ["u8", 96]
           }
         }
       ]
     },
     {
       "name": "create_metadata_schema",
-      "docs": [
-        "Create a new metadata schema."
-      ],
-      "discriminator": [
-        231,
-        107,
-        149,
-        242,
-        58,
-        194,
-        205,
-        51
-      ],
+      "docs": ["Create a new metadata schema."],
+      "discriminator": [231, 107, 149, 242, 58, 194, 205, 51],
       "accounts": [
         {
           "name": "metadata_schema",
-          "docs": [
-            "The metadata schema account to create (PDA)."
-          ],
+          "docs": ["The metadata schema account to create (PDA)."],
           "writable": true,
           "pda": {
             "seeds": [
               {
                 "kind": "const",
                 "value": [
-                  109,
-                  101,
-                  116,
-                  97,
-                  100,
-                  97,
-                  116,
-                  97,
-                  95,
-                  115,
-                  99,
-                  104,
-                  101,
-                  109,
-                  97
+                  109, 101, 116, 97, 100, 97, 116, 97, 95, 115, 99, 104, 101,
+                  109, 97
                 ]
               },
               {
@@ -704,9 +473,7 @@
         },
         {
           "name": "system_program",
-          "docs": [
-            "System program for account creation."
-          ],
+          "docs": ["System program for account creation."],
           "address": "11111111111111111111111111111111"
         }
       ],
@@ -714,75 +481,43 @@
         {
           "name": "id",
           "type": {
-            "array": [
-              "u8",
-              32
-            ]
+            "array": ["u8", 32]
           }
         },
         {
           "name": "version",
           "type": {
-            "array": [
-              "u8",
-              16
-            ]
+            "array": ["u8", 16]
           }
         },
         {
           "name": "hash",
           "type": {
-            "array": [
-              "u8",
-              32
-            ]
+            "array": ["u8", 32]
           }
         },
         {
           "name": "cid",
           "type": {
-            "array": [
-              "u8",
-              96
-            ]
+            "array": ["u8", 96]
           }
         }
       ]
     },
     {
       "name": "initialize_config",
-      "docs": [
-        "Initialize the protocol configuration."
-      ],
-      "discriminator": [
-        208,
-        127,
-        21,
-        1,
-        194,
-        190,
-        196,
-        70
-      ],
+      "docs": ["Initialize the protocol configuration."],
+      "discriminator": [208, 127, 21, 1, 194, 190, 196, 70],
       "accounts": [
         {
           "name": "config",
-          "docs": [
-            "The config account to initialize (PDA)."
-          ],
+          "docs": ["The config account to initialize (PDA)."],
           "writable": true,
           "pda": {
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  99,
-                  111,
-                  110,
-                  102,
-                  105,
-                  103
-                ]
+                "value": [99, 111, 110, 102, 105, 103]
               }
             ]
           }
@@ -798,9 +533,7 @@
         },
         {
           "name": "system_program",
-          "docs": [
-            "System program for account creation."
-          ],
+          "docs": ["System program for account creation."],
           "address": "11111111111111111111111111111111"
         }
       ],
@@ -821,61 +554,30 @@
     },
     {
       "name": "initialize_treasury",
-      "docs": [
-        "Initialize the protocol treasury."
-      ],
-      "discriminator": [
-        124,
-        186,
-        211,
-        195,
-        85,
-        165,
-        129,
-        166
-      ],
+      "docs": ["Initialize the protocol treasury."],
+      "discriminator": [124, 186, 211, 195, 85, 165, 129, 166],
       "accounts": [
         {
           "name": "treasury",
-          "docs": [
-            "The treasury account to initialize (PDA)."
-          ],
+          "docs": ["The treasury account to initialize (PDA)."],
           "writable": true,
           "pda": {
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  116,
-                  114,
-                  101,
-                  97,
-                  115,
-                  117,
-                  114,
-                  121
-                ]
+                "value": [116, 114, 101, 97, 115, 117, 114, 121]
               }
             ]
           }
         },
         {
           "name": "config",
-          "docs": [
-            "The protocol configuration account."
-          ],
+          "docs": ["The protocol configuration account."],
           "pda": {
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  99,
-                  111,
-                  110,
-                  102,
-                  105,
-                  103
-                ]
+                "value": [99, 111, 110, 102, 105, 103]
               }
             ]
           }
@@ -888,15 +590,11 @@
           ],
           "writable": true,
           "signer": true,
-          "relations": [
-            "config"
-          ]
+          "relations": ["config"]
         },
         {
           "name": "system_program",
-          "docs": [
-            "System program for account creation."
-          ],
+          "docs": ["System program for account creation."],
           "address": "11111111111111111111111111111111"
         }
       ],
@@ -904,38 +602,18 @@
     },
     {
       "name": "transfer_entity_control",
-      "docs": [
-        "Transfer entity control to a new controller."
-      ],
-      "discriminator": [
-        1,
-        75,
-        135,
-        215,
-        37,
-        147,
-        111,
-        129
-      ],
+      "docs": ["Transfer entity control to a new controller."],
+      "discriminator": [1, 75, 135, 215, 37, 147, 111, 129],
       "accounts": [
         {
           "name": "entity",
-          "docs": [
-            "The entity to update."
-          ],
+          "docs": ["The entity to update."],
           "writable": true,
           "pda": {
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  101,
-                  110,
-                  116,
-                  105,
-                  116,
-                  121
-                ]
+                "value": [101, 110, 116, 105, 116, 121]
               },
               {
                 "kind": "account",
@@ -952,9 +630,7 @@
         },
         {
           "name": "controller",
-          "docs": [
-            "The current controller (must sign)."
-          ],
+          "docs": ["The current controller (must sign)."],
           "signer": true
         }
       ],
@@ -967,44 +643,22 @@
     },
     {
       "name": "transfer_ip",
-      "docs": [
-        "Transfer IP ownership."
-      ],
-      "discriminator": [
-        75,
-        161,
-        2,
-        114,
-        236,
-        211,
-        90,
-        39
-      ],
+      "docs": ["Transfer IP ownership."],
+      "discriminator": [75, 161, 2, 114, 236, 211, 90, 39],
       "accounts": [
         {
           "name": "ip",
-          "docs": [
-            "The IP account to transfer."
-          ],
+          "docs": ["The IP account to transfer."],
           "writable": true
         },
         {
           "name": "current_owner_entity",
-          "docs": [
-            "The current owner entity."
-          ],
+          "docs": ["The current owner entity."],
           "pda": {
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  101,
-                  110,
-                  116,
-                  105,
-                  116,
-                  121
-                ]
+                "value": [101, 110, 116, 105, 116, 121]
               },
               {
                 "kind": "account",
@@ -1021,21 +675,12 @@
         },
         {
           "name": "new_owner_entity",
-          "docs": [
-            "The new owner entity."
-          ],
+          "docs": ["The new owner entity."],
           "pda": {
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  101,
-                  110,
-                  116,
-                  105,
-                  116,
-                  121
-                ]
+                "value": [101, 110, 116, 105, 116, 121]
               },
               {
                 "kind": "account",
@@ -1052,9 +697,7 @@
         },
         {
           "name": "controller",
-          "docs": [
-            "The current owner entity controller (must sign)."
-          ],
+          "docs": ["The current owner entity controller (must sign)."],
           "signer": true
         }
       ],
@@ -1062,51 +705,27 @@
     },
     {
       "name": "update_config",
-      "docs": [
-        "Update the protocol configuration."
-      ],
-      "discriminator": [
-        29,
-        158,
-        252,
-        191,
-        10,
-        83,
-        219,
-        99
-      ],
+      "docs": ["Update the protocol configuration."],
+      "discriminator": [29, 158, 252, 191, 10, 83, 219, 99],
       "accounts": [
         {
           "name": "config",
-          "docs": [
-            "The config account to update."
-          ],
+          "docs": ["The config account to update."],
           "writable": true,
           "pda": {
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  99,
-                  111,
-                  110,
-                  102,
-                  105,
-                  103
-                ]
+                "value": [99, 111, 110, 102, 105, 103]
               }
             ]
           }
         },
         {
           "name": "authority",
-          "docs": [
-            "The current authority (must sign)."
-          ],
+          "docs": ["The current authority (must sign)."],
           "signer": true,
-          "relations": [
-            "config"
-          ]
+          "relations": ["config"]
         }
       ],
       "args": [
@@ -1122,42 +741,18 @@
     },
     {
       "name": "update_derivative_license",
-      "docs": [
-        "Update the license on a derivative link."
-      ],
-      "discriminator": [
-        41,
-        224,
-        88,
-        19,
-        88,
-        173,
-        140,
-        116
-      ],
+      "docs": ["Update the license on a derivative link."],
+      "discriminator": [41, 224, 88, 19, 88, 173, 140, 116],
       "accounts": [
         {
           "name": "derivative_link",
-          "docs": [
-            "The derivative link to update."
-          ],
+          "docs": ["The derivative link to update."],
           "writable": true,
           "pda": {
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  100,
-                  101,
-                  114,
-                  105,
-                  118,
-                  97,
-                  116,
-                  105,
-                  118,
-                  101
-                ]
+                "value": [100, 101, 114, 105, 118, 97, 116, 105, 118, 101]
               },
               {
                 "kind": "account",
@@ -1174,27 +769,16 @@
         },
         {
           "name": "child_ip",
-          "docs": [
-            "The child IP (for ownership verification)."
-          ]
+          "docs": ["The child IP (for ownership verification)."]
         },
         {
           "name": "child_owner_entity",
-          "docs": [
-            "The owner entity of the child IP."
-          ],
+          "docs": ["The owner entity of the child IP."],
           "pda": {
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  101,
-                  110,
-                  116,
-                  105,
-                  116,
-                  121
-                ]
+                "value": [101, 110, 116, 105, 116, 121]
               },
               {
                 "kind": "account",
@@ -1211,9 +795,7 @@
         },
         {
           "name": "parent_ip",
-          "docs": [
-            "The parent IP (for license validation)."
-          ]
+          "docs": ["The parent IP (for license validation)."]
         },
         {
           "name": "new_license_grant",
@@ -1229,9 +811,7 @@
         },
         {
           "name": "controller",
-          "docs": [
-            "The child owner entity controller (must sign)."
-          ],
+          "docs": ["The child owner entity controller (must sign)."],
           "signer": true
         }
       ],
@@ -1244,72 +824,40 @@
     },
     {
       "name": "withdraw_treasury",
-      "docs": [
-        "Withdraw tokens from the protocol treasury."
-      ],
-      "discriminator": [
-        40,
-        63,
-        122,
-        158,
-        144,
-        216,
-        83,
-        96
-      ],
+      "docs": ["Withdraw tokens from the protocol treasury."],
+      "discriminator": [40, 63, 122, 158, 144, 216, 83, 96],
       "accounts": [
         {
           "name": "treasury",
-          "docs": [
-            "The treasury account (PDA authority for token accounts)."
-          ],
+          "docs": ["The treasury account (PDA authority for token accounts)."],
           "pda": {
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  116,
-                  114,
-                  101,
-                  97,
-                  115,
-                  117,
-                  114,
-                  121
-                ]
+                "value": [116, 114, 101, 97, 115, 117, 114, 121]
               }
             ]
           }
         },
         {
           "name": "treasury_token_account",
-          "docs": [
-            "The treasury's SPL token account to withdraw from."
-          ],
+          "docs": ["The treasury's SPL token account to withdraw from."],
           "writable": true
         },
         {
           "name": "destination_token_account",
-          "docs": [
-            "The destination SPL token account."
-          ],
+          "docs": ["The destination SPL token account."],
           "writable": true
         },
         {
           "name": "authority",
-          "docs": [
-            "The treasury authority (must sign)."
-          ],
+          "docs": ["The treasury authority (must sign)."],
           "signer": true,
-          "relations": [
-            "treasury"
-          ]
+          "relations": ["treasury"]
         },
         {
           "name": "token_program",
-          "docs": [
-            "SPL Token program."
-          ],
+          "docs": ["SPL Token program."],
           "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
         }
       ],
@@ -1324,278 +872,89 @@
   "accounts": [
     {
       "name": "CreatorEntityCounter",
-      "discriminator": [
-        22,
-        204,
-        152,
-        81,
-        10,
-        240,
-        219,
-        140
-      ]
+      "discriminator": [22, 204, 152, 81, 10, 240, 219, 140]
     },
     {
       "name": "DerivativeLink",
-      "discriminator": [
-        203,
-        42,
-        152,
-        142,
-        174,
-        209,
-        228,
-        117
-      ]
+      "discriminator": [203, 42, 152, 142, 174, 209, 228, 117]
     },
     {
       "name": "Entity",
-      "discriminator": [
-        46,
-        157,
-        161,
-        161,
-        254,
-        46,
-        79,
-        24
-      ]
+      "discriminator": [46, 157, 161, 161, 254, 46, 79, 24]
     },
     {
       "name": "IpAccount",
-      "discriminator": [
-        97,
-        57,
-        119,
-        87,
-        95,
-        245,
-        239,
-        253
-      ]
+      "discriminator": [97, 57, 119, 87, 95, 245, 239, 253]
     },
     {
       "name": "MetadataAccount",
-      "discriminator": [
-        32,
-        224,
-        226,
-        224,
-        77,
-        64,
-        109,
-        234
-      ]
+      "discriminator": [32, 224, 226, 224, 77, 64, 109, 234]
     },
     {
       "name": "MetadataSchema",
-      "discriminator": [
-        27,
-        2,
-        79,
-        28,
-        153,
-        167,
-        124,
-        115
-      ]
+      "discriminator": [27, 2, 79, 28, 153, 167, 124, 115]
     },
     {
       "name": "ProtocolConfig",
-      "discriminator": [
-        207,
-        91,
-        250,
-        28,
-        152,
-        179,
-        215,
-        209
-      ]
+      "discriminator": [207, 91, 250, 28, 152, 179, 215, 209]
     },
     {
       "name": "ProtocolTreasury",
-      "discriminator": [
-        162,
-        26,
-        123,
-        61,
-        102,
-        146,
-        47,
-        73
-      ]
+      "discriminator": [162, 26, 123, 61, 102, 146, 47, 73]
     }
   ],
   "events": [
     {
       "name": "ConfigInitialized",
-      "discriminator": [
-        181,
-        49,
-        200,
-        156,
-        19,
-        167,
-        178,
-        91
-      ]
+      "discriminator": [181, 49, 200, 156, 19, 167, 178, 91]
     },
     {
       "name": "ConfigUpdated",
-      "discriminator": [
-        40,
-        241,
-        230,
-        122,
-        11,
-        19,
-        198,
-        194
-      ]
+      "discriminator": [40, 241, 230, 122, 11, 19, 198, 194]
     },
     {
       "name": "DerivativeLicenseUpdated",
-      "discriminator": [
-        224,
-        105,
-        250,
-        233,
-        66,
-        19,
-        49,
-        196
-      ]
+      "discriminator": [224, 105, 250, 233, 66, 19, 49, 196]
     },
     {
       "name": "DerivativeLinkCreated",
-      "discriminator": [
-        27,
-        142,
-        1,
-        92,
-        251,
-        49,
-        190,
-        224
-      ]
+      "discriminator": [27, 142, 1, 92, 251, 49, 190, 224]
     },
     {
       "name": "EntityControlTransferred",
-      "discriminator": [
-        45,
-        239,
-        120,
-        115,
-        218,
-        39,
-        118,
-        113
-      ]
+      "discriminator": [45, 239, 120, 115, 218, 39, 118, 113]
     },
     {
       "name": "EntityCreated",
-      "discriminator": [
-        125,
-        231,
-        125,
-        132,
-        13,
-        116,
-        119,
-        126
-      ]
+      "discriminator": [125, 231, 125, 132, 13, 116, 119, 126]
     },
     {
       "name": "EntityMetadataCreated",
-      "discriminator": [
-        107,
-        58,
-        16,
-        150,
-        116,
-        245,
-        192,
-        239
-      ]
+      "discriminator": [107, 58, 16, 150, 116, 245, 192, 239]
     },
     {
       "name": "IpCreated",
-      "discriminator": [
-        145,
-        44,
-        30,
-        88,
-        215,
-        11,
-        28,
-        168
-      ]
+      "discriminator": [145, 44, 30, 88, 215, 11, 28, 168]
     },
     {
       "name": "IpMetadataCreated",
-      "discriminator": [
-        151,
-        13,
-        118,
-        107,
-        237,
-        73,
-        83,
-        176
-      ]
+      "discriminator": [151, 13, 118, 107, 237, 73, 83, 176]
     },
     {
       "name": "IpTransferred",
-      "discriminator": [
-        129,
-        251,
-        84,
-        89,
-        245,
-        173,
-        123,
-        225
-      ]
+      "discriminator": [129, 251, 84, 89, 245, 173, 123, 225]
     },
     {
       "name": "MetadataSchemaCreated",
-      "discriminator": [
-        38,
-        11,
-        65,
-        175,
-        140,
-        7,
-        31,
-        74
-      ]
+      "discriminator": [38, 11, 65, 175, 140, 7, 31, 74]
     },
     {
       "name": "TreasuryInitialized",
-      "discriminator": [
-        199,
-        73,
-        174,
-        205,
-        59,
-        145,
-        55,
-        179
-      ]
+      "discriminator": [199, 73, 174, 205, 59, 145, 55, 179]
     },
     {
       "name": "TreasuryWithdrawal",
-      "discriminator": [
-        244,
-        117,
-        175,
-        46,
-        187,
-        109,
-        20,
-        16
-      ]
+      "discriminator": [244, 117, 175, 46, 187, 109, 20, 16]
     }
   ],
   "errors": [
@@ -1713,45 +1072,33 @@
   "types": [
     {
       "name": "ConfigInitialized",
-      "docs": [
-        "Emitted when protocol configuration is initialized."
-      ],
+      "docs": ["Emitted when protocol configuration is initialized."],
       "type": {
         "kind": "struct",
         "fields": [
           {
             "name": "config",
-            "docs": [
-              "The config PDA."
-            ],
+            "docs": ["The config PDA."],
             "type": "pubkey"
           },
           {
             "name": "authority",
-            "docs": [
-              "The protocol authority."
-            ],
+            "docs": ["The protocol authority."],
             "type": "pubkey"
           },
           {
             "name": "treasury",
-            "docs": [
-              "The treasury PDA."
-            ],
+            "docs": ["The treasury PDA."],
             "type": "pubkey"
           },
           {
             "name": "registration_currency",
-            "docs": [
-              "The registration currency mint."
-            ],
+            "docs": ["The registration currency mint."],
             "type": "pubkey"
           },
           {
             "name": "registration_fee",
-            "docs": [
-              "The registration fee amount."
-            ],
+            "docs": ["The registration fee amount."],
             "type": "u64"
           }
         ]
@@ -1759,58 +1106,44 @@
     },
     {
       "name": "ConfigUpdated",
-      "docs": [
-        "Emitted when protocol configuration is updated."
-      ],
+      "docs": ["Emitted when protocol configuration is updated."],
       "type": {
         "kind": "struct",
         "fields": [
           {
             "name": "config",
-            "docs": [
-              "The config PDA."
-            ],
+            "docs": ["The config PDA."],
             "type": "pubkey"
           },
           {
             "name": "authority",
-            "docs": [
-              "The authority who made the change."
-            ],
+            "docs": ["The authority who made the change."],
             "type": "pubkey"
           },
           {
             "name": "new_authority",
-            "docs": [
-              "New authority (if changed)."
-            ],
+            "docs": ["New authority (if changed)."],
             "type": {
               "option": "pubkey"
             }
           },
           {
             "name": "new_treasury",
-            "docs": [
-              "New treasury (if changed)."
-            ],
+            "docs": ["New treasury (if changed)."],
             "type": {
               "option": "pubkey"
             }
           },
           {
             "name": "new_registration_currency",
-            "docs": [
-              "New registration currency (if changed)."
-            ],
+            "docs": ["New registration currency (if changed)."],
             "type": {
               "option": "pubkey"
             }
           },
           {
             "name": "new_registration_fee",
-            "docs": [
-              "New registration fee (if changed)."
-            ],
+            "docs": ["New registration fee (if changed)."],
             "type": {
               "option": "u64"
             }
@@ -1831,9 +1164,7 @@
         "fields": [
           {
             "name": "creator",
-            "docs": [
-              "The creator wallet this counter belongs to."
-            ],
+            "docs": ["The creator wallet this counter belongs to."],
             "type": "pubkey"
           },
           {
@@ -1846,9 +1177,7 @@
           },
           {
             "name": "bump",
-            "docs": [
-              "PDA bump seed."
-            ],
+            "docs": ["PDA bump seed."],
             "type": "u8"
           }
         ]
@@ -1856,38 +1185,28 @@
     },
     {
       "name": "DerivativeLicenseUpdated",
-      "docs": [
-        "Emitted when a derivative link's license is updated."
-      ],
+      "docs": ["Emitted when a derivative link's license is updated."],
       "type": {
         "kind": "struct",
         "fields": [
           {
             "name": "derivative_link",
-            "docs": [
-              "The derivative link PDA."
-            ],
+            "docs": ["The derivative link PDA."],
             "type": "pubkey"
           },
           {
             "name": "child_ip",
-            "docs": [
-              "The child IP."
-            ],
+            "docs": ["The child IP."],
             "type": "pubkey"
           },
           {
             "name": "old_license_grant",
-            "docs": [
-              "The previous license grant."
-            ],
+            "docs": ["The previous license grant."],
             "type": "pubkey"
           },
           {
             "name": "new_license_grant",
-            "docs": [
-              "The new license grant."
-            ],
+            "docs": ["The new license grant."],
             "type": "pubkey"
           },
           {
@@ -1912,16 +1231,12 @@
         "fields": [
           {
             "name": "parent_ip",
-            "docs": [
-              "The parent IP that this derivative is based on."
-            ],
+            "docs": ["The parent IP that this derivative is based on."],
             "type": "pubkey"
           },
           {
             "name": "child_ip",
-            "docs": [
-              "The child IP that is derived from the parent."
-            ],
+            "docs": ["The child IP that is derived from the parent."],
             "type": "pubkey"
           },
           {
@@ -1934,16 +1249,12 @@
           },
           {
             "name": "created_at",
-            "docs": [
-              "Unix timestamp when this derivative link was created."
-            ],
+            "docs": ["Unix timestamp when this derivative link was created."],
             "type": "i64"
           },
           {
             "name": "bump",
-            "docs": [
-              "PDA bump seed."
-            ],
+            "docs": ["PDA bump seed."],
             "type": "u8"
           }
         ]
@@ -1951,52 +1262,38 @@
     },
     {
       "name": "DerivativeLinkCreated",
-      "docs": [
-        "Emitted when a derivative link is created."
-      ],
+      "docs": ["Emitted when a derivative link is created."],
       "type": {
         "kind": "struct",
         "fields": [
           {
             "name": "derivative_link",
-            "docs": [
-              "The derivative link PDA."
-            ],
+            "docs": ["The derivative link PDA."],
             "type": "pubkey"
           },
           {
             "name": "parent_ip",
-            "docs": [
-              "The parent IP."
-            ],
+            "docs": ["The parent IP."],
             "type": "pubkey"
           },
           {
             "name": "child_ip",
-            "docs": [
-              "The child IP (derivative)."
-            ],
+            "docs": ["The child IP (derivative)."],
             "type": "pubkey"
           },
           {
             "name": "license_grant",
-            "docs": [
-              "The license grant used."
-            ],
+            "docs": ["The license grant used."],
             "type": "pubkey"
           },
           {
             "name": "child_owner_entity",
-            "docs": [
-              "The child IP owner entity."
-            ],
+            "docs": ["The child IP owner entity."],
             "type": "pubkey"
           },
           {
             "name": "created_at",
-            "docs": [
-              "Creation timestamp."
-            ],
+            "docs": ["Creation timestamp."],
             "type": "i64"
           }
         ]
@@ -2015,9 +1312,7 @@
         "fields": [
           {
             "name": "creator",
-            "docs": [
-              "The original creator of this entity (immutable)."
-            ],
+            "docs": ["The original creator of this entity (immutable)."],
             "type": "pubkey"
           },
           {
@@ -2046,23 +1341,17 @@
           },
           {
             "name": "created_at",
-            "docs": [
-              "Unix timestamp when this entity was created."
-            ],
+            "docs": ["Unix timestamp when this entity was created."],
             "type": "i64"
           },
           {
             "name": "updated_at",
-            "docs": [
-              "Unix timestamp when this entity was last updated."
-            ],
+            "docs": ["Unix timestamp when this entity was last updated."],
             "type": "i64"
           },
           {
             "name": "bump",
-            "docs": [
-              "PDA bump seed."
-            ],
+            "docs": ["PDA bump seed."],
             "type": "u8"
           }
         ]
@@ -2070,38 +1359,28 @@
     },
     {
       "name": "EntityControlTransferred",
-      "docs": [
-        "Emitted when entity control is transferred."
-      ],
+      "docs": ["Emitted when entity control is transferred."],
       "type": {
         "kind": "struct",
         "fields": [
           {
             "name": "entity",
-            "docs": [
-              "The entity PDA."
-            ],
+            "docs": ["The entity PDA."],
             "type": "pubkey"
           },
           {
             "name": "old_controller",
-            "docs": [
-              "The previous controller."
-            ],
+            "docs": ["The previous controller."],
             "type": "pubkey"
           },
           {
             "name": "new_controller",
-            "docs": [
-              "The new controller."
-            ],
+            "docs": ["The new controller."],
             "type": "pubkey"
           },
           {
             "name": "updated_at",
-            "docs": [
-              "Update timestamp."
-            ],
+            "docs": ["Update timestamp."],
             "type": "i64"
           }
         ]
@@ -2109,45 +1388,33 @@
     },
     {
       "name": "EntityCreated",
-      "docs": [
-        "Emitted when a new entity is created."
-      ],
+      "docs": ["Emitted when a new entity is created."],
       "type": {
         "kind": "struct",
         "fields": [
           {
             "name": "entity",
-            "docs": [
-              "The entity PDA."
-            ],
+            "docs": ["The entity PDA."],
             "type": "pubkey"
           },
           {
             "name": "creator",
-            "docs": [
-              "The entity creator."
-            ],
+            "docs": ["The entity creator."],
             "type": "pubkey"
           },
           {
             "name": "index",
-            "docs": [
-              "The entity index within the creator's wallet."
-            ],
+            "docs": ["The entity index within the creator's wallet."],
             "type": "u64"
           },
           {
             "name": "controller",
-            "docs": [
-              "The initial controller."
-            ],
+            "docs": ["The initial controller."],
             "type": "pubkey"
           },
           {
             "name": "created_at",
-            "docs": [
-              "Creation timestamp."
-            ],
+            "docs": ["Creation timestamp."],
             "type": "i64"
           }
         ]
@@ -2155,76 +1422,52 @@
     },
     {
       "name": "EntityMetadataCreated",
-      "docs": [
-        "Emitted when entity metadata is created."
-      ],
+      "docs": ["Emitted when entity metadata is created."],
       "type": {
         "kind": "struct",
         "fields": [
           {
             "name": "metadata",
-            "docs": [
-              "The metadata PDA."
-            ],
+            "docs": ["The metadata PDA."],
             "type": "pubkey"
           },
           {
             "name": "entity",
-            "docs": [
-              "The entity this metadata belongs to."
-            ],
+            "docs": ["The entity this metadata belongs to."],
             "type": "pubkey"
           },
           {
             "name": "authority",
-            "docs": [
-              "The entity (acts as authority)."
-            ],
+            "docs": ["The entity (acts as authority)."],
             "type": "pubkey"
           },
           {
             "name": "schema",
-            "docs": [
-              "The metadata schema."
-            ],
+            "docs": ["The metadata schema."],
             "type": "pubkey"
           },
           {
             "name": "revision",
-            "docs": [
-              "The metadata revision number."
-            ],
+            "docs": ["The metadata revision number."],
             "type": "u64"
           },
           {
             "name": "hash",
-            "docs": [
-              "The metadata hash."
-            ],
+            "docs": ["The metadata hash."],
             "type": {
-              "array": [
-                "u8",
-                32
-              ]
+              "array": ["u8", 32]
             }
           },
           {
             "name": "cid",
-            "docs": [
-              "The metadata CID."
-            ],
+            "docs": ["The metadata CID."],
             "type": {
-              "array": [
-                "u8",
-                96
-              ]
+              "array": ["u8", 96]
             }
           },
           {
             "name": "created_at",
-            "docs": [
-              "Creation timestamp."
-            ],
+            "docs": ["Creation timestamp."],
             "type": "i64"
           }
         ]
@@ -2243,14 +1486,9 @@
         "fields": [
           {
             "name": "content_hash",
-            "docs": [
-              "SHA-256 hash of the content (immutable)."
-            ],
+            "docs": ["SHA-256 hash of the content (immutable)."],
             "type": {
-              "array": [
-                "u8",
-                32
-              ]
+              "array": ["u8", 32]
             }
           },
           {
@@ -2278,23 +1516,17 @@
           },
           {
             "name": "created_at",
-            "docs": [
-              "Unix timestamp when this IP was registered."
-            ],
+            "docs": ["Unix timestamp when this IP was registered."],
             "type": "i64"
           },
           {
             "name": "updated_at",
-            "docs": [
-              "Unix timestamp when this IP was last updated."
-            ],
+            "docs": ["Unix timestamp when this IP was last updated."],
             "type": "i64"
           },
           {
             "name": "bump",
-            "docs": [
-              "PDA bump seed."
-            ],
+            "docs": ["PDA bump seed."],
             "type": "u8"
           }
         ]
@@ -2302,50 +1534,35 @@
     },
     {
       "name": "IpCreated",
-      "docs": [
-        "Emitted when a new IP is registered."
-      ],
+      "docs": ["Emitted when a new IP is registered."],
       "type": {
         "kind": "struct",
         "fields": [
           {
             "name": "ip",
-            "docs": [
-              "The IP account PDA."
-            ],
+            "docs": ["The IP account PDA."],
             "type": "pubkey"
           },
           {
             "name": "content_hash",
-            "docs": [
-              "The content hash."
-            ],
+            "docs": ["The content hash."],
             "type": {
-              "array": [
-                "u8",
-                32
-              ]
+              "array": ["u8", 32]
             }
           },
           {
             "name": "registrant_entity",
-            "docs": [
-              "The registrant entity."
-            ],
+            "docs": ["The registrant entity."],
             "type": "pubkey"
           },
           {
             "name": "registration_fee",
-            "docs": [
-              "The registration fee paid."
-            ],
+            "docs": ["The registration fee paid."],
             "type": "u64"
           },
           {
             "name": "created_at",
-            "docs": [
-              "Creation timestamp."
-            ],
+            "docs": ["Creation timestamp."],
             "type": "i64"
           }
         ]
@@ -2353,76 +1570,52 @@
     },
     {
       "name": "IpMetadataCreated",
-      "docs": [
-        "Emitted when IP metadata is created."
-      ],
+      "docs": ["Emitted when IP metadata is created."],
       "type": {
         "kind": "struct",
         "fields": [
           {
             "name": "metadata",
-            "docs": [
-              "The metadata PDA."
-            ],
+            "docs": ["The metadata PDA."],
             "type": "pubkey"
           },
           {
             "name": "ip",
-            "docs": [
-              "The IP this metadata belongs to."
-            ],
+            "docs": ["The IP this metadata belongs to."],
             "type": "pubkey"
           },
           {
             "name": "owner_entity",
-            "docs": [
-              "The owner entity."
-            ],
+            "docs": ["The owner entity."],
             "type": "pubkey"
           },
           {
             "name": "schema",
-            "docs": [
-              "The metadata schema."
-            ],
+            "docs": ["The metadata schema."],
             "type": "pubkey"
           },
           {
             "name": "revision",
-            "docs": [
-              "The metadata revision number."
-            ],
+            "docs": ["The metadata revision number."],
             "type": "u64"
           },
           {
             "name": "hash",
-            "docs": [
-              "The metadata hash."
-            ],
+            "docs": ["The metadata hash."],
             "type": {
-              "array": [
-                "u8",
-                32
-              ]
+              "array": ["u8", 32]
             }
           },
           {
             "name": "cid",
-            "docs": [
-              "The metadata CID."
-            ],
+            "docs": ["The metadata CID."],
             "type": {
-              "array": [
-                "u8",
-                96
-              ]
+              "array": ["u8", 96]
             }
           },
           {
             "name": "created_at",
-            "docs": [
-              "Creation timestamp."
-            ],
+            "docs": ["Creation timestamp."],
             "type": "i64"
           }
         ]
@@ -2430,31 +1623,23 @@
     },
     {
       "name": "IpTransferred",
-      "docs": [
-        "Emitted when IP ownership is transferred."
-      ],
+      "docs": ["Emitted when IP ownership is transferred."],
       "type": {
         "kind": "struct",
         "fields": [
           {
             "name": "ip",
-            "docs": [
-              "The IP account PDA."
-            ],
+            "docs": ["The IP account PDA."],
             "type": "pubkey"
           },
           {
             "name": "from_entity",
-            "docs": [
-              "The previous owner entity."
-            ],
+            "docs": ["The previous owner entity."],
             "type": "pubkey"
           },
           {
             "name": "to_entity",
-            "docs": [
-              "The new owner entity."
-            ],
+            "docs": ["The new owner entity."],
             "type": "pubkey"
           },
           {
@@ -2486,33 +1671,21 @@
           },
           {
             "name": "hash",
-            "docs": [
-              "SHA-256 hash of the metadata content."
-            ],
+            "docs": ["SHA-256 hash of the metadata content."],
             "type": {
-              "array": [
-                "u8",
-                32
-              ]
+              "array": ["u8", 32]
             }
           },
           {
             "name": "cid",
-            "docs": [
-              "IPFS CID pointing to the metadata content."
-            ],
+            "docs": ["IPFS CID pointing to the metadata content."],
             "type": {
-              "array": [
-                "u8",
-                96
-              ]
+              "array": ["u8", 96]
             }
           },
           {
             "name": "parent_type",
-            "docs": [
-              "Type of parent (Entity or IP)."
-            ],
+            "docs": ["Type of parent (Entity or IP)."],
             "type": {
               "defined": {
                 "name": "MetadataParentType"
@@ -2521,30 +1694,22 @@
           },
           {
             "name": "parent",
-            "docs": [
-              "Public key of the parent (Entity or IP account)."
-            ],
+            "docs": ["Public key of the parent (Entity or IP account)."],
             "type": "pubkey"
           },
           {
             "name": "revision",
-            "docs": [
-              "Monotonically increasing revision number."
-            ],
+            "docs": ["Monotonically increasing revision number."],
             "type": "u64"
           },
           {
             "name": "created_at",
-            "docs": [
-              "Unix timestamp when this metadata was created."
-            ],
+            "docs": ["Unix timestamp when this metadata was created."],
             "type": "i64"
           },
           {
             "name": "bump",
-            "docs": [
-              "PDA bump seed."
-            ],
+            "docs": ["PDA bump seed."],
             "type": "u8"
           }
         ]
@@ -2552,9 +1717,7 @@
     },
     {
       "name": "MetadataParentType",
-      "docs": [
-        "Type of parent that this metadata is attached to."
-      ],
+      "docs": ["Type of parent that this metadata is attached to."],
       "type": {
         "kind": "enum",
         "variants": [
@@ -2579,71 +1742,45 @@
         "fields": [
           {
             "name": "id",
-            "docs": [
-              "Unique identifier for this schema."
-            ],
+            "docs": ["Unique identifier for this schema."],
             "type": {
-              "array": [
-                "u8",
-                32
-              ]
+              "array": ["u8", 32]
             }
           },
           {
             "name": "version",
-            "docs": [
-              "Version string for this schema."
-            ],
+            "docs": ["Version string for this schema."],
             "type": {
-              "array": [
-                "u8",
-                16
-              ]
+              "array": ["u8", 16]
             }
           },
           {
             "name": "hash",
-            "docs": [
-              "SHA-256 hash of the schema definition."
-            ],
+            "docs": ["SHA-256 hash of the schema definition."],
             "type": {
-              "array": [
-                "u8",
-                32
-              ]
+              "array": ["u8", 32]
             }
           },
           {
             "name": "cid",
-            "docs": [
-              "IPFS CID pointing to the schema definition."
-            ],
+            "docs": ["IPFS CID pointing to the schema definition."],
             "type": {
-              "array": [
-                "u8",
-                96
-              ]
+              "array": ["u8", 96]
             }
           },
           {
             "name": "creator",
-            "docs": [
-              "Creator of this schema."
-            ],
+            "docs": ["Creator of this schema."],
             "type": "pubkey"
           },
           {
             "name": "created_at",
-            "docs": [
-              "Unix timestamp when this schema was created."
-            ],
+            "docs": ["Unix timestamp when this schema was created."],
             "type": "i64"
           },
           {
             "name": "bump",
-            "docs": [
-              "PDA bump seed."
-            ],
+            "docs": ["PDA bump seed."],
             "type": "u8"
           }
         ]
@@ -2651,79 +1788,51 @@
     },
     {
       "name": "MetadataSchemaCreated",
-      "docs": [
-        "Emitted when a metadata schema is created."
-      ],
+      "docs": ["Emitted when a metadata schema is created."],
       "type": {
         "kind": "struct",
         "fields": [
           {
             "name": "schema",
-            "docs": [
-              "The schema PDA."
-            ],
+            "docs": ["The schema PDA."],
             "type": "pubkey"
           },
           {
             "name": "schema_id",
-            "docs": [
-              "The schema ID."
-            ],
+            "docs": ["The schema ID."],
             "type": {
-              "array": [
-                "u8",
-                32
-              ]
+              "array": ["u8", 32]
             }
           },
           {
             "name": "version",
-            "docs": [
-              "The schema version."
-            ],
+            "docs": ["The schema version."],
             "type": {
-              "array": [
-                "u8",
-                16
-              ]
+              "array": ["u8", 16]
             }
           },
           {
             "name": "hash",
-            "docs": [
-              "The schema hash."
-            ],
+            "docs": ["The schema hash."],
             "type": {
-              "array": [
-                "u8",
-                32
-              ]
+              "array": ["u8", 32]
             }
           },
           {
             "name": "cid",
-            "docs": [
-              "The schema CID."
-            ],
+            "docs": ["The schema CID."],
             "type": {
-              "array": [
-                "u8",
-                96
-              ]
+              "array": ["u8", 96]
             }
           },
           {
             "name": "creator",
-            "docs": [
-              "The schema creator."
-            ],
+            "docs": ["The schema creator."],
             "type": "pubkey"
           },
           {
             "name": "created_at",
-            "docs": [
-              "Creation timestamp."
-            ],
+            "docs": ["Creation timestamp."],
             "type": "i64"
           }
         ]
@@ -2741,37 +1850,27 @@
         "fields": [
           {
             "name": "authority",
-            "docs": [
-              "The authority allowed to update configuration."
-            ],
+            "docs": ["The authority allowed to update configuration."],
             "type": "pubkey"
           },
           {
             "name": "treasury",
-            "docs": [
-              "The treasury PDA that receives registration fees."
-            ],
+            "docs": ["The treasury PDA that receives registration fees."],
             "type": "pubkey"
           },
           {
             "name": "registration_currency",
-            "docs": [
-              "The SPL token mint for registration fees."
-            ],
+            "docs": ["The SPL token mint for registration fees."],
             "type": "pubkey"
           },
           {
             "name": "registration_fee",
-            "docs": [
-              "The fee amount required to register an IP."
-            ],
+            "docs": ["The fee amount required to register an IP."],
             "type": "u64"
           },
           {
             "name": "bump",
-            "docs": [
-              "PDA bump seed."
-            ],
+            "docs": ["PDA bump seed."],
             "type": "u8"
           }
         ]
@@ -2789,23 +1888,17 @@
         "fields": [
           {
             "name": "authority",
-            "docs": [
-              "The authority allowed to withdraw from treasury."
-            ],
+            "docs": ["The authority allowed to withdraw from treasury."],
             "type": "pubkey"
           },
           {
             "name": "config",
-            "docs": [
-              "Reference to the ProtocolConfig PDA."
-            ],
+            "docs": ["Reference to the ProtocolConfig PDA."],
             "type": "pubkey"
           },
           {
             "name": "bump",
-            "docs": [
-              "PDA bump seed."
-            ],
+            "docs": ["PDA bump seed."],
             "type": "u8"
           }
         ]
@@ -2813,31 +1906,23 @@
     },
     {
       "name": "TreasuryInitialized",
-      "docs": [
-        "Emitted when protocol treasury is initialized."
-      ],
+      "docs": ["Emitted when protocol treasury is initialized."],
       "type": {
         "kind": "struct",
         "fields": [
           {
             "name": "treasury",
-            "docs": [
-              "The treasury PDA."
-            ],
+            "docs": ["The treasury PDA."],
             "type": "pubkey"
           },
           {
             "name": "authority",
-            "docs": [
-              "The treasury authority."
-            ],
+            "docs": ["The treasury authority."],
             "type": "pubkey"
           },
           {
             "name": "config",
-            "docs": [
-              "The protocol config PDA."
-            ],
+            "docs": ["The protocol config PDA."],
             "type": "pubkey"
           }
         ]
@@ -2845,45 +1930,33 @@
     },
     {
       "name": "TreasuryWithdrawal",
-      "docs": [
-        "Emitted when tokens are withdrawn from treasury."
-      ],
+      "docs": ["Emitted when tokens are withdrawn from treasury."],
       "type": {
         "kind": "struct",
         "fields": [
           {
             "name": "treasury",
-            "docs": [
-              "The treasury PDA."
-            ],
+            "docs": ["The treasury PDA."],
             "type": "pubkey"
           },
           {
             "name": "authority",
-            "docs": [
-              "The authority who made the withdrawal."
-            ],
+            "docs": ["The authority who made the withdrawal."],
             "type": "pubkey"
           },
           {
             "name": "destination",
-            "docs": [
-              "The destination token account."
-            ],
+            "docs": ["The destination token account."],
             "type": "pubkey"
           },
           {
             "name": "mint",
-            "docs": [
-              "The token mint."
-            ],
+            "docs": ["The token mint."],
             "type": "pubkey"
           },
           {
             "name": "amount",
-            "docs": [
-              "The amount withdrawn."
-            ],
+            "docs": ["The amount withdrawn."],
             "type": "u64"
           }
         ]
@@ -2891,44 +1964,34 @@
     },
     {
       "name": "UpdateConfigParams",
-      "docs": [
-        "Parameters for updating the config."
-      ],
+      "docs": ["Parameters for updating the config."],
       "type": {
         "kind": "struct",
         "fields": [
           {
             "name": "new_authority",
-            "docs": [
-              "New authority (optional)."
-            ],
+            "docs": ["New authority (optional)."],
             "type": {
               "option": "pubkey"
             }
           },
           {
             "name": "new_treasury",
-            "docs": [
-              "New treasury PDA (optional)."
-            ],
+            "docs": ["New treasury PDA (optional)."],
             "type": {
               "option": "pubkey"
             }
           },
           {
             "name": "new_registration_currency",
-            "docs": [
-              "New registration currency mint (optional)."
-            ],
+            "docs": ["New registration currency mint (optional)."],
             "type": {
               "option": "pubkey"
             }
           },
           {
             "name": "new_registration_fee",
-            "docs": [
-              "New registration fee (optional)."
-            ],
+            "docs": ["New registration fee (optional)."],
             "type": {
               "option": "u64"
             }

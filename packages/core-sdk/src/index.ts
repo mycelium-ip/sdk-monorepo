@@ -1,5 +1,8 @@
 export { MyceliumClient } from "./client/MyceliumClient";
 
+export type { IpCore } from "./idl/ip_core";
+export type { License } from "./idl/license";
+
 export * from "./constants/programs";
 export * from "./errors";
 export * from "./types";

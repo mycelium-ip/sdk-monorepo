@@ -34,7 +34,7 @@ describe("License", () => {
         originIp: state.ip,
         ownerEntity: state.entity,
         derivativesAllowed: true,
-        controllerSigners: [keypair.publicKey],
+        controller: keypair.publicKey,
       });
 
       expect(ix.keys.length).toBeGreaterThan(0);
@@ -65,7 +65,7 @@ describe("License", () => {
         originIp: state.ip,
         ownerEntity: state.entity,
         derivativesAllowed: true,
-        controllerSigners: [keypair.publicKey],
+        controller: keypair.publicKey,
       });
 
       expect(result.signature).toBeTruthy();
@@ -93,7 +93,7 @@ describe("License", () => {
         originIp: state.ip,
         authorityEntity: state.entity,
         derivativesAllowed: false,
-        controllerSigners: [keypair.publicKey],
+        controller: keypair.publicKey,
       });
 
       expect(ix.keys.length).toBeGreaterThan(0);
@@ -117,7 +117,7 @@ describe("License", () => {
         originIp: state.ip,
         authorityEntity: state.entity,
         derivativesAllowed: false,
-        controllerSigners: [keypair.publicKey],
+        controller: keypair.publicKey,
       });
 
       expect(result.signature).toBeTruthy();
@@ -131,7 +131,7 @@ describe("License", () => {
         originIp: state.ip,
         authorityEntity: state.entity,
         derivativesAllowed: true,
-        controllerSigners: [keypair.publicKey],
+        controller: keypair.publicKey,
       });
     });
   });

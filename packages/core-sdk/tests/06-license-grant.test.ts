@@ -50,7 +50,7 @@ describe("License Grant", () => {
         authorityEntity: state.entity,
         granteeEntity: state.granteeEntity,
         expiration: 0,
-        controllerSigners: [keypair.publicKey],
+        controller: keypair.publicKey,
       });
 
       expect(ix.keys.length).toBeGreaterThan(0);
@@ -75,7 +75,7 @@ describe("License Grant", () => {
         authorityEntity: state.entity,
         granteeEntity: state.granteeEntity,
         expiration: 0, // no expiration
-        controllerSigners: [keypair.publicKey],
+        controller: keypair.publicKey,
       });
 
       expect(result.signature).toBeTruthy();
@@ -116,7 +116,7 @@ describe("License Grant", () => {
         authorityEntity: state.entity,
         granteeEntity: revokeGranteePda,
         expiration: 0,
-        controllerSigners: [keypair.publicKey],
+        controller: keypair.publicKey,
       });
       expect(createResult.signature).toBeTruthy();
 
@@ -133,7 +133,7 @@ describe("License Grant", () => {
         originIp: state.ip,
         authorityEntity: state.entity,
         granteeEntity: revokeGranteePda,
-        controllerSigners: [keypair.publicKey],
+        controller: keypair.publicKey,
       });
 
       expect(ix.keys.length).toBeGreaterThan(0);
@@ -166,7 +166,7 @@ describe("License Grant", () => {
         authorityEntity: state.entity,
         granteeEntity: revokeGranteePda,
         expiration: 0,
-        controllerSigners: [keypair.publicKey],
+        controller: keypair.publicKey,
       });
 
       await delay();
@@ -175,7 +175,7 @@ describe("License Grant", () => {
         originIp: state.ip,
         authorityEntity: state.entity,
         granteeEntity: revokeGranteePda,
-        controllerSigners: [keypair.publicKey],
+        controller: keypair.publicKey,
       });
 
       expect(result.signature).toBeTruthy();

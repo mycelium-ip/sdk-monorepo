@@ -42,7 +42,7 @@ describe("Derivative", () => {
     await client.ipCore.ip.create({
       registrantEntity: childOwnerPda,
       contentHash: childHash,
-      controllerSigners: [keypair.publicKey],
+      controller: keypair.publicKey,
       treasuryTokenAccount,
       payerTokenAccount,
     });
@@ -62,7 +62,7 @@ describe("Derivative", () => {
       authorityEntity: state.entity,
       granteeEntity: childOwnerPda,
       expiration: 0,
-      controllerSigners: [keypair.publicKey],
+      controller: keypair.publicKey,
     });
 
     await delay();
@@ -92,7 +92,7 @@ describe("Derivative", () => {
         childOwnerEntity: state.childOwnerEntity,
         licenseGrant: grantPda,
         license: state.license,
-        controllerSigners: [keypair.publicKey],
+        controller: keypair.publicKey,
       });
 
       expect(ix.keys.length).toBeGreaterThan(0);
@@ -134,7 +134,7 @@ describe("Derivative", () => {
         childOwnerEntity: state.childOwnerEntity,
         licenseGrant: grantPda,
         license: state.license,
-        controllerSigners: [keypair.publicKey],
+        controller: keypair.publicKey,
       });
 
       expect(result.signature).toBeTruthy();
@@ -173,7 +173,7 @@ describe("Derivative", () => {
         childOwnerEntity: state.childOwnerEntity,
         newLicenseGrant: grantPda,
         newLicense: state.license,
-        controllerSigners: [keypair.publicKey],
+        controller: keypair.publicKey,
       });
 
       expect(ix.keys.length).toBeGreaterThan(0);
@@ -207,7 +207,7 @@ describe("Derivative", () => {
         newLicenseGrant: grantPda,
         newLicense: state.license,
         derivativeLink: state.derivativeLink,
-        controllerSigners: [keypair.publicKey],
+        controller: keypair.publicKey,
       });
 
       expect(result.signature).toBeTruthy();

@@ -43,7 +43,7 @@ describe("License Revoke", () => {
     await client.ipCore.ip.create({
       registrantEntity: entityPda,
       contentHash,
-      controllerSigners: [keypair.publicKey],
+      controller: keypair.publicKey,
       treasuryTokenAccount,
       payerTokenAccount,
     });
@@ -61,7 +61,7 @@ describe("License Revoke", () => {
       originIp: ipPda,
       ownerEntity: entityPda,
       derivativesAllowed: false,
-      controllerSigners: [keypair.publicKey],
+      controller: keypair.publicKey,
     });
 
     const [licensePda] = deriveLicensePda(
@@ -86,7 +86,7 @@ describe("License Revoke", () => {
       const ix = await client.license.license.revokeIx({
         originIp: revokeIp,
         authorityEntity: revokeEntity,
-        controllerSigners: [keypair.publicKey],
+        controller: keypair.publicKey,
       });
 
       expect(ix.keys.length).toBeGreaterThan(0);
@@ -107,7 +107,7 @@ describe("License Revoke", () => {
       const result = await client.license.license.revoke({
         originIp: revokeIp,
         authorityEntity: revokeEntity,
-        controllerSigners: [keypair.publicKey],
+        controller: keypair.publicKey,
       });
 
       expect(result.signature).toBeTruthy();

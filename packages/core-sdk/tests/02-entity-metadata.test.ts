@@ -42,7 +42,7 @@ describe("Entity Metadata", () => {
         schema: state.schema,
         dataHash,
         cid,
-        controllerSigners: [keypair.publicKey],
+        controller: keypair.publicKey,
       });
 
       expect(ix.keys.length).toBeGreaterThan(0);
@@ -65,7 +65,7 @@ describe("Entity Metadata", () => {
         schema: state.schema,
         dataHash,
         cid,
-        controllerSigners: [keypair.publicKey],
+        controller: keypair.publicKey,
       });
 
       expect(result.signature).toBeTruthy();

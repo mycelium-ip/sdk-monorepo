@@ -41,7 +41,7 @@ describe("IP Metadata", () => {
         schema: state.schema,
         dataHash,
         cid,
-        controllerSigners: [keypair.publicKey],
+        controller: keypair.publicKey,
       });
 
       expect(ix.keys.length).toBeGreaterThan(0);
@@ -66,7 +66,7 @@ describe("IP Metadata", () => {
         schema: state.schema,
         dataHash,
         cid,
-        controllerSigners: [keypair.publicKey],
+        controller: keypair.publicKey,
       });
 
       expect(result.signature).toBeTruthy();

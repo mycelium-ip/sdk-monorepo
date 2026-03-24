@@ -3,7 +3,7 @@ name: core-sdk
 description: >
   **INTEGRATION SKILL** — Use `@mycelium-ip/core-sdk` to interact with the
   Mycelium IP protocol on Solana. USE FOR: creating entities, registering IP,
-  licensing, derivatives, metadata, PDA derivation, multi-sig transactions,
+  licensing, derivatives, metadata, PDA derivation,
   building custom instruction pipelines on Solana. DO NOT USE FOR: React
   component integration (use the @mycelium-ip/react skill instead).
 ---
@@ -222,7 +222,6 @@ await sdk.ipCore.ip.create({
   contentHash: sha256Hash(new TextEncoder().encode("ipfs://Qm...")),
   treasuryTokenAccount: treasuryAta, // optional, derived from config
   payerTokenAccount: payerAta, // optional, derived as payer ATA
-  controllerSigners: [],
 });
 
 // Transfer
@@ -230,7 +229,7 @@ await sdk.ipCore.ip.transfer({
   ip: ipPda,
   currentOwnerEntity: entityA,
   newOwnerEntity: entityB,
-  controllerSigners: [controllerOfEntityA],
+  controller: controllerOfEntityA, // optional, defaults to wallet
 });
 ```
 
@@ -251,7 +250,6 @@ await sdk.ipCore.metadata.createEntityMetadata({
   schema: schemaPda,
   dataHash: sha256Hash(metadataBytes),
   cid: "ipfs://QmMeta...",
-  controllerSigners: [],
 });
 
 // IP metadata
@@ -261,7 +259,6 @@ await sdk.ipCore.metadata.createIpMetadata({
   schema: schemaPda,
   dataHash: sha256Hash(metadataBytes),
   cid: "ipfs://QmIpMeta...",
-  controllerSigners: [],
 });
 ```
 
@@ -275,7 +272,6 @@ await sdk.ipCore.derivative.create({
   childOwnerEntity: childEntityPda,
   licenseGrant: grantPda,
   license: licensePda,
-  controllerSigners: [],
 });
 
 // Update derivative license
@@ -285,7 +281,6 @@ await sdk.ipCore.derivative.updateLicense({
   childOwnerEntity: childEntityPda,
   newLicenseGrant: newGrantPda,
   newLicense: newLicensePda,
-  controllerSigners: [],
 });
 ```
 
@@ -296,20 +291,17 @@ await sdk.license.license.create({
   originIp: ipPda,
   ownerEntity: entityPda,
   derivativesAllowed: true,
-  controllerSigners: [],
 });
 
 await sdk.license.license.update({
   originIp: ipPda,
   authorityEntity: entityPda,
   derivativesAllowed: false,
-  controllerSigners: [],
 });
 
 await sdk.license.license.revoke({
   originIp: ipPda,
   authorityEntity: entityPda,
-  controllerSigners: [],
 });
 ```
 
@@ -321,14 +313,12 @@ await sdk.license.grant.create({
   authorityEntity: entityPda,
   granteeEntity: granteePda,
   expiration: BigInt(Math.floor(Date.now() / 1000) + 86400 * 365),
-  controllerSigners: [],
 });
 
 await sdk.license.grant.revoke({
   originIp: ipPda,
   authorityEntity: entityPda,
   granteeEntity: granteePda,
-  controllerSigners: [],
 });
 ```
 
@@ -520,17 +510,27 @@ transparently.
 
 ---
 
-## Multi-sig / Controller Signers
+## Controller
 
-Entities can have multiple controllers with a signature threshold.
-Pass `controllerSigners: PublicKey[]` on any params interface that requires
-entity authority. The SDK converts these into `remainingAccounts` via
-`buildSignerMetas()`.
+Most mutation params accept an optional `controller?: PublicKey` that
+identifies the entity controller authorising the operation. When omitted it
+defaults to the connected wallet's public key.
 
 ```ts
-import { buildSignerMetas } from "@mycelium-ip/core-sdk";
-const metas = buildSignerMetas([controller1, controller2]);
-// [{ pubkey, isSigner: true, isWritable: false }, ...]
+// Explicit controller (when it differs from the connected wallet)
+await sdk.ipCore.ip.transfer({
+  ip: ipPda,
+  currentOwnerEntity: entityA,
+  newOwnerEntity: entityB,
+  controller: otherControllerPubkey,
+});
+
+// Omitted — wallet is used automatically
+await sdk.ipCore.ip.transfer({
+  ip: ipPda,
+  currentOwnerEntity: entityA,
+  newOwnerEntity: entityB,
+});
 ```
 
 ---
@@ -544,7 +544,7 @@ All errors extend `MyceliumError` with a `.code` discriminant:
 | `TokenAccountNotFoundError`     | `TOKEN_ACCOUNT_NOT_FOUND`    | ATA doesn't exist on-chain              |
 | `InsufficientTokenBalanceError` | `INSUFFICIENT_TOKEN_BALANCE` | Payer balance < registration fee        |
 | `EntityNotFoundError`           | `ENTITY_NOT_FOUND`           | Entity PDA doesn't exist                |
-| `InsufficientSignersError`      | `INSUFFICIENT_SIGNERS`       | controllerSigners don't meet threshold  |
+| `AccountNotFoundError`          | `ACCOUNT_NOT_FOUND`          | Generic account not found on-chain      |
 | `UnsupportedFeatureError`       | (wallet module)              | Wallet missing `solana:signTransaction` |
 
 ```ts
@@ -633,8 +633,9 @@ const ids = getProgramIds("devnet"); // { ipCore: PublicKey, license: PublicKey 
    construction otherwise.
 2. **Missing `solana:signTransaction`** — Required wallet feature; throws
    `UnsupportedFeatureError`.
-3. **Multi-sig threshold** — You must pass **all** required controller public
-   keys via `controllerSigners` or the on-chain check fails.
+3. **Controller default** — `controller` defaults to the connected wallet.
+   Pass an explicit `controller` PublicKey only when the entity controller
+   differs from the wallet.
 4. **Content hash** — `CreateIpParams.contentHash` expects a 32-byte SHA-256
    digest. Use `sha256Hash()` from this package.
 5. **`cluster` default** — Defaults to `"devnet"`. Set explicitly for
