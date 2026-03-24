@@ -40,7 +40,7 @@ export class MetadataModule {
         toFixedBytes(params.dataHash, 32, "hash"),
         toFixedBytes(params.cid, 96, "cid"),
       )
-      .accounts({
+      .accountsPartial({
         metadataSchema,
         creator,
         systemProgram: SystemProgram.programId,
@@ -88,7 +88,7 @@ export class MetadataModule {
         toFixedBytes(params.dataHash, 32, "hash"),
         toFixedBytes(params.cid, 96, "cid"),
       )
-      .accounts({
+      .accountsPartial({
         metadata,
         entity: params.entity,
         schema: params.schema,
@@ -140,7 +140,7 @@ export class MetadataModule {
         toFixedBytes(params.dataHash, 32, "hash"),
         toFixedBytes(params.cid, 96, "cid"),
       )
-      .accounts({
+      .accountsPartial({
         metadata,
         ip: params.ip,
         ownerEntity: params.ownerEntity,

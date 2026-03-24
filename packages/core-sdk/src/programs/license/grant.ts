@@ -39,7 +39,7 @@ export class GrantModule {
         toI64Bn(params.expiration, "expiration"),
         params.ipCoreProgramId ?? this.client.ipCoreProgramId,
       )
-      .accounts({
+      .accountsPartial({
         licenseGrant,
         license,
         authorityEntity: params.authorityEntity,
@@ -92,7 +92,7 @@ export class GrantModule {
 
     return this.client.program.methods
       .revokeLicenseGrant(params.ipCoreProgramId ?? this.client.ipCoreProgramId)
-      .accounts({
+      .accountsPartial({
         licenseGrant,
         license,
         authorityEntity: params.authorityEntity,

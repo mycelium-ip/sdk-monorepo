@@ -31,7 +31,8 @@ export interface ParsedEvent<E = unknown> {
 export async function parseTransactionEvents(
   connection: Connection,
   signature: string,
-  program: Program,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  program: Program<any>,
 ): Promise<ParsedEvent[]> {
   let tx = await connection.getTransaction(signature, {
     commitment: "confirmed",

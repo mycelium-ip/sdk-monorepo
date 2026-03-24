@@ -12,7 +12,8 @@ import { parseTransactionEvents } from "./events";
 export async function sendInstruction<E>(
   provider: AnchorProvider,
   instruction: TransactionInstruction,
-  program: Program,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  program: Program<any>,
   sendOptions?: SendOptions,
   confirmOptions?: ConfirmOptions,
 ): Promise<TransactionResult<E>> {

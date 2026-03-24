@@ -126,7 +126,7 @@ export function useCreateEntityWithMetadata() {
               toFixedBytes(params.metadata.dataHash, 32, "hash"),
               toFixedBytes(params.metadata.cid, 96, "cid"),
             )
-            .accounts({
+            .accountsPartial({
               metadata,
               entity: entityPda,
               schema: params.metadata.schema,

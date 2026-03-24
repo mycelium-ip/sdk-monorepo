@@ -2,6 +2,7 @@ import type { AnchorProvider } from "@coral-xyz/anchor";
 import { Program } from "@coral-xyz/anchor";
 import type { Connection } from "@solana/web3.js";
 import { PublicKey } from "@solana/web3.js";
+import type { IpCore } from "../../idl/ip_core";
 import { getIdls, getProgramIds, PDA_SEEDS } from "../../constants/programs";
 import {
   deriveCreatorEntityCounterPda,
@@ -49,7 +50,7 @@ import { MetadataModule } from "./metadata";
 
 export class IpCoreClient {
   readonly provider: AnchorProvider;
-  readonly program: Program;
+  readonly program: Program<IpCore>;
   readonly licenseProgramId: PublicKey;
 
   readonly entity: EntityModule;
@@ -63,7 +64,7 @@ export class IpCoreClient {
 
     this.licenseProgramId = programIds.license;
     this.provider = provider;
-    this.program = new Program(idls.ipCore, provider);
+    this.program = new Program<IpCore>(idls.ipCore as IpCore, provider);
 
     this.entity = new EntityModule(this);
     this.ip = new IpModule(this);

@@ -33,7 +33,7 @@ export class DerivativeModule {
       .createDerivativeLink(
         params.licenseProgramId ?? this.client.licenseProgramId,
       )
-      .accounts({
+      .accountsPartial({
         derivativeLink,
         parentIp: params.parentIp,
         childIp: params.childIp,
@@ -82,7 +82,7 @@ export class DerivativeModule {
       .updateDerivativeLicense(
         params.licenseProgramId ?? this.client.licenseProgramId,
       )
-      .accounts({
+      .accountsPartial({
         derivativeLink: params.derivativeLink ?? derivedDerivativeLink,
         childIp: params.childIp,
         childOwnerEntity: params.childOwnerEntity,

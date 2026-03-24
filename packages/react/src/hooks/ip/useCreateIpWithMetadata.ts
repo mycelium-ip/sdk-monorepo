@@ -134,7 +134,7 @@ export function useCreateIpWithMetadata() {
               toFixedBytes(params.metadata.dataHash, 32, "hash"),
               toFixedBytes(params.metadata.cid, 96, "cid"),
             )
-            .accounts({
+            .accountsPartial({
               metadata,
               ip: ipPda,
               ownerEntity: params.ip.registrantEntity,

@@ -33,7 +33,7 @@ export class LicenseModule {
         params.derivativesAllowed,
         params.ipCoreProgramId ?? this.client.ipCoreProgramId,
       )
-      .accounts({
+      .accountsPartial({
         license,
         originIp: params.originIp,
         ownerEntity: params.ownerEntity,
@@ -78,7 +78,7 @@ export class LicenseModule {
         params.derivativesAllowed,
         params.ipCoreProgramId ?? this.client.ipCoreProgramId,
       )
-      .accounts({
+      .accountsPartial({
         license,
         authorityEntity: params.authorityEntity,
         controller: params.controller ?? this.client.provider.wallet.publicKey,
@@ -113,7 +113,7 @@ export class LicenseModule {
     );
     return this.client.program.methods
       .revokeLicense(params.ipCoreProgramId ?? this.client.ipCoreProgramId)
-      .accounts({
+      .accountsPartial({
         license,
         authorityEntity: params.authorityEntity,
         controller: params.controller ?? this.client.provider.wallet.publicKey,

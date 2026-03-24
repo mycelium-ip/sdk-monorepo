@@ -72,7 +72,7 @@ export class IpModule {
 
     return this.client.program.methods
       .createIp(toFixedBytes(params.contentHash, 32, "contentHash"))
-      .accounts({
+      .accountsPartial({
         ip,
         registrantEntity: params.registrantEntity,
         config,
@@ -119,7 +119,7 @@ export class IpModule {
       params.controller ?? this.client.provider.wallet.publicKey;
     return this.client.program.methods
       .transferIp()
-      .accounts({
+      .accountsPartial({
         ip: params.ip,
         currentOwnerEntity: params.currentOwnerEntity,
         newOwnerEntity: params.newOwnerEntity,

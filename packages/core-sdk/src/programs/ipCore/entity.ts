@@ -35,7 +35,7 @@ export class EntityModule {
 
     return this.client.program.methods
       .createEntity()
-      .accounts({
+      .accountsPartial({
         counter,
         entity,
         creator,
@@ -65,7 +65,7 @@ export class EntityModule {
       params.controller ?? this.client.provider.wallet.publicKey;
     return this.client.program.methods
       .transferEntityControl(params.newController)
-      .accounts({
+      .accountsPartial({
         entity: params.entity,
         controller,
       })

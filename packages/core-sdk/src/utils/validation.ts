@@ -76,7 +76,8 @@ export async function validateAccountExists(
  * @throws {EntityNotFoundError} entity PDA does not exist on-chain
  */
 export async function validateEntityAuthorityRaw(
-  ipCoreProgram: Program,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ipCoreProgram: Program<any>,
   entityPda: PublicKey,
 ): Promise<void> {
   try {
