@@ -51,23 +51,32 @@ export class IpModule {
       this.client.program.programId,
     );
 
-    // Use prefetched token accounts when available, otherwise derive them
-    let treasuryTokenAccount =
-      _prefetched?.treasuryTokenAccount ?? params.treasuryTokenAccount;
-    let payerTokenAccount =
-      _prefetched?.payerTokenAccount ?? params.payerTokenAccount;
+    // Fetch config to determine whether token accounts are required
+    const protocolConfig =
+      _prefetched?.config ?? (await this.client.fetchConfig());
+    const isFreeRegistration = protocolConfig.registrationFee === BigInt(0);
 
-    if (!treasuryTokenAccount || !payerTokenAccount) {
-      const protocolConfig =
-        _prefetched?.config ?? (await this.client.fetchConfig());
+    let treasuryTokenAccount: PublicKey | null = null;
+    let payerTokenAccount: PublicKey | null = null;
+    let tokenProgram: PublicKey | null = null;
+
+    if (!isFreeRegistration) {
+      // Use prefetched token accounts when available, otherwise derive them
+      treasuryTokenAccount =
+        _prefetched?.treasuryTokenAccount ??
+        params.treasuryTokenAccount ??
+        null;
+      payerTokenAccount =
+        _prefetched?.payerTokenAccount ?? params.payerTokenAccount ?? null;
+
       const mint = protocolConfig.registrationCurrency;
-
       if (!treasuryTokenAccount) {
         treasuryTokenAccount = deriveAta(mint, treasury);
       }
       if (!payerTokenAccount) {
         payerTokenAccount = deriveAta(mint, payer);
       }
+      tokenProgram = new PublicKey(TOKEN_PROGRAM_ID);
     }
 
     return this.client.program.methods
@@ -81,7 +90,7 @@ export class IpModule {
         payerTokenAccount,
         controller: params.controller ?? payer,
         payer,
-        tokenProgram: new PublicKey(TOKEN_PROGRAM_ID),
+        tokenProgram,
         systemProgram: SystemProgram.programId,
       })
       .instruction();

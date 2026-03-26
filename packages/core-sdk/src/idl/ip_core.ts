@@ -327,13 +327,21 @@ export type IpCore = {
         },
         {
           name: "treasuryTokenAccount";
-          docs: ["Treasury's token account to receive the registration fee."];
+          docs: [
+            "Treasury's token account to receive the registration fee.",
+            "Optional when registration fee is 0.",
+          ];
           writable: true;
+          optional: true;
         },
         {
           name: "payerTokenAccount";
-          docs: ["Payer's token account to pay the registration fee."];
+          docs: [
+            "Payer's token account to pay the registration fee.",
+            "Optional when registration fee is 0.",
+          ];
           writable: true;
+          optional: true;
         },
         {
           name: "controller";
@@ -348,7 +356,8 @@ export type IpCore = {
         },
         {
           name: "tokenProgram";
-          docs: ["SPL Token program."];
+          docs: ["SPL Token program.", "Optional when registration fee is 0."];
+          optional: true;
           address: "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA";
         },
         {
@@ -1076,6 +1085,16 @@ export type IpCore = {
       code: 6019;
       name: "invalidGrantee";
       msg: "Grantee does not match the child owner entity";
+    },
+    {
+      code: 6020;
+      name: "missingTokenAccount";
+      msg: "Token accounts are required when registration fee is non-zero";
+    },
+    {
+      code: 6021;
+      name: "missingTokenProgram";
+      msg: "Token program is required when registration fee is non-zero";
     },
   ];
   types: [
