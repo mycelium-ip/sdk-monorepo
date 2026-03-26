@@ -220,8 +220,8 @@ const counter = await sdk.ipCore.fetchCreatorEntityCounter(creatorPubkey);
 await sdk.ipCore.ip.create({
   registrantEntity: entityPda,
   contentHash: sha256Hash(new TextEncoder().encode("ipfs://Qm...")),
-  treasuryTokenAccount: treasuryAta, // optional, derived from config
-  payerTokenAccount: payerAta, // optional, derived as payer ATA
+  treasuryTokenAccount: treasuryAta, // optional; omitted when fee is 0, derived from config otherwise
+  payerTokenAccount: payerAta, // optional; omitted when fee is 0, derived as payer ATA otherwise
 });
 
 // Transfer
@@ -640,9 +640,11 @@ const ids = getProgramIds("devnet"); // { ipCore: PublicKey, license: PublicKey 
    digest. Use `sha256Hash()` from this package.
 5. **`cluster` default** — Defaults to `"devnet"`. Set explicitly for
    mainnet-beta.
-6. **Token accounts** — If `treasuryTokenAccount` / `payerTokenAccount` are
-   omitted in `CreateIpParams`, the SDK derives them from on-chain config.
-   Ensure the accounts exist and have sufficient balance.
+6. **Token accounts** — When the protocol registration fee is 0, token
+   accounts are not required and the SDK omits them automatically. When the
+   fee is non-zero, `treasuryTokenAccount` / `payerTokenAccount` are derived
+   from on-chain config if omitted. Ensure the accounts exist and the payer
+   has sufficient balance.
 
 ---
 
